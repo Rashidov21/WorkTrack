@@ -123,6 +123,7 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_DEFAULT_QUEUE = "worktrack"
 
 # Audit log (simple file or DB; extend as needed)
 AUDIT_LOG_ENABLED = True
