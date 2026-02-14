@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Jarimani tahrirlash — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Jarimani tahrirlash</h1>
+<p class="mb-4 text-slate-600">Xodim: <strong>{{ penalty.employee.employee_id }}</strong> {{ penalty.employee.get_full_name }}</p>
+<form method="post" class="max-w-xl space-y-4">
+  {% csrf_token %}
+  {% for field in form %}
+  <div>
+    <label class="block text-sm font-medium text-slate-700">{{ field.label }}</label>
+    {{ field }}
+    {% if field.errors %}<p class="text-red-600 text-sm">{{ field.errors.0 }}</p>{% endif %}
+  </div>
+  {% endfor %}
+  <div class="flex gap-2">
+    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Saqlash</button>
+    <a href="{% url 'penalties:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
+  </div>
+</form>
+{% endblock %}

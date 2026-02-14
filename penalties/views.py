@@ -1,5 +1,5 @@
 """Penalty rules and penalty list; manual penalty (admin)."""
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
@@ -8,7 +8,7 @@ from core.decorators import manager_required, admin_required
 from django.utils.decorators import method_decorator
 
 from .models import Penalty, PenaltyRule
-from .forms import PenaltyRuleForm, ManualPenaltyForm
+from .forms import PenaltyRuleForm, ManualPenaltyForm, PenaltyEditForm
 from notifications.tasks import send_telegram_message
 
 
@@ -78,3 +78,45 @@ class PenaltyHistoryView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Penalty.objects.filter(employee_id=self.kwargs["pk"]).select_related("rule").order_by("-created_at")
+
+
+@method_decorator(admin_required, name="dispatch")
+class PenaltyUpdateView(LoginRequiredMixin, UpdateView):
+    """Admin: jarima summa/sabab/qoidani tahrirlash."""
+    model = Penalty
+    form_class = PenaltyEditForm
+    template_name = "penalties/penalty_edit.html"
+    context_object_name = "penalty"
+    success_url = reverse_lazy("penalties:list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Jarima saqlandi.")
+        return super().form_valid(form)
+
+
+@method_decorator(admin_required, name="dispatch")
+class PenaltyDeleteView(LoginRequiredMixin, DeleteView):
+    """Admin: jarimani o‘chirish."""
+    model = Penalty
+    template_name = "penalties/penalty_confirm_delete.html"
+    context_object_name = "penalty"
+    success_url = reverse_lazy("penalties:list")
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, "Jarima o‘chirildi.")
+        return response
+
+
+@method_decorator(admin_required, name="dispatch")
+class PenaltyRuleDeleteView(LoginRequiredMixin, DeleteView):
+    """Admin: jarima qoidasini o‘chirish."""
+    model = PenaltyRule
+    template_name = "penalties/rule_confirm_delete.html"
+    context_object_name = "rule"
+    success_url = reverse_lazy("penalties:rule_list")
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, "Jarima qoidasi o‘chirildi.")
+        return response

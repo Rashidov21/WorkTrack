@@ -14,7 +14,7 @@ env = environ.Env(
     DATABASE_URL=(str, ""),
     CELERY_BROKER_URL=(str, "redis://localhost:6379/0"),
     CELERY_RESULT_BACKEND=(str, "redis://localhost:6379/0"),
-    TIME_ZONE=(str, "UTC"),
+    TIME_ZONE=(str, "Asia/Tashkent"),
     WEBHOOK_RATE_LIMIT=(int, 120),  # max requests per minute per IP for webhook
 )
 
@@ -98,6 +98,12 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = env("TIME_ZONE")
 USE_I18N = True
 USE_TZ = True
+# 24 soatlik vaqt, Asia/Tashkent; AM/PM emas
+USE_L10N = False
+DATE_FORMAT = "d.m.Y"
+TIME_FORMAT = "H:i"
+DATETIME_FORMAT = "d.m.Y H:i"
+SHORT_DATETIME_FORMAT = "d.m.Y H:i"
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]

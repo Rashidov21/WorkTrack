@@ -31,3 +31,16 @@ class ManualPenaltyForm(forms.ModelForm):
             "amount": forms.NumberInput(attrs={"class": INPUT_CLASS}),
             "reason": forms.Textarea(attrs={"rows": 2, "class": TEXTAREA_CLASS}),
         }
+
+
+class PenaltyEditForm(forms.ModelForm):
+    """Admin: jarima summa, sabab, qoidani tahrirlash."""
+    class Meta:
+        model = Penalty
+        fields = ["amount", "reason", "rule"]
+        labels = {"amount": "Summa", "reason": "Sabab", "rule": "Qoida"}
+        widgets = {
+            "amount": forms.NumberInput(attrs={"class": INPUT_CLASS}),
+            "reason": forms.Textarea(attrs={"rows": 2, "class": TEXTAREA_CLASS}),
+            "rule": forms.Select(attrs={"class": SELECT_CLASS}),
+        }

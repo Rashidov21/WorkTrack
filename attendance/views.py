@@ -1,9 +1,10 @@
 """Attendance logs and daily summary list."""
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
-from django.db.models import Q
-from core.decorators import manager_required
+from django.urls import reverse_lazy
+from django.contrib import messages
+from core.decorators import manager_required, admin_required
 from django.utils.decorators import method_decorator
 
 from .models import AttendanceLog, DailySummary
@@ -50,3 +51,17 @@ class DailySummaryListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["selected_date"] = self.request.GET.get("date") or timezone.now().strftime("%Y-%m-%d")
         return context
+
+
+@method_decorator(admin_required, name="dispatch")
+class AttendanceLogDeleteView(LoginRequiredMixin, DeleteView):
+    """Admin: noto‘g‘ri davomat yozuvini o‘chirish."""
+    model = AttendanceLog
+    template_name = "attendance/log_confirm_delete.html"
+    context_object_name = "log"
+    success_url = reverse_lazy("attendance:log_list")
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, "Davomat yozuvi o‘chirildi.")
+        return response
