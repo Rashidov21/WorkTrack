@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Penalty report — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Penalty report</h1>
+<form method="get" class="flex gap-2 mb-4">
+  <select name="period" class="rounded border"><option value="day" {% if period == 'day' %}selected{% endif %}>Day</option><option value="week" {% if period == 'week' %}selected{% endif %}>Week</option><option value="month" {% if period == 'month' %}selected{% endif %}>Month</option><option value="year" {% if period == 'year' %}selected{% endif %}>Year</option></select>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Apply</button>
+  <a href="{% url 'reports:export_penalty' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded ml-2">Export Excel</a>
+</form>
+<p class="text-slate-600 mb-4">{{ start }} to {{ end }} — Total: {{ total }}</p>
+<div class="bg-white rounded-xl shadow border overflow-hidden">
+  <table class="min-w-full divide-y divide-slate-200">
+    <thead class="bg-slate-50">
+      <tr>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Date</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Employee</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Amount</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Rule</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in penalties %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-2">{{ p.created_at|date }}</td>
+        <td class="px-4 py-2">{{ p.employee.employee_id }} — {{ p.employee.get_full_name }}</td>
+        <td class="px-4 py-2">{{ p.amount }}</td>
+        <td class="px-4 py-2">{{ p.rule.name|default:"—" }}</td>
+        <td class="px-4 py-2">{{ p.reason|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">No penalties.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

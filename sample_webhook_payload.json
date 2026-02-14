@@ -1,0 +1,6 @@
+{
+  "employee_id": "EMP001",
+  "event_type": "check_in",
+  "timestamp": "2025-02-14T08:35:00Z",
+  "event_id": "device-12345-67890"
+}

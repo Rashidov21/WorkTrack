@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Integration settings — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Integration settings</h1>
+<p class="text-slate-600 mb-4">Hikvision device (DS-K1T343) and webhook.</p>
+<form method="post" class="max-w-xl space-y-4">
+  {% csrf_token %}
+  <div>
+    <label class="block text-sm font-medium text-slate-700">Device IP</label>
+    <input type="text" name="device_ip" value="{{ integration.device_ip }}" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="192.168.1.100">
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-slate-700">API username</label>
+    <input type="text" name="api_username" value="{{ integration.api_username }}" class="mt-1 block w-full rounded-lg border-slate-300">
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-slate-700">API password</label>
+    <input type="password" name="api_password" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="Leave blank to keep current">
+  </div>
+  <div class="flex items-center gap-2">
+    <input type="checkbox" name="webhook_enabled" {% if integration.webhook_enabled %}checked{% endif %} class="rounded border-slate-300">
+    <label class="text-sm font-medium text-slate-700">Webhook enabled (receive events from device)</label>
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-slate-700">Webhook secret (optional)</label>
+    <input type="password" name="webhook_secret" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="Leave blank to keep. Device sends X-Webhook-Secret header">
+  </div>
+  <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">Save</button>
+</form>
+<div class="mt-6 p-4 bg-slate-100 rounded-lg">
+  <p class="text-sm font-medium text-slate-700">Webhook URL (POST JSON)</p>
+  <p class="font-mono text-sm break-all mt-1">/integrations/webhook/</p>
+  <p class="text-slate-600 text-sm mt-2">Configure the device to send events to this URL. If you set a webhook secret, the device must send it in the <code class="bg-slate-200 px-1">X-Webhook-Secret</code> header. See README for sample payload.</p>
+</div>
+{% endblock %}

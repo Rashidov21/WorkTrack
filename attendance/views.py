@@ -1,0 +1,52 @@
+"""Attendance logs and daily summary list."""
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils import timezone
+from django.db.models import Q
+from core.decorators import manager_required
+from django.utils.decorators import method_decorator
+
+from .models import AttendanceLog, DailySummary
+
+
+@method_decorator(manager_required, name="dispatch")
+class AttendanceLogListView(LoginRequiredMixin, ListView):
+    model = AttendanceLog
+    template_name = "attendance/log_list.html"
+    context_object_name = "logs"
+    paginate_by = 50
+
+    def get_queryset(self):
+        qs = super().get_queryset().select_related("employee")
+        employee_id = self.request.GET.get("employee_id")
+        if employee_id:
+            qs = qs.filter(employee__employee_id=employee_id)
+        event = self.request.GET.get("event_type")
+        if event:
+            qs = qs.filter(event_type=event)
+        date_str = self.request.GET.get("date")
+        if date_str:
+            qs = qs.filter(timestamp__date=date_str)
+        return qs.order_by("-timestamp")
+
+
+@method_decorator(manager_required, name="dispatch")
+class DailySummaryListView(LoginRequiredMixin, ListView):
+    model = DailySummary
+    template_name = "attendance/summary_list.html"
+    context_object_name = "summaries"
+    paginate_by = 50
+
+    def get_queryset(self):
+        qs = super().get_queryset().select_related("employee")
+        date_str = self.request.GET.get("date") or timezone.now().strftime("%Y-%m-%d")
+        qs = qs.filter(date=date_str)
+        status = self.request.GET.get("status")
+        if status:
+            qs = qs.filter(status=status)
+        return qs.order_by("employee__employee_id")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["selected_date"] = self.request.GET.get("date") or timezone.now().strftime("%Y-%m-%d")
+        return context

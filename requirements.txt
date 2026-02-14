@@ -1,0 +1,25 @@
+# Django
+Django>=5.0,<6
+django-environ>=0.11
+
+# Database (SQLite by default; for PostgreSQL use DATABASE_URL env)
+dj-database-url>=2.1
+# psycopg[binary]>=3.1  # when using PostgreSQL
+
+# Task queue
+celery[redis]>=5.3
+redis>=5.0
+
+# Excel export
+openpyxl>=3.1
+pandas>=2.0
+
+# HTTP / Telegram
+requests>=2.31
+
+# Production
+gunicorn>=21.0
+whitenoise>=6.6
+
+# Tailwind (optional; use CDN in dev or build step)
+# django-tailwind>=3.8

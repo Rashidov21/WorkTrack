@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{% if employee %}Edit{% else %}Add{% endif %} Employee — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if employee %}Edit{% else %}Add{% endif %} employee</h1>
+<form method="post" class="max-w-xl space-y-4">
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="text-red-600">{{ form.non_field_errors }}</div>{% endif %}
+  {% for field in form %}
+  <div>
+    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ field.label }}</label>
+    {{ field }}
+    {% if field.errors %}<p class="text-red-600 text-sm">{{ field.errors.0 }}</p>{% endif %}
+  </div>
+  {% endfor %}
+  <div class="flex gap-2">
+    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save</button>
+    <a href="{% url 'employees:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Cancel</a>
+  </div>
+</form>
+{% endblock %}
