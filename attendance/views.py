@@ -8,6 +8,7 @@ from core.decorators import manager_required, admin_required
 from django.utils.decorators import method_decorator
 
 from .models import AttendanceLog, DailySummary
+from .services import recompute_daily_summary
 
 
 @method_decorator(manager_required, name="dispatch")
@@ -62,6 +63,10 @@ class AttendanceLogDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("attendance:log_list")
 
     def delete(self, request, *args, **kwargs):
+        log = self.get_object()
+        employee = log.employee
+        day = log.timestamp.date()
         response = super().delete(request, *args, **kwargs)
+        recompute_daily_summary(employee, day)
         messages.success(request, "Davomat yozuvi o‘chirildi.")
         return response
