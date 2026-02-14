@@ -7,23 +7,23 @@
   {% csrf_token %}
   <div>
     <label class="block text-sm font-medium text-slate-700">Qurilma IP</label>
-    <input type="text" name="device_ip" value="{{ integration.device_ip }}" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="192.168.1.100">
+    <input type="text" name="device_ip" value="{{ integration.device_ip }}" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="192.168.1.100">
   </div>
   <div>
     <label class="block text-sm font-medium text-slate-700">API foydalanuvchi nomi</label>
-    <input type="text" name="api_username" value="{{ integration.api_username }}" class="mt-1 block w-full rounded-lg border-slate-300">
+    <input type="text" name="api_username" value="{{ integration.api_username }}" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400">
   </div>
   <div>
     <label class="block text-sm font-medium text-slate-700">API parol</label>
-    <input type="password" name="api_password" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="O‘zgartirmaslik uchun bo‘sh qoldiring">
+    <input type="password" name="api_password" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="O‘zgartirmaslik uchun bo‘sh qoldiring">
   </div>
   <div class="flex items-center gap-2">
-    <input type="checkbox" name="webhook_enabled" {% if integration.webhook_enabled %}checked{% endif %} class="rounded border-slate-300">
+    <input type="checkbox" name="webhook_enabled" {% if integration.webhook_enabled %}checked{% endif %} class="rounded border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-500 h-4 w-4">
     <label class="text-sm font-medium text-slate-700">Webhook yoqilgan (qurilmadan hodisalar qabul qilish)</label>
   </div>
   <div>
     <label class="block text-sm font-medium text-slate-700">Webhook maxfiy kalit (ixtiyoriy)</label>
-    <input type="password" name="webhook_secret" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="Saqlash uchun bo‘sh qoldiring. Qurilma X-Webhook-Secret yuboradi">
+    <input type="password" name="webhook_secret" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="Saqlash uchun bo‘sh qoldiring. Qurilma X-Webhook-Secret yuboradi">
   </div>
   <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">Saqlash</button>
 </form>

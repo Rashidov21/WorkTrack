@@ -2,10 +2,10 @@
 {% block title %}Jarimalar hisoboti — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">Jarimalar hisoboti</h1>
-<form method="get" class="flex gap-2 mb-4">
-  <select name="period" class="rounded border"><option value="day" {% if period == 'day' %}selected{% endif %}>Kun</option><option value="week" {% if period == 'week' %}selected{% endif %}>Hafta</option><option value="month" {% if period == 'month' %}selected{% endif %}>Oy</option><option value="year" {% if period == 'year' %}selected{% endif %}>Yil</option></select>
-  <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Qo‘llash</button>
-  <a href="{% url 'reports:export_penalty' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded ml-2">Excelga yuklash</a>
+<form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
+  <select name="period" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="day" {% if period == 'day' %}selected{% endif %}>Kun</option><option value="week" {% if period == 'week' %}selected{% endif %}>Hafta</option><option value="month" {% if period == 'month' %}selected{% endif %}>Oy</option><option value="year" {% if period == 'year' %}selected{% endif %}>Yil</option></select>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Qo‘llash</button>
+  <a href="{% url 'reports:export_penalty' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 ml-2">Excelga yuklash</a>
 </form>
 <p class="text-slate-600 mb-4">{{ start }} dan {{ end }} gacha — Jami: {{ total }}</p>
 <div class="bg-white rounded-xl shadow border overflow-hidden">

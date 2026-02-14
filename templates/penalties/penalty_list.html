@@ -3,13 +3,13 @@
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">Jarimalar</h1>
 <div class="flex gap-4 mb-4">
-  <form method="get" class="flex gap-2">
-    <input type="text" name="employee_id" placeholder="Xodim ID" value="{{ request.GET.employee_id }}" class="rounded border">
-    <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Filtr</button>
+  <form method="get" class="flex gap-2 flex-wrap items-center">
+    <input type="text" name="employee_id" placeholder="Xodim ID" value="{{ request.GET.employee_id }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px]">
+    <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Filtr</button>
   </form>
   {% if user.role == 'admin' %}
-  <a href="{% url 'penalties:add_manual' %}" class="px-4 py-2 bg-emerald-600 text-white rounded">Qo‘lda jarima qo‘shish</a>
-  <a href="{% url 'penalties:rule_list' %}" class="px-4 py-2 bg-slate-600 text-white rounded">Jarima qoidalari</a>
+  <a href="{% url 'penalties:add_manual' %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Qo‘lda jarima qo‘shish</a>
+  <a href="{% url 'penalties:rule_list' %}" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700">Jarima qoidalari</a>
   {% endif %}
 </div>
 <div class="bg-white rounded-xl shadow border overflow-hidden">

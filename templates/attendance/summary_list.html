@@ -2,10 +2,10 @@
 {% block title %}Kunlik xulosa — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">Kunlik xulosa</h1>
-<form method="get" class="flex gap-2 mb-4">
-  <input type="date" name="date" value="{{ selected_date }}" class="rounded border">
-  <select name="status" class="rounded border"><option value="">Hammasi</option><option value="present">Keldi</option><option value="late">Kechikdi</option><option value="absent">Kelmadi</option></select>
-  <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Qo‘llash</button>
+<form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
+  <input type="date" name="date" value="{{ selected_date }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 min-h-[42px]">
+  <select name="status" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="">Hammasi</option><option value="present">Keldi</option><option value="late">Kechikdi</option><option value="absent">Kelmadi</option></select>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Qo‘llash</button>
 </form>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">

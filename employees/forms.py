@@ -21,13 +21,16 @@ class EmployeeForm(forms.ModelForm):
             "is_active": "Faol",
             "device_person_id": "Qurilma shaxs ID",
         }
+        input_class = "mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400"
+        checkbox_class = "rounded border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-500 h-4 w-4"
         widgets = {
-            "employee_id": forms.TextInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300 shadow-sm"}),
-            "first_name": forms.TextInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300 shadow-sm"}),
-            "last_name": forms.TextInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300 shadow-sm"}),
-            "department": forms.TextInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300 shadow-sm"}),
-            "work_start_time": forms.TimeInput(attrs={"type": "time", "class": "mt-1 block w-full rounded-lg border-slate-300"}),
-            "work_end_time": forms.TimeInput(attrs={"type": "time", "class": "mt-1 block w-full rounded-lg border-slate-300"}),
-            "grace_period_minutes": forms.NumberInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300"}),
-            "device_person_id": forms.TextInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300 shadow-sm"}),
+            "employee_id": forms.TextInput(attrs={"class": input_class}),
+            "first_name": forms.TextInput(attrs={"class": input_class}),
+            "last_name": forms.TextInput(attrs={"class": input_class}),
+            "department": forms.TextInput(attrs={"class": input_class}),
+            "work_start_time": forms.TimeInput(attrs={"type": "time", "class": input_class}),
+            "work_end_time": forms.TimeInput(attrs={"type": "time", "class": input_class}),
+            "grace_period_minutes": forms.NumberInput(attrs={"class": input_class}),
+            "is_active": forms.CheckboxInput(attrs={"class": checkbox_class}),
+            "device_person_id": forms.TextInput(attrs={"class": input_class}),
         }
