@@ -1,7 +1,7 @@
 """Webhook endpoint and settings UI."""
 import json
 import time
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -24,8 +24,7 @@ def _get_client_ip(request):
 class DeviceWebhookView(View):
     """
     Receive HTTP POST from Hikvision device (or simulator).
-    Protected by optional X-Webhook-Secret header and rate limit per IP.
-    CSRF exempt so external devices (Postman, Hikvision) can POST without token.
+    CSRF exempt; rate limit per IP. Secret tekshirilmaydi (qurilma yuborolmaydi).
     """
     def post(self, request):
         try:
@@ -36,12 +35,6 @@ class DeviceWebhookView(View):
         integration = IntegrationSettings.get_settings()
         if not integration.webhook_enabled:
             return JsonResponse({"ok": False, "reason": "webhook_disabled"}, status=503)
-
-        # Optional: require webhook secret if configured
-        if integration.webhook_secret:
-            secret = request.headers.get("X-Webhook-Secret") or request.GET.get("secret")
-            if secret != integration.webhook_secret:
-                return HttpResponseForbidden("Invalid or missing webhook secret")
 
         # Rate limit by IP
         ip = _get_client_ip(request)
