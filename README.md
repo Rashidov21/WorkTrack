@@ -65,12 +65,16 @@ Open http://127.0.0.1:8000/ and log in.
 - **config/** — Django project (settings, URLs, Celery app)
 - **core/** — Dashboard, audit log, system settings, decorators
 - **accounts/** — Custom user with role (admin, manager, viewer)
-- **employees/** — Employee CRUD, work times, grace period
+- **employees/** — Employee CRUD, work times, grace period, **work schedules** (ish grafiklari)
 - **attendance/** — Logs, daily summary, lateness records, services
 - **penalties/** — Rules and penalty records, manual adjustment
 - **reports/** — Daily/weekly/monthly/yearly reports, Excel export
 - **integrations/** — Device webhook endpoint, integration settings UI
 - **notifications/** — Telegram settings and async send via Celery
+
+## Work schedules (Ish grafiklari)
+
+Admin can create **work schedules** (name, start/end time, grace period, working days). Assign a schedule to an employee in the employee form. Lateness and penalties are then computed from that schedule for each day; if the day is not a working day for the schedule, no lateness is applied. Employees without a schedule use their personal work start/end times (existing behaviour).
 
 ## Device webhook
 

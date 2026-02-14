@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{% if schedule %}Grafikni tahrirlash{% else %}Grafik qo‘shish{% endif %} — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if schedule %}Grafikni tahrirlash{% else %}Grafik qo‘shish{% endif %}</h1>
+<form method="post" class="max-w-xl space-y-6">
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="text-red-600">{{ form.non_field_errors }}</div>{% endif %}
+
+  <div>
+    <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.name.label }}</label>
+    {{ form.name }}
+    {% if form.name.errors %}<p class="text-red-600 text-sm mt-1">{{ form.name.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4">
+    <h2 class="text-sm font-semibold text-slate-700">Ish vaqtlari</h2>
+    <div>
+      <label for="{{ form.work_start_time.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_start_time.label }}</label>
+      {{ form.work_start_time }}
+      {% if form.work_start_time.errors %}<p class="text-red-600 text-sm mt-1">{{ form.work_start_time.errors.0 }}</p>{% endif %}
+    </div>
+    <div>
+      <label for="{{ form.work_end_time.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_end_time.label }}</label>
+      {{ form.work_end_time }}
+      {% if form.work_end_time.errors %}<p class="text-red-600 text-sm mt-1">{{ form.work_end_time.errors.0 }}</p>{% endif %}
+    </div>
+    <div>
+      <label for="{{ form.grace_period_minutes.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.grace_period_minutes.label }}</label>
+      {{ form.grace_period_minutes }}
+      {% if form.grace_period_minutes.help_text %}<p class="mt-0.5 text-xs text-slate-500">{{ form.grace_period_minutes.help_text }}</p>{% endif %}
+      {% if form.grace_period_minutes.errors %}<p class="text-red-600 text-sm mt-1">{{ form.grace_period_minutes.errors.0 }}</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50">
+    <h2 class="text-sm font-semibold text-slate-700 mb-2">{{ form.working_days_choice.label }}</h2>
+    {% if form.working_days_choice.help_text %}<p class="text-xs text-slate-500 mb-3">{{ form.working_days_choice.help_text }}</p>{% endif %}
+    <div class="flex flex-wrap gap-x-6 gap-y-2">
+      {% for choice_id, choice_label in form.working_days_choice.field.choices %}
+      <label class="inline-flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" name="working_days_choice" value="{{ choice_id }}" class="rounded border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-500 h-4 w-4" {% if form.working_days_choice.value %}{% if choice_id in form.working_days_choice.value or choice_id|stringformat:"s" in form.working_days_choice.value %}checked{% endif %}{% endif %}>
+        <span class="text-sm text-slate-700">{{ choice_label }}</span>
+      </label>
+      {% endfor %}
+    </div>
+    {% if form.working_days_choice.errors %}<p class="text-red-600 text-sm mt-2">{{ form.working_days_choice.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="flex items-center gap-2">
+    {{ form.is_active }}
+    <label for="{{ form.is_active.id_for_label }}" class="text-sm font-medium text-slate-700 cursor-pointer">{{ form.is_active.label }}</label>
+  </div>
+  {% if form.is_active.errors %}<p class="text-red-600 text-sm">{{ form.is_active.errors.0 }}</p>{% endif %}
+
+  <div class="flex gap-2 pt-2">
+    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Saqlash</button>
+    <a href="{% url 'employees:schedule_list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
+  </div>
+</form>
+{% endblock %}

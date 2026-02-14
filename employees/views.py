@@ -1,4 +1,4 @@
-"""Employee CRUD (admin/manager)."""
+"""Employee CRUD (admin/manager) and WorkSchedule CRUD."""
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -6,8 +6,8 @@ from django.shortcuts import get_object_or_404
 from core.decorators import admin_required, manager_required
 from django.utils.decorators import method_decorator
 
-from .models import Employee
-from .forms import EmployeeForm
+from .models import Employee, WorkSchedule
+from .forms import EmployeeForm, WorkScheduleForm
 
 
 @method_decorator(manager_required, name="dispatch")
@@ -53,3 +53,37 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "employees/employee_confirm_delete.html"
     success_url = reverse_lazy("employees:list")
     context_object_name = "employee"
+
+
+# ——— Ish grafiklari (WorkSchedule) ——— admin only
+@method_decorator(admin_required, name="dispatch")
+class ScheduleListView(LoginRequiredMixin, ListView):
+    model = WorkSchedule
+    template_name = "employees/schedule_list.html"
+    context_object_name = "schedules"
+    ordering = ["name"]
+
+
+@method_decorator(admin_required, name="dispatch")
+class ScheduleCreateView(LoginRequiredMixin, CreateView):
+    model = WorkSchedule
+    form_class = WorkScheduleForm
+    template_name = "employees/schedule_form.html"
+    success_url = reverse_lazy("employees:schedule_list")
+
+
+@method_decorator(admin_required, name="dispatch")
+class ScheduleUpdateView(LoginRequiredMixin, UpdateView):
+    model = WorkSchedule
+    form_class = WorkScheduleForm
+    template_name = "employees/schedule_form.html"
+    context_object_name = "schedule"
+    success_url = reverse_lazy("employees:schedule_list")
+
+
+@method_decorator(admin_required, name="dispatch")
+class ScheduleDeleteView(LoginRequiredMixin, DeleteView):
+    model = WorkSchedule
+    template_name = "employees/schedule_confirm_delete.html"
+    success_url = reverse_lazy("employees:schedule_list")
+    context_object_name = "schedule"

@@ -77,23 +77,28 @@ def recompute_daily_summary(employee, day: date):
         summary.working_minutes = int(delta.total_seconds() / 60)
     summary.missing_check_out = bool(check_in and not check_out)
 
-    # Lateness
-    start_dt = timezone.make_aware(datetime.combine(day, employee.work_start_time))
-    grace_end = start_dt + timedelta(minutes=employee.grace_period_minutes)
-    if check_in.timestamp > grace_end:
-        minutes_late = int((check_in.timestamp - grace_end).total_seconds() / 60)
-        summary.minutes_late = minutes_late
-        summary.status = DailySummary.STATUS_LATE
-        LatenessRecord.objects.update_or_create(
-            employee=employee,
-            date=day,
-            defaults={
-                "minutes_late": minutes_late,
-                "check_in_time": check_in.timestamp,
-                "expected_start": employee.work_start_time,
-            },
-        )
+    # Lateness: use work schedule for this day if set
+    work_start, work_end, grace_minutes, is_working_day = employee.get_work_params_for_date(day)
+    if is_working_day:
+        start_dt = timezone.make_aware(datetime.combine(day, work_start))
+        grace_end = start_dt + timedelta(minutes=grace_minutes)
+        if check_in.timestamp > grace_end:
+            minutes_late = int((check_in.timestamp - grace_end).total_seconds() / 60)
+            summary.minutes_late = minutes_late
+            summary.status = DailySummary.STATUS_LATE
+            LatenessRecord.objects.update_or_create(
+                employee=employee,
+                date=day,
+                defaults={
+                    "minutes_late": minutes_late,
+                    "check_in_time": check_in.timestamp,
+                    "expected_start": work_start,
+                },
+            )
+        else:
+            summary.status = DailySummary.STATUS_PRESENT
     else:
+        # Dam olish kuni — kechikish hisoblanmaydi
         summary.status = DailySummary.STATUS_PRESENT
 
     summary.save()

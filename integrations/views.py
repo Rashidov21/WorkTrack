@@ -10,6 +10,7 @@ from django.conf import settings as django_settings
 from django.core.cache import cache
 from core.decorators import admin_required
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from .models import IntegrationSettings
 from .tasks import process_device_event
 
@@ -19,10 +20,12 @@ def _get_client_ip(request):
     return (xff.split(",")[0].strip() if xff else None) or request.META.get("REMOTE_ADDR") or "unknown"
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class DeviceWebhookView(View):
     """
     Receive HTTP POST from Hikvision device (or simulator).
     Protected by optional X-Webhook-Secret header and rate limit per IP.
+    CSRF exempt so external devices (Postman, Hikvision) can POST without token.
     """
     def post(self, request):
         try:

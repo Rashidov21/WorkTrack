@@ -2,17 +2,71 @@
 {% block title %}{% if employee %}Tahrirlash{% else %}Qo‘shish{% endif %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if employee %}Xodimni tahrirlash{% else %}Xodim qo‘shish{% endif %}</h1>
-<form method="post" class="max-w-xl space-y-4">
+<form method="post" class="max-w-xl space-y-6">
   {% csrf_token %}
   {% if form.non_field_errors %}<div class="text-red-600">{{ form.non_field_errors }}</div>{% endif %}
-  {% for field in form %}
+
   <div>
-    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ field.label }}</label>
-    {{ field }}
-    {% if field.errors %}<p class="text-red-600 text-sm">{{ field.errors.0 }}</p>{% endif %}
+    <label for="{{ form.employee_id.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.employee_id.label }}</label>
+    {{ form.employee_id }}
+    {% if form.employee_id.errors %}<p class="text-red-600 text-sm mt-1">{{ form.employee_id.errors.0 }}</p>{% endif %}
   </div>
-  {% endfor %}
-  <div class="flex gap-2">
+  <div>
+    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.first_name.label }}</label>
+    {{ form.first_name }}
+    {% if form.first_name.errors %}<p class="text-red-600 text-sm mt-1">{{ form.first_name.errors.0 }}</p>{% endif %}
+  </div>
+  <div>
+    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.last_name.label }}</label>
+    {{ form.last_name }}
+    {% if form.last_name.errors %}<p class="text-red-600 text-sm mt-1">{{ form.last_name.errors.0 }}</p>{% endif %}
+  </div>
+  <div>
+    <label for="{{ form.department.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.department.label }}</label>
+    {{ form.department }}
+    {% if form.department.errors %}<p class="text-red-600 text-sm mt-1">{{ form.department.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div>
+    <label for="{{ form.work_schedule.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_schedule.label }}</label>
+    {{ form.work_schedule }}
+    <p class="mt-1.5 text-xs text-slate-500">Umumiy grafik tanlang yoki bo‘sh qoldiring — bo‘sh qoldirsangiz, quyidagi shaxsiy vaqtlar ishlatiladi (har bir xodim uchun individual grafik).</p>
+    {% if form.work_schedule.errors %}<p class="text-red-600 text-sm mt-1">{{ form.work_schedule.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4">
+    <h2 class="text-sm font-semibold text-slate-700">Shaxsiy ish vaqtlari (grafik tanlanmasa)</h2>
+    <p class="text-xs text-slate-500">Ish grafigi tanlanmagan xodimlar uchun bu vaqtlar ishlatiladi — har bir xodim uchun individual.</p>
+    <div>
+      <label for="{{ form.work_start_time.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_start_time.label }}</label>
+      {{ form.work_start_time }}
+      {% if form.work_start_time.errors %}<p class="text-red-600 text-sm mt-1">{{ form.work_start_time.errors.0 }}</p>{% endif %}
+    </div>
+    <div>
+      <label for="{{ form.work_end_time.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_end_time.label }}</label>
+      {{ form.work_end_time }}
+      {% if form.work_end_time.errors %}<p class="text-red-600 text-sm mt-1">{{ form.work_end_time.errors.0 }}</p>{% endif %}
+    </div>
+    <div>
+      <label for="{{ form.grace_period_minutes.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.grace_period_minutes.label }}</label>
+      {{ form.grace_period_minutes }}
+      {% if form.grace_period_minutes.errors %}<p class="text-red-600 text-sm mt-1">{{ form.grace_period_minutes.errors.0 }}</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    {{ form.is_active }}
+    <label for="{{ form.is_active.id_for_label }}" class="text-sm font-medium text-slate-700 cursor-pointer">{{ form.is_active.label }}</label>
+  </div>
+  {% if form.is_active.errors %}<p class="text-red-600 text-sm">{{ form.is_active.errors.0 }}</p>{% endif %}
+
+  <div>
+    <label for="{{ form.device_person_id.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.device_person_id.label }}</label>
+    {{ form.device_person_id }}
+    {% if form.device_person_id.errors %}<p class="text-red-600 text-sm mt-1">{{ form.device_person_id.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="flex gap-2 pt-2">
     <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Saqlash</button>
     <a href="{% url 'employees:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
   </div>
