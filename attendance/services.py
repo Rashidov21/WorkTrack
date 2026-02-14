@@ -31,8 +31,8 @@ def create_log_idempotent(employee_id: str, event_type: str, timestamp, source_i
         return AttendanceLog.objects.get(source_id=source_id), False
 
     if isinstance(timestamp, (str,)):
-        timestamp = timezone.make_aware(datetime.fromisoformat(timestamp.replace("Z", "+00:00")))
-    elif timestamp and timezone.is_naive(timestamp):
+        timestamp = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+    if timestamp and timezone.is_naive(timestamp):
         timestamp = timezone.make_aware(timestamp)
 
     log = AttendanceLog.objects.create(
