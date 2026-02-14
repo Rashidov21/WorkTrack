@@ -30,16 +30,15 @@
         <td class="px-4 py-2">{{ s.minutes_late }}</td>
       </tr>
       {% empty %}
-      <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">Ushbu sana uchun ma’lumot yo‘q.</td></tr>
+      <tr><td colspan="6" class="px-4 py-10 text-center">
+        <div class="flex flex-col items-center gap-2 text-slate-500">
+          <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>Ushbu sana uchun ma’lumot yo‘q.</span>
+        </div>
+      </td></tr>
       {% endfor %}
     </tbody>
   </table>
-  {% if page_obj.has_other_pages %}
-  <div class="p-3 border-t flex justify-between">
-    <span>{{ page_obj.number }}-sahifa</span>
-    {% if page_obj.has_previous %}<a href="?date={{ selected_date }}&page={{ page_obj.previous_page_number }}">Oldingi</a>{% endif %}
-    {% if page_obj.has_next %}<a href="?date={{ selected_date }}&page={{ page_obj.next_page_number }}">Keyingi</a>{% endif %}
-  </div>
-  {% endif %}
+  {% include "components/pagination.html" with page_obj=page_obj query_params=request.GET %}
 </div>
 {% endblock %}

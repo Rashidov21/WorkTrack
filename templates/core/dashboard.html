@@ -1,29 +1,30 @@
 {% extends "base.html" %}
+{% load humanize %}
 {% block title %}Boshqaruv paneli — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-6">Boshqaruv paneli</h1>
 <p class="text-slate-600 mb-4">{{ today }} uchun umumiy ko‘rinish</p>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-  <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Keldi</p>
-    <p class="text-3xl font-bold text-emerald-600">{{ present_count }}</p>
+  <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
+    <p class="text-sm text-slate-500 uppercase tracking-wider">Keldi</p>
+    <p class="text-3xl font-bold text-emerald-600 mt-1">{{ present_count|intcomma }}</p>
   </div>
-  <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Kechikkan</p>
-    <p class="text-3xl font-bold text-amber-600">{{ late_count }}</p>
+  <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
+    <p class="text-sm text-slate-500 uppercase tracking-wider">Kechikkan</p>
+    <p class="text-3xl font-bold text-amber-600 mt-1">{{ late_count|intcomma }}</p>
   </div>
-  <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Kelmadi</p>
-    <p class="text-3xl font-bold text-slate-600">{{ absent_count }}</p>
+  <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
+    <p class="text-sm text-slate-500 uppercase tracking-wider">Kelmadi</p>
+    <p class="text-3xl font-bold text-slate-600 mt-1">{{ absent_count|intcomma }}</p>
   </div>
-  <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Bugungi jarimalar</p>
-    <p class="text-3xl font-bold text-rose-600">{{ total_penalties_today }}</p>
+  <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
+    <p class="text-sm text-slate-500 uppercase tracking-wider">Bugungi jarimalar</p>
+    <p class="text-3xl font-bold text-rose-600 mt-1">{{ total_penalties_today|intcomma }}</p>
   </div>
 </div>
-<div class="bg-white rounded-xl shadow p-6 border border-slate-200 mb-6">
+<div class="bg-white rounded-xl shadow p-6 border border-slate-200 mb-6 transition-shadow hover:shadow-md">
   <h2 class="text-lg font-medium text-slate-800 mb-4">Davomat trendi (joy egasi)</h2>
-  <div class="h-48 flex items-center justify-center bg-slate-50 rounded-lg text-slate-400">Grafik joyi</div>
+  <div class="h-48 flex items-center justify-center bg-slate-50 rounded-lg text-slate-400 text-sm">Grafik joyi</div>
 </div>
 <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
   <h2 class="text-lg font-medium text-slate-800 p-4 border-b">Bugungi xulosa</h2>
@@ -48,7 +49,12 @@
           <td class="px-4 py-2">{{ s.minutes_late|default:"0" }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="5" class="px-4 py-6 text-slate-500 text-center">Bugun davomat ma’lumoti yo‘q.</td></tr>
+        <tr><td colspan="5" class="px-4 py-10 text-center">
+          <div class="flex flex-col items-center gap-2 text-slate-500">
+            <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span>Bugun davomat ma’lumoti yo‘q.</span>
+          </div>
+        </td></tr>
         {% endfor %}
       </tbody>
     </table>
