@@ -10,6 +10,17 @@ class EmployeeForm(forms.ModelForm):
             "work_start_time", "work_end_time", "grace_period_minutes",
             "is_active", "device_person_id",
         ]
+        labels = {
+            "employee_id": "Xodim ID",
+            "first_name": "Ism",
+            "last_name": "Familiya",
+            "department": "Bo‘lim",
+            "work_start_time": "Ish boshlanish vaqti",
+            "work_end_time": "Ish tugash vaqti",
+            "grace_period_minutes": "Ruxsat etilgan muhlat (daqika)",
+            "is_active": "Faol",
+            "device_person_id": "Qurilma shaxs ID",
+        }
         widgets = {
             "employee_id": forms.TextInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300 shadow-sm"}),
             "first_name": forms.TextInput(attrs={"class": "mt-1 block w-full rounded-lg border-slate-300 shadow-sm"}),

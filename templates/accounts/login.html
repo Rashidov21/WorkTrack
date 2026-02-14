@@ -1,27 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — {{ APP_NAME }}</title>
+  <title>Kirish — {{ APP_NAME }}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@tailwindcss/forms@0.5.7"></script>
 </head>
 <body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
-  <div class="w-full max-w-sm bg-white rounded-xl shadow-lg border border-slate-200 p-6">
-    <h1 class="text-xl font-semibold text-slate-800 mb-2">Sign in</h1>
-    <p class="text-slate-500 text-sm mb-6">Employee attendance and lateness monitoring</p>
+  <div class="w-full max-w-md bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+    <h1 class="text-xl font-semibold text-slate-800 mb-2">Tizimga kirish</h1>
+    <p class="text-slate-500 text-sm mb-6">Xodimlar davomati va kechikishlarni kuzatuvchi tizim</p>
+    {% if form and form.non_field_errors %}
+    <div class="mb-4 p-3 rounded-lg bg-red-50 text-red-700 text-sm border border-red-200">
+      {% for err in form.non_field_errors %}{{ err }}{% endfor %}
+    </div>
+    {% endif %}
     <form method="post" action="{% url 'accounts:login' %}" class="space-y-4">
       {% csrf_token %}
       <div>
-        <label for="id_username" class="block text-sm font-medium text-slate-700">Username</label>
-        <input type="text" name="username" id="id_username" required autofocus class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm">
+        <label for="id_username" class="block text-sm font-medium text-slate-700">Foydalanuvchi nomi</label>
+        <input type="text" name="username" id="id_username" required autofocus value="{% if form %}{{ form.username.value|default:'' }}{% endif %}"
+          class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2">
+        {% if form and form.username.errors %}<p class="mt-1 text-sm text-red-600">{{ form.username.errors.0 }}</p>{% endif %}
       </div>
       <div>
-        <label for="id_password" class="block text-sm font-medium text-slate-700">Password</label>
-        <input type="password" name="password" id="id_password" required class="mt-1 block w-full rounded-lg border-slate-300 shadow-sm">
+        <label for="id_password" class="block text-sm font-medium text-slate-700">Parol</label>
+        <input type="password" name="password" id="id_password" required
+          class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2">
+        {% if form and form.password.errors %}<p class="mt-1 text-sm text-red-600">{{ form.password.errors.0 }}</p>{% endif %}
       </div>
-      <button type="submit" class="w-full bg-slate-800 text-white py-2 rounded-lg hover:bg-slate-700">Sign in</button>
+      <button type="submit" class="w-full bg-slate-800 text-white py-2.5 rounded-lg hover:bg-slate-700 font-medium">Kirish</button>
     </form>
   </div>
 </body>

@@ -6,9 +6,9 @@ from django.utils import timezone
 class PenaltyRule(models.Model):
     """Admin-defined rule: per-minute, fixed, or custom."""
     RULE_TYPES = [
-        ("per_minute", "Per Minute Late"),
-        ("fixed", "Fixed Amount"),
-        ("custom", "Custom"),
+        ("per_minute", "Har daqiqaga"),
+        ("fixed", "Qat'iy summa"),
+        ("custom", "Boshqa"),
     ]
     name = models.CharField(max_length=100)
     rule_type = models.CharField(max_length=20, choices=RULE_TYPES, default="per_minute")

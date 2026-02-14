@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Telegram settings — {{ APP_NAME }}{% endblock %}
+{% block title %}Telegram sozlamalari — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Telegram settings</h1>
-<p class="text-slate-600 mb-4">Notifications when employee is late or penalty is applied.</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Telegram sozlamalari</h1>
+<p class="text-slate-600 mb-4">Xodim kechikganda yoki jarima qo‘llanganda bildirishnoma yuboriladi.</p>
 <form method="post" class="max-w-xl space-y-4">
   {% csrf_token %}
   <div>
@@ -10,16 +10,16 @@
     <input type="password" name="bot_token" value="{{ telegram.bot_token }}" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="123456:ABC...">
   </div>
   <div>
-    <label class="block text-sm font-medium text-slate-700">Chat ID (group or channel)</label>
+    <label class="block text-sm font-medium text-slate-700">Chat ID (guruh yoki kanal)</label>
     <input type="text" name="chat_id" value="{{ telegram.chat_id }}" class="mt-1 block w-full rounded-lg border-slate-300" placeholder="-1001234567890">
   </div>
   <div class="flex items-center gap-2">
     <input type="checkbox" name="enabled" {% if telegram.enabled %}checked{% endif %} class="rounded border-slate-300">
-    <label class="text-sm font-medium text-slate-700">Enable Telegram notifications</label>
+    <label class="text-sm font-medium text-slate-700">Telegram bildirishnomalarini yoqish</label>
   </div>
   <div class="flex gap-2">
-    <button type="submit" name="save" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">Save</button>
-    <button type="submit" name="test" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Send test message</button>
+    <button type="submit" name="save" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">Saqlash</button>
+    <button type="submit" name="test" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Test xabar yuborish</button>
   </div>
 </form>
 {% endblock %}

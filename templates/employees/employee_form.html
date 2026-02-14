@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}{% if employee %}Edit{% else %}Add{% endif %} Employee — {{ APP_NAME }}{% endblock %}
+{% block title %}{% if employee %}Tahrirlash{% else %}Qo‘shish{% endif %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if employee %}Edit{% else %}Add{% endif %} employee</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if employee %}Xodimni tahrirlash{% else %}Xodim qo‘shish{% endif %}</h1>
 <form method="post" class="max-w-xl space-y-4">
   {% csrf_token %}
   {% if form.non_field_errors %}<div class="text-red-600">{{ form.non_field_errors }}</div>{% endif %}
@@ -13,8 +13,8 @@
   </div>
   {% endfor %}
   <div class="flex gap-2">
-    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Save</button>
-    <a href="{% url 'employees:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Cancel</a>
+    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Saqlash</button>
+    <a href="{% url 'employees:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
   </div>
 </form>
 {% endblock %}

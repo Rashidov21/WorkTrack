@@ -1,28 +1,28 @@
 {% extends "base.html" %}
-{% block title %}Attendance logs — {{ APP_NAME }}{% endblock %}
+{% block title %}Davomat jurnali — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Attendance logs</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Davomat jurnali</h1>
 <form method="get" class="flex gap-2 mb-4 flex-wrap">
-  <input type="text" name="employee_id" placeholder="Employee ID" value="{{ request.GET.employee_id }}" class="rounded border">
-  <select name="event_type" class="rounded border"><option value="">All</option><option value="check_in" {% if request.GET.event_type == 'check_in' %}selected{% endif %}>Check In</option><option value="check_out" {% if request.GET.event_type == 'check_out' %}selected{% endif %}>Check Out</option></select>
+  <input type="text" name="employee_id" placeholder="Xodim ID" value="{{ request.GET.employee_id }}" class="rounded border">
+  <select name="event_type" class="rounded border"><option value="">Hammasi</option><option value="check_in" {% if request.GET.event_type == 'check_in' %}selected{% endif %}>Kelish</option><option value="check_out" {% if request.GET.event_type == 'check_out' %}selected{% endif %}>Ketish</option></select>
   <input type="date" name="date" value="{{ request.GET.date }}" class="rounded border">
-  <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Filter</button>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Filtr</button>
 </form>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Employee</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Type</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Timestamp</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Source</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Xodim</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Turi</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Vaqt</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Manba</th>
       </tr>
     </thead>
     <tbody>{% for log in logs %}
       <tr class="hover:bg-slate-50"><td class="px-4 py-2">{{ log.employee.employee_id }} — {{ log.employee.get_full_name }}</td><td class="px-4 py-2">{{ log.get_event_type_display }}</td><td class="px-4 py-2">{{ log.timestamp }}</td><td class="px-4 py-2">{{ log.source }}</td></tr>
-    {% empty %}<tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">No logs.</td></tr>{% endfor %}
+    {% empty %}<tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">Yozuvlar yo‘q.</td></tr>{% endfor %}
     </tbody>
   </table>
-  {% if page_obj.has_other_pages %}<div class="p-3 border-t flex justify-between"><span>Page {{ page_obj.number }}</span>{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Prev</a>{% endif %}{% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}</div>{% endif %}
+  {% if page_obj.has_other_pages %}<div class="p-3 border-t flex justify-between"><span>{{ page_obj.number }}-sahifa</span>{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Oldingi</a>{% endif %}{% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Keyingi</a>{% endif %}</div>{% endif %}
 </div>
 {% endblock %}

@@ -60,7 +60,7 @@ class ManualPenaltyCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.is_manual = True
-        messages.success(self.request, "Penalty added.")
+        messages.success(self.request, "Jarima qo‘shildi.")
         response = super().form_valid(form)
         # Notify via Telegram
         send_telegram_message.delay(

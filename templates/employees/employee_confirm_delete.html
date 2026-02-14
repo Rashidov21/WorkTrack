@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Delete employee — {{ APP_NAME }}{% endblock %}
+{% block title %}Xodimni o‘chirish — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Delete employee</h1>
-<p class="mb-4">Are you sure you want to delete <strong>{{ employee.get_full_name }} ({{ employee.employee_id }})</strong>?</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Xodimni o‘chirish</h1>
+<p class="mb-4"><strong>{{ employee.get_full_name }} ({{ employee.employee_id }})</strong> ni rostdan ham o‘chirmoqchimisiz?</p>
 <form method="post">
   {% csrf_token %}
-  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">Delete</button>
-  <a href="{% url 'employees:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Cancel</a>
+  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">O‘chirish</button>
+  <a href="{% url 'employees:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
 </form>
 {% endblock %}

@@ -1,22 +1,22 @@
 {% extends "base.html" %}
-{% block title %}Daily summary — {{ APP_NAME }}{% endblock %}
+{% block title %}Kunlik xulosa — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Daily summary</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Kunlik xulosa</h1>
 <form method="get" class="flex gap-2 mb-4">
   <input type="date" name="date" value="{{ selected_date }}" class="rounded border">
-  <select name="status" class="rounded border"><option value="">All</option><option value="present">Present</option><option value="late">Late</option><option value="absent">Absent</option></select>
-  <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Apply</button>
+  <select name="status" class="rounded border"><option value="">Hammasi</option><option value="present">Keldi</option><option value="late">Kechikdi</option><option value="absent">Kelmadi</option></select>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded">Qo‘llash</button>
 </form>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Employee</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Status</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Check In</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Check Out</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Working (min)</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Late (min)</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Xodim</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Holat</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Kelish</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Ketish</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Ishlash (daq)</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Kechikish (daq)</th>
       </tr>
     </thead>
     <tbody>
@@ -30,9 +30,16 @@
         <td class="px-4 py-2">{{ s.minutes_late }}</td>
       </tr>
       {% empty %}
-      <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">No data for this date.</td></tr>
+      <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">Ushbu sana uchun ma’lumot yo‘q.</td></tr>
       {% endfor %}
     </tbody>
   </table>
+  {% if page_obj.has_other_pages %}
+  <div class="p-3 border-t flex justify-between">
+    <span>{{ page_obj.number }}-sahifa</span>
+    {% if page_obj.has_previous %}<a href="?date={{ selected_date }}&page={{ page_obj.previous_page_number }}">Oldingi</a>{% endif %}
+    {% if page_obj.has_next %}<a href="?date={{ selected_date }}&page={{ page_obj.next_page_number }}">Keyingi</a>{% endif %}
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

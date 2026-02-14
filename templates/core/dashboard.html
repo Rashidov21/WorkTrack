@@ -1,41 +1,41 @@
 {% extends "base.html" %}
-{% block title %}Dashboard — {{ APP_NAME }}{% endblock %}
+{% block title %}Boshqaruv paneli — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-6">Dashboard</h1>
-<p class="text-slate-600 mb-4">Overview for {{ today }}</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-6">Boshqaruv paneli</h1>
+<p class="text-slate-600 mb-4">{{ today }} uchun umumiy ko‘rinish</p>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Present</p>
+    <p class="text-sm text-slate-500 uppercase">Keldi</p>
     <p class="text-3xl font-bold text-emerald-600">{{ present_count }}</p>
   </div>
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Late</p>
+    <p class="text-sm text-slate-500 uppercase">Kechikkan</p>
     <p class="text-3xl font-bold text-amber-600">{{ late_count }}</p>
   </div>
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Absent</p>
+    <p class="text-sm text-slate-500 uppercase">Kelmadi</p>
     <p class="text-3xl font-bold text-slate-600">{{ absent_count }}</p>
   </div>
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200">
-    <p class="text-sm text-slate-500 uppercase">Penalties Today</p>
+    <p class="text-sm text-slate-500 uppercase">Bugungi jarimalar</p>
     <p class="text-3xl font-bold text-rose-600">{{ total_penalties_today }}</p>
   </div>
 </div>
 <div class="bg-white rounded-xl shadow p-6 border border-slate-200 mb-6">
-  <h2 class="text-lg font-medium text-slate-800 mb-4">Attendance trend (placeholder)</h2>
-  <div class="h-48 flex items-center justify-center bg-slate-50 rounded-lg text-slate-400">Chart area</div>
+  <h2 class="text-lg font-medium text-slate-800 mb-4">Davomat trendi (joy egasi)</h2>
+  <div class="h-48 flex items-center justify-center bg-slate-50 rounded-lg text-slate-400">Grafik joyi</div>
 </div>
 <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
-  <h2 class="text-lg font-medium text-slate-800 p-4 border-b">Today summary</h2>
+  <h2 class="text-lg font-medium text-slate-800 p-4 border-b">Bugungi xulosa</h2>
   <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-slate-200">
       <thead class="bg-slate-50">
         <tr>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Employee</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Status</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Check In</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Working (min)</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Late (min)</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Xodim</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Holat</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kelish</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Ishlash (daq)</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kechikish (daq)</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-200">
@@ -48,11 +48,11 @@
           <td class="px-4 py-2">{{ s.minutes_late|default:"0" }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="5" class="px-4 py-6 text-slate-500 text-center">No attendance data for today.</td></tr>
+        <tr><td colspan="5" class="px-4 py-6 text-slate-500 text-center">Bugun davomat ma’lumoti yo‘q.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-  <div class="p-2 border-t"><a href="{% url 'attendance:summary_list' %}?date={{ today|date:'Y-m-d' }}" class="text-blue-600 hover:underline">View full daily summary</a></div>
+  <div class="p-2 border-t"><a href="{% url 'attendance:summary_list' %}?date={{ today|date:'Y-m-d' }}" class="text-blue-600 hover:underline">To‘liq kunlik xulosani ko‘rish</a></div>
 </div>
 {% endblock %}

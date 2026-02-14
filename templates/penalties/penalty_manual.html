@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Add manual penalty — {{ APP_NAME }}{% endblock %}
+{% block title %}Qo‘lda jarima — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Add manual penalty</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">Qo‘lda jarima qo‘shish</h1>
 <form method="post" class="max-w-xl space-y-4">{% csrf_token %}{% for field in form %}<div><label class="block text-sm font-medium text-slate-700">{{ field.label }}</label>{{ field }}{% if field.errors %}<p class="text-red-600 text-sm">{{ field.errors.0 }}</p>{% endif %}</div>{% endfor %}
-  <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded">Save</button>
-  <a href="{% url 'penalties:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded">Cancel</a>
+  <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded">Saqlash</button>
+  <a href="{% url 'penalties:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded">Bekor qilish</a>
 </form>
 {% endblock %}

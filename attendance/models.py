@@ -6,8 +6,8 @@ from django.utils import timezone
 class AttendanceLog(models.Model):
     """Raw check-in/check-out event from device or manual entry."""
     EVENT_CHOICES = [
-        ("check_in", "Check In"),
-        ("check_out", "Check Out"),
+        ("check_in", "Kelish"),
+        ("check_out", "Ketish"),
     ]
     employee = models.ForeignKey(
         "employees.Employee",
@@ -48,10 +48,10 @@ class DailySummary(models.Model):
     STATUS_ABSENT = "absent"
     STATUS_LEAVE = "leave"
     STATUS_CHOICES = [
-        (STATUS_PRESENT, "Present"),
-        (STATUS_LATE, "Late"),
-        (STATUS_ABSENT, "Absent"),
-        (STATUS_LEAVE, "Leave"),
+        (STATUS_PRESENT, "Keldi"),
+        (STATUS_LATE, "Kechikdi"),
+        (STATUS_ABSENT, "Kelmadi"),
+        (STATUS_LEAVE, "Ta'tilda"),
     ]
 
     employee = models.ForeignKey(
