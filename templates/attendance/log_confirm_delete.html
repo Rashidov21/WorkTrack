@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-{% block title %}Davomat yozuvini o‘chirish — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Davomat yozuvini o'chirish" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Davomat yozuvini o‘chirish</h1>
-<p class="mb-4 text-slate-600">Haqiqatan ham bu yozuvni o‘chirmoqchimisiz?</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Davomat yozuvini o'chirish" %}</h1>
+<p class="mb-4 text-slate-600">{% trans "Haqiqatan ham bu yozuvni o'chirmoqchimisiz?" %}</p>
 <div class="bg-slate-50 rounded-lg p-4 mb-4 max-w-md">
   <p><strong>{{ log.employee.employee_id }}</strong> {{ log.employee.get_full_name }}</p>
-  <p>Turi: {{ log.get_event_type_display }}</p>
-  <p>Vaqt: {{ log.timestamp|date:"d.m.Y H:i" }}</p>
+  <p>{% trans "Turi" %}: {{ log.get_event_type_display }}</p>
+  <p>{% trans "Vaqt" %}: {{ log.timestamp|date:"d.m.Y H:i" }}</p>
 </div>
 <form method="post">
   {% csrf_token %}
-  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">O‘chirish</button>
-  <a href="{% url 'attendance:log_list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
+  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">{% trans "O'chirish" %}</button>
+  <a href="{% url 'attendance:log_list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Bekor qilish" %}</a>
 </form>
 {% endblock %}

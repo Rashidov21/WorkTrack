@@ -463,3 +463,48 @@ msgstr "Да, удалить"
 
 msgid "Test xabar yuborish"
 msgstr "Отправить тестовое сообщение"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "daq"
+msgstr "мин"
+
+msgid "Menyu"
+msgstr "Меню"
+
+msgid "Davomat yozuvini o'chirish"
+msgstr "Удалить запись посещаемости"
+
+msgid "Haqiqatan ham bu yozuvni o'chirmoqchimisiz?"
+msgstr "Вы уверены, что хотите удалить эту запись?"
+
+msgid "Turi"
+msgstr "Тип"
+
+msgid "Vaqt"
+msgstr "Время"
+
+msgid "Platform sozlamalari"
+msgstr "Настройки платформы"
+
+msgid "Standart ish vaqti, muhlat va jarima. Yangi xodim qo'shilganda ishlatiladi."
+msgstr "Стандартное рабочее время, льгота и штраф. Используется для новых сотрудников."
+
+msgid "Standart ish boshlanish vaqti"
+msgstr "Стандартное время начала работы"
+
+msgid "Standart ish tugash vaqti"
+msgstr "Стандартное время окончания работы"
+
+msgid "Standart muhlat (daqika)"
+msgstr "Стандартная льгота (мин)"
+
+msgid "Standart jarima har daqiqaga (summa)"
+msgstr "Стандартный штраф за минуту (сумма)"
+
+msgid "Rostan ham bu jarimani o'chirmoqchimisiz?"
+msgstr "Вы уверены, что хотите удалить этот штраф?"
+
+msgid "Kalit-qiymat juftliklarini <a href=\"/admin/core/systemsettings/\" class=\"link-primary\">Django admin</a> da ham tahrirlashingiz mumkin."
+msgstr "Пары ключ-значение можно также редактировать в <a href=\"/admin/core/systemsettings/\" class=\"link-primary\">Django admin</a>."

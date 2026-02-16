@@ -1,27 +1,28 @@
 {% extends "base.html" %}
-{% block title %}Platform sozlamalari — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Platform sozlamalari" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Platform sozlamalari</h1>
-<p class="text-slate-600 mb-4">Standart ish vaqti, muhlat va jarima. Yangi xodim qo‘shilganda ishlatiladi.</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Platform sozlamalari" %}</h1>
+<p class="text-slate-600 mb-4">{% trans "Standart ish vaqti, muhlat va jarima. Yangi xodim qo'shilganda ishlatiladi." %}</p>
 <form method="post" class="max-w-xl space-y-4">
   {% csrf_token %}
   <div>
-    <label class="block text-sm font-medium text-slate-700">Standart ish boshlanish vaqti</label>
+    <label class="block text-sm font-medium text-slate-700">{% trans "Standart ish boshlanish vaqti" %}</label>
     <input type="time" name="default_work_start" value="{{ default_work_start }}" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900">
   </div>
   <div>
-    <label class="block text-sm font-medium text-slate-700">Standart ish tugash vaqti</label>
+    <label class="block text-sm font-medium text-slate-700">{% trans "Standart ish tugash vaqti" %}</label>
     <input type="time" name="default_work_end" value="{{ default_work_end }}" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900">
   </div>
   <div>
-    <label class="block text-sm font-medium text-slate-700">Standart muhlat (daqika)</label>
+    <label class="block text-sm font-medium text-slate-700">{% trans "Standart muhlat (daqika)" %}</label>
     <input type="number" name="default_grace_period" value="{{ default_grace_period }}" min="0" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900">
   </div>
   <div>
-    <label class="block text-sm font-medium text-slate-700">Standart jarima har daqiqaga (summa)</label>
+    <label class="block text-sm font-medium text-slate-700">{% trans "Standart jarima har daqiqaga (summa)" %}</label>
     <input type="number" name="default_penalty_per_minute" value="{{ default_penalty_per_minute }}" min="0" step="0.01" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900">
   </div>
-  <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">Saqlash</button>
+  <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">{% trans "Saqlash" %}</button>
 </form>
-<p class="mt-4 text-slate-500 text-sm">Kalit-qiymat juftliklarini <a href="/admin/core/systemsettings/" class="link-primary">Django admin</a> da ham tahrirlashingiz mumkin.</p>
+<p class="mt-4 text-slate-500 text-sm">{% blocktrans %}Kalit-qiymat juftliklarini <a href="/admin/core/systemsettings/" class="link-primary">Django admin</a> da ham tahrirlashingiz mumkin.{% endblocktrans %}</p>
 {% endblock %}

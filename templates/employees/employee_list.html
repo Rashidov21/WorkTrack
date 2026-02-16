@@ -21,7 +21,7 @@
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">ID</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "ID" %}</th>
         <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "F.I.SH" %}</th>
         <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Bo'lim" %}</th>
         <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Grafik" %}</th>
@@ -39,7 +39,7 @@
         <td class="px-4 py-2">{{ e.department|default:"—" }}</td>
         <td class="px-4 py-2">{% if e.work_schedule %}{{ e.work_schedule.name }}{% else %}—{% endif %}</td>
         <td class="px-4 py-2">{{ e.work_start_time|time:"H:i" }} / {{ e.work_end_time|time:"H:i" }}</td>
-        <td class="px-4 py-2">{{ e.grace_period_minutes }} daq</td>
+        <td class="px-4 py-2">{{ e.grace_period_minutes }} {% trans "daq" %}</td>
         <td class="px-4 py-2">
           <span class="px-2 py-0.5 rounded text-sm {% if e.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{% if e.is_active %}{% trans "Faol" %}{% else %}{% trans "Nofaol" %}{% endif %}</span>
         </td>
