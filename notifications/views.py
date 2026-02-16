@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from core.decorators import admin_required
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext
 
 from .models import TelegramSettings
 
@@ -24,22 +25,22 @@ class TelegramSettingsView(LoginRequiredMixin, TemplateView):
         if "test" in request.POST:
             # Send test message
             if not telegram.bot_token or not telegram.chat_id:
-                messages.error(request, "Avval Bot token va Chat ID ni kiriting.")
+                messages.error(request, gettext("Avval Bot token va Chat ID ni kiriting."))
                 return redirect("notifications:telegram_settings")
             url = f"https://api.telegram.org/bot{telegram.bot_token}/sendMessage"
             try:
                 r = requests.post(url, json={"chat_id": telegram.chat_id, "text": "WorkTrack test message."}, timeout=10)
                 r.raise_for_status()
-                messages.success(request, "Test xabar yuborildi.")
+                messages.success(request, gettext("Test xabar yuborildi."))
             except Exception as e:
-                messages.error(request, f"Xatolik: {e}")
+                messages.error(request, gettext("Xatolik: %(err)s") % {"err": e})
             return redirect("notifications:telegram_settings")
 
         telegram.bot_token = request.POST.get("bot_token", "").strip()
         telegram.chat_id = request.POST.get("chat_id", "").strip()
         telegram.enabled = request.POST.get("enabled") == "on"
         telegram.save()
-        messages.success(request, "Telegram sozlamalari saqlandi.")
+        messages.success(request, gettext("Telegram sozlamalari saqlandi."))
         return redirect("notifications:telegram_settings")
 
     def get(self, request, *args, **kwargs):

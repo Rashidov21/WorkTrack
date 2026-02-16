@@ -115,7 +115,7 @@
     type: 'bar',
     data: {
       labels: labels,
-      datasets: [{ label: 'Kelganlar', data: data, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderColor: 'rgb(5, 150, 105)', borderWidth: 1 }]
+      datasets: [{ label: '{{ chart_dataset_label|escapejs }}', data: data, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderColor: 'rgb(5, 150, 105)', borderWidth: 1 }]
     },
     options: {
       responsive: true,

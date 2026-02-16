@@ -105,5 +105,5 @@ class EmployeeForm(forms.ModelForm):
             "grace_period_minutes": forms.NumberInput(attrs={"class": input_class}),
             "is_active": forms.CheckboxInput(attrs={"class": checkbox_class}),
             "device_person_id": forms.TextInput(attrs={"class": input_class}),
-            "telegram_username": forms.TextInput(attrs={"class": input_class, "placeholder": "username (@ siz)"}),
+            "telegram_username": forms.TextInput(attrs={"class": input_class, "placeholder": _("username (@ siz)")}),
         }

@@ -4,6 +4,7 @@ from django.views.generic import TemplateView, RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Sum
 from django.utils import timezone
+from django.utils.translation import gettext
 from datetime import date, timedelta
 
 from employees.models import Employee
@@ -53,6 +54,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             chart_data.append(cnt)
         context["chart_labels_json"] = json.dumps(chart_labels)
         context["chart_data_json"] = json.dumps(chart_data)
+        context["chart_dataset_label"] = gettext("Kelganlar")
 
         # Kechikkanlar (bugun)
         context["late_today"] = [s for s in summaries_list if s.status == DailySummary.STATUS_LATE]

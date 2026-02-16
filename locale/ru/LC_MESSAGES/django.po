@@ -343,7 +343,10 @@ msgstr "Пользователь"
 msgid "Users"
 msgstr "Пользователи"
 
-# Models (attendance)
+# Models (attendance) and templates
+msgid "Kelish"
+msgstr "Приход"
+
 msgid "Ketish"
 msgstr "Уход"
 
@@ -508,3 +511,37 @@ msgstr "Вы уверены, что хотите удалить этот штр�
 
 msgid "Kalit-qiymat juftliklarini <a href=\"/admin/core/systemsettings/\" class=\"link-primary\">Django admin</a> da ham tahrirlashingiz mumkin."
 msgstr "Пары ключ-значение можно также редактировать в <a href=\"/admin/core/systemsettings/\" class=\"link-primary\">Django admin</a>."
+
+# Chart label (core/views.py)
+msgid "Kelganlar"
+msgstr "Пришедшие"
+
+# Notifications flash messages
+msgid "Avval Bot token va Chat ID ni kiriting."
+msgstr "Сначала введите токен бота и Chat ID."
+
+msgid "Test xabar yuborildi."
+msgstr "Тестовое сообщение отправлено."
+
+msgid "Xatolik: %(err)s"
+msgstr "Ошибка: %(err)s"
+
+msgid "Telegram sozlamalari saqlandi."
+msgstr "Настройки Telegram сохранены."
+
+# Employee form placeholder
+msgid "username (@ siz)"
+msgstr "username (@ вас)"
+
+# Sidebar and pagination
+msgid "Telegram"
+msgstr "Telegram"
+
+msgid "Oldingi"
+msgstr "Назад"
+
+msgid "Keyingi"
+msgstr "Вперёд"
+
+msgid "{{ n }} / {{ p }} sahifa, jami {{ c }} ta"
+msgstr "{{ n }} / {{ p }} стр., всего {{ c }}"

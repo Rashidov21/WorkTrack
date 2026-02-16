@@ -1,16 +1,17 @@
+{% load i18n %}
 {% comment %}
 Usage: {% include "components/pagination.html" with page_obj=page_obj query_params=request.GET %}
 query_params: request.GET — all current GET params will be preserved except 'page' is overridden.
 {% endcomment %}
 {% if page_obj.has_other_pages %}
 <div class="p-3 border-t border-slate-200 flex flex-wrap justify-between items-center gap-2 bg-slate-50/50">
-  <span class="text-sm text-slate-600">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }} sahifa, jami {{ page_obj.paginator.count }} ta</span>
+  <span class="text-sm text-slate-600">{% blocktrans with n=page_obj.number p=page_obj.paginator.num_pages c=page_obj.paginator.count %}{{ n }} / {{ p }} sahifa, jami {{ c }} ta{% endblocktrans %}</span>
   <div class="flex gap-2">
     {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400">Oldingi</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400">{% trans "Oldingi" %}</a>
     {% endif %}
     {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400">Keyingi</a>
+    <a href="?page={{ page_obj.next_page_number }}{% for key, value in query_params.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="px-3 py-1.5 text-sm rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400">{% trans "Keyingi" %}</a>
     {% endif %}
   </div>
 </div>
