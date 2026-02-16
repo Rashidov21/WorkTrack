@@ -1,5 +1,6 @@
 """Webhook endpoint and settings UI."""
 import json
+import logging
 import time
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views import View
@@ -14,6 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import IntegrationSettings
 from .tasks import process_device_event
 
+logger = logging.getLogger(__name__)
+
 
 def _get_client_ip(request):
     xff = request.META.get("HTTP_X_FORWARDED_FOR")
@@ -27,6 +30,14 @@ class DeviceWebhookView(View):
     CSRF exempt; rate limit per IP. Secret tekshirilmaydi (qurilma yuborolmaydi).
     """
     def post(self, request):
+        # Qurilma qanday formatda yuborayotganini bilish uchun (keyin o‘chirish mumkin)
+        content_type = request.META.get("CONTENT_TYPE", "")
+        raw_body = request.body[:2000] if request.body else b""
+        logger.warning(
+            "webhook raw: content_type=%s body=%s",
+            content_type,
+            raw_body,
+        )
         try:
             body = json.loads(request.body)
         except json.JSONDecodeError:
