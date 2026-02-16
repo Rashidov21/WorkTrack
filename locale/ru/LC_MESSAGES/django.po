@@ -85,10 +85,6 @@ msgid "Muallif"
 msgstr "Автор"
 
 #: templates/core/dashboard.html
-msgid "Boshqaruv paneli"
-msgstr "Панель управления"
-
-#: templates/core/dashboard.html
 msgid "{{ date }} uchun umumiy ko'rinish"
 msgstr "Обзор за {{ date }}"
 
@@ -163,10 +159,6 @@ msgstr "Сотрудник"
 #: templates/core/dashboard.html
 msgid "Holat"
 msgstr "Статус"
-
-#: templates/core/dashboard.html
-msgid "Kelish"
-msgstr "Приход"
 
 #: templates/core/dashboard.html
 msgid "Ishlash (daq)"
@@ -349,9 +341,6 @@ msgid "Users"
 msgstr "Пользователи"
 
 # Models (attendance)
-msgid "Kelish"
-msgstr "Приход"
-
 msgid "Ketish"
 msgstr "Уход"
 
@@ -361,14 +350,8 @@ msgstr "Журнал посещаемости"
 msgid "Attendance Logs"
 msgstr "Журналы посещаемости"
 
-msgid "Keldi"
-msgstr "Пришёл"
-
 msgid "Kechikdi"
 msgstr "Опоздал"
-
-msgid "Kelmadi"
-msgstr "Не пришёл"
 
 msgid "Ta'tilda"
 msgstr "В отпуске"
@@ -429,9 +412,6 @@ msgstr "Рабочие дни: через запятую (0=Пн..6=Вс). На�
 msgid "Ish grafigi"
 msgstr "График работы"
 
-msgid "Ish grafiklari"
-msgstr "Графики работы"
-
 msgid "Ish boshlanish (grafik tanlanmasa ishlatiladi)"
 msgstr "Начало работы (если график не назначен)"
 
@@ -443,9 +423,3 @@ msgstr "Льгота в минутах (если график не назнач�
 
 msgid "Telegram username (ixtiyoriy)"
 msgstr "Telegram username (необязательно)"
-
-msgid "Xodim"
-msgstr "Сотрудник"
-
-msgid "Xodimlar"
-msgstr "Сотрудники"
