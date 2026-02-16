@@ -1,10 +1,10 @@
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="{{ request.LANGUAGE_CODE|default:'uz' }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% trans "Kirish" %} — {{ APP_NAME }}</title>
-  {% load static i18n %}
   <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@tailwindcss/forms@0.5.7"></script>
