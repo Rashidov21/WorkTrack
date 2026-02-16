@@ -28,13 +28,13 @@
     <tbody>
       {% for p in penalties %}
       <tr class="hover:bg-slate-50">
-        <td class="px-4 py-2"><a href="{% url 'penalties:employee_history' p.employee_id %}" class="text-blue-600">{{ p.employee.employee_id }} {{ p.employee.get_full_name }}</a></td>
+        <td class="px-4 py-2"><a href="{% url 'penalties:employee_history' p.employee_id %}" class="link-primary">{{ p.employee.employee_id }} {{ p.employee.get_full_name }}</a></td>
         <td class="px-4 py-2">{{ p.amount }}</td>
         <td class="px-4 py-2">{{ p.rule.name|default:"—" }}</td>
         <td class="px-4 py-2">{{ p.reason|default:"—" }}</td>
         <td class="px-4 py-2">{{ p.created_at|date }}</td>
         <td class="px-4 py-2">{{ p.is_manual|yesno:"Ha,Yo‘q" }}</td>
-        {% if user.role == 'admin' %}<td class="px-4 py-2"><a href="{% url 'penalties:edit' p.pk %}" class="text-blue-600 hover:underline">Tahrirlash</a> · <a href="{% url 'penalties:delete' p.pk %}" class="text-red-600 hover:underline">O‘chirish</a></td>{% endif %}
+        {% if user.role == 'admin' %}<td class="px-4 py-2"><a href="{% url 'penalties:edit' p.pk %}" class="link-primary">Tahrirlash</a> · <a href="{% url 'penalties:delete' p.pk %}" class="text-red-600 hover:underline">O‘chirish</a></td>{% endif %}
       </tr>
       {% empty %}
       <tr><td colspan="{% if user.role == 'admin' %}7{% else %}6{% endif %}" class="px-4 py-10 text-center">

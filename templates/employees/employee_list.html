@@ -34,7 +34,7 @@
       {% for e in employees %}
       <tr class="hover:bg-slate-50">
         <td class="px-4 py-2 font-mono">{{ e.employee_id }}</td>
-        <td class="px-4 py-2"><a href="{% url 'employees:detail' e.pk %}" class="text-blue-600 hover:underline font-medium">{{ e.get_full_name }}</a></td>
+        <td class="px-4 py-2"><a href="{% url 'employees:detail' e.pk %}" class="link-primary font-medium">{{ e.get_full_name }}</a></td>
         <td class="px-4 py-2">{{ e.department|default:"—" }}</td>
         <td class="px-4 py-2">{% if e.work_schedule %}{{ e.work_schedule.name }}{% else %}—{% endif %}</td>
         <td class="px-4 py-2">{{ e.work_start_time|time:"H:i" }} / {{ e.work_end_time|time:"H:i" }}</td>

@@ -13,6 +13,17 @@ Production-ready employee attendance and lateness monitoring web application int
 - **Authentication:** Django auth with roles (Admin, Manager, Viewer)
 
 ## Quick start
+# VPS da quyidagilarni qilishingiz yetadi:
+- 1. Kodni yangilash
+- cd /root/WorkTrack   # yoki loyiha yo‘lingiz
+- git pull
+- 2. Migration (yangi telegram_username uchun)
+- source .venv/bin/activatepython manage.py migrate
+- 3. Servislarni qayta ishga tushirish
+- sudo systemctl restart worktrack
+- sudo systemctl restart worktrack-celery
+
+Agar gunicorn va celery boshqa servis nomlari bilan ishlasa, ularni o‘sha nomlar bilan restart qiling.
 
 ### 1. Create virtual environment and install dependencies
 

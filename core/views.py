@@ -45,3 +45,8 @@ class SettingsRedirectView(LoginRequiredMixin, RedirectView):
     """Redirect to integration settings by default."""
     pattern_name = "integrations:settings"
     permanent = False
+
+
+class SupportView(LoginRequiredMixin, TemplateView):
+    """Yordam: qo‘llanma va bog‘lanish."""
+    template_name = "core/support.html"

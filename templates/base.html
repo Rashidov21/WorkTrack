@@ -12,6 +12,9 @@
     .toast-leave { animation: toast-out 0.25s ease forwards; }
     @keyframes toast-in { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
     @keyframes toast-out { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100%); } }
+    .link-primary { color: rgb(30 64 175); font-weight: 500; }
+    .link-primary:hover { text-decoration: underline; color: rgb(29 78 216); }
+    .link-primary:focus { outline: none; border-radius: 4px; box-shadow: 0 0 0 2px rgb(148 163 184); }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen">
@@ -68,6 +71,12 @@
         </a>
       </div>
       {% endif %}
+      <div class="pt-2 mt-2 border-t border-slate-600">
+        <a href="{% url 'core:support' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'support' %}bg-slate-700{% endif %}">
+          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Yordam
+        </a>
+      </div>
     </nav>
     <div class="pt-4 mt-auto border-t border-slate-600">
       <p class="text-sm text-slate-400">{{ user.username }} ({{ user.get_role_display }})</p>
