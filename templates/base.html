@@ -80,7 +80,10 @@
     </nav>
     <div class="pt-4 mt-auto border-t border-slate-600">
       <p class="text-sm text-slate-400">{{ user.username }} ({{ user.get_role_display }})</p>
-      <a href="{% url 'accounts:logout' %}" class="text-sm text-amber-300 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded inline-block mt-1">Chiqish</a>
+      <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+        {% csrf_token %}
+        <button type="submit" class="text-sm text-amber-300 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded bg-transparent border-0 p-0 cursor-pointer">Chiqish</button>
+      </form>
     </div>
   </aside>
   <main class="flex-1 min-w-0 p-4 lg:p-6 pt-14 lg:pt-6">
