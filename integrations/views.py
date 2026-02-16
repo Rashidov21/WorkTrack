@@ -26,7 +26,9 @@ def _hikvision_event_to_payload(data):
     inner = data.get("AccessControllerEvent") or {}
     timestamp = data.get("dateTime") or ""
     employee_id = (
-        data.get("personId")
+        inner.get("employeeNoString")
+        or data.get("employeeNoString")
+        or data.get("personId")
         or data.get("cardNo")
         or data.get("employee_id")
         or inner.get("personId")
@@ -98,10 +100,19 @@ class DeviceWebhookView(View):
                 list(data.keys()),
                 list((data.get("AccessControllerEvent") or {}).keys()),
             )
-            payload = _hikvision_event_to_payload(data)
-            if not payload.get("employee_id"):
-                logger.warning("webhook multipart: no employee_id/personId/serialNo in payload")
-            items = [payload]
+            event_type_raw = data.get("eventType") or ""
+            inner_raw = data.get("AccessControllerEvent")
+            if (
+                event_type_raw == "heartBeat"
+                or not inner_raw
+                or (isinstance(inner_raw, (list, dict)) and len(inner_raw) == 0)
+            ):
+                items = []
+            else:
+                payload = _hikvision_event_to_payload(data)
+                if not payload.get("employee_id"):
+                    logger.warning("webhook multipart: no employee_id/personId/serialNo in payload")
+                items = [payload]
         else:
             try:
                 body = json.loads(request.body)
