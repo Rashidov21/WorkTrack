@@ -1,11 +1,14 @@
 """
 Celery tasks: process device webhook event (save log, recompute summary, apply penalty, notify).
 """
+import logging
 from celery import shared_task
 from django.utils import timezone
 from datetime import date
 
 from attendance.services import create_log_idempotent, recompute_daily_summary
+
+logger = logging.getLogger(__name__)
 from attendance.models import DailySummary, LatenessRecord
 from penalties.services import apply_penalty_for_lateness
 from notifications.tasks import send_telegram_message
@@ -32,6 +35,10 @@ def process_device_event(self, payload: dict):
         source="device",
     )
     if not log:
+        logger.warning(
+            "process_device_event: employee_not_found employee_id=%s",
+            repr(employee_id),
+        )
         return {"ok": False, "reason": "employee_not_found"}
 
     day = log.timestamp.date() if hasattr(log.timestamp, "date") else date.fromisoformat(str(log.timestamp)[:10])

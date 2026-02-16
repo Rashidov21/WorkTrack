@@ -110,6 +110,11 @@ class DeviceWebhookView(View):
                 items = []
             else:
                 payload = _hikvision_event_to_payload(data)
+                logger.warning(
+                    "webhook payload employee_id: repr=%s type=%s",
+                    repr(payload.get("employee_id")),
+                    type(payload.get("employee_id")).__name__,
+                )
                 if not payload.get("employee_id"):
                     logger.warning("webhook multipart: no employee_id/personId/serialNo in payload")
                 items = [payload]
