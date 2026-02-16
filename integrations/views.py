@@ -32,9 +32,20 @@ def _hikvision_event_to_payload(data):
         or inner.get("personId")
         or inner.get("cardNo")
         or inner.get("employee_id")
+        or inner.get("serialNo")
+        or inner.get("SerialNo")
+        or data.get("serialNo")
+        or data.get("SerialNo")
+        or inner.get("frontSerialNo")
+        or data.get("frontSerialNo")
     )
     if employee_id is None:
-        serial_no = inner.get("serialNo") or data.get("serialNo")
+        serial_no = (
+            inner.get("serialNo")
+            or inner.get("SerialNo")
+            or data.get("serialNo")
+            or data.get("SerialNo")
+        )
         if serial_no is not None:
             employee_id = str(serial_no)
     if employee_id is not None:
@@ -82,6 +93,11 @@ class DeviceWebhookView(View):
             except json.JSONDecodeError as e:
                 logger.warning("webhook multipart: invalid JSON in AccessControllerEvent: %s", e)
                 return HttpResponseBadRequest("Invalid JSON in AccessControllerEvent")
+            logger.warning(
+                "webhook multipart keys: data=%s inner=%s",
+                list(data.keys()),
+                list((data.get("AccessControllerEvent") or {}).keys()),
+            )
             payload = _hikvision_event_to_payload(data)
             if not payload.get("employee_id"):
                 logger.warning("webhook multipart: no employee_id/personId/serialNo in payload")
