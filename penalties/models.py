@@ -1,14 +1,15 @@
 """Penalty rules and penalty records."""
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class PenaltyRule(models.Model):
     """Admin-defined rule: per-minute, fixed, or custom."""
     RULE_TYPES = [
-        ("per_minute", "Har daqiqaga"),
-        ("fixed", "Qat'iy summa"),
-        ("custom", "Boshqa"),
+        ("per_minute", _("Har daqiqaga")),
+        ("fixed", _("Qat'iy summa")),
+        ("custom", _("Boshqa")),
     ]
     name = models.CharField(max_length=100)
     rule_type = models.CharField(max_length=20, choices=RULE_TYPES, default="per_minute")
@@ -24,8 +25,8 @@ class PenaltyRule(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "Penalty Rule"
-        verbose_name_plural = "Penalty Rules"
+        verbose_name = _("Penalty Rule")
+        verbose_name_plural = _("Penalty Rules")
 
     def __str__(self):
         return f"{self.name} ({self.get_rule_type_display()})"
@@ -67,8 +68,8 @@ class Penalty(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
-        verbose_name = "Penalty"
-        verbose_name_plural = "Penalties"
+        verbose_name = _("Penalty")
+        verbose_name_plural = _("Penalties")
 
     def __str__(self):
         return f"{self.employee} {self.amount} @ {self.created_at.date()}"

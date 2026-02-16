@@ -1,43 +1,44 @@
 {% extends "base.html" %}
-{% block title %}Yordam — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Yordam" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="max-w-3xl mx-auto">
   <h1 class="text-2xl font-semibold text-slate-800 mb-2 flex items-center gap-2">
     <svg class="w-8 h-8 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    Yordam
+    {% trans "Yordam" %}
   </h1>
-  <p class="text-slate-600 mb-8">Platformadan foydalanish qo‘llanmasi va bog‘lanish.</p>
+  <p class="text-slate-600 mb-8">{% trans "Platformadan foydalanish qo'llanmasi va bog'lanish." %}</p>
 
   <section class="bg-white rounded-xl shadow border border-slate-200 p-6 mb-6">
     <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
       <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-      Bo‘limlar va foydalanish
+      {% trans "Bo'limlar va foydalanish" %}
     </h2>
     <ul class="space-y-3 text-slate-700">
-      <li><strong>Boshqaruv paneli</strong> — bugungi davomat xulosasi (keldi, kechikkan, kelmadi), jarimalar va kunlik jadval.</li>
-      <li><strong>Xodimlar</strong> — xodimlarni ro‘yxatdan o‘tkazish, tahrirlash; ism-familiyaga bosib xodim kartasi (davomat, kechikish, jarimalar).</li>
-      <li><strong>Davomat</strong> — qurilma yoki qo‘lda kiritilgan barcha kelish/ketish yozuvlari; filtrlash (xodim, tur, sana).</li>
-      <li><strong>Kunlik xulosa</strong> — tanlangan sana bo‘yicha har bir xodimning holati, kelish/ketish vaqti, ishlash daqiqasi, kechikish.</li>
-      <li><strong>Jarimalar</strong> — kechikish va boshqa sabablar bo‘yicha jarimalar ro‘yxati; qo‘lda jarima qo‘shish; jarima qoidalari (admin).</li>
-      <li><strong>Hisobotlar</strong> — davomat, kechikish va jarima hisobotlari (kun/hafta/oy/yil); Excelga yuklash.</li>
-      <li><strong>Ish grafiklari</strong> (admin) — xodimlarga tayinlanadigan grafiklar; grafik bo‘yicha kechikish hisoblanadi.</li>
-      <li><strong>Integratsiya</strong> (admin) — qurilma IP, webhook, API va platforma sozlamalari.</li>
-      <li><strong>Telegram</strong> (admin) — bot va guruh sozlamalari; kechikish xabarlari guruhga yuboriladi.</li>
+      <li><strong>{% trans "Boshqaruv paneli" %}</strong> — {% trans "bugungi davomat xulosasi (keldi, kechikkan, kelmadi), jarimalar va kunlik jadval." %}</li>
+      <li><strong>{% trans "Xodimlar" %}</strong> — {% trans "xodimlarni ro'yxatdan o'tkazish, tahrirlash; ism-familiyaga bosib xodim kartasi (davomat, kechikish, jarimalar)." %}</li>
+      <li><strong>{% trans "Davomat" %}</strong> — {% trans "qurilma yoki qo'lda kiritilgan barcha kelish/ketish yozuvlari; filtrlash (xodim, tur, sana)." %}</li>
+      <li><strong>{% trans "Kunlik xulosa" %}</strong> — {% trans "tanlangan sana bo'yicha har bir xodimning holati, kelish/ketish vaqti, ishlash daqiqasi, kechikish." %}</li>
+      <li><strong>{% trans "Jarimalar" %}</strong> — {% trans "kechikish va boshqa sabablar bo'yicha jarimalar ro'yxati; qo'lda jarima qo'shish; jarima qoidalari (admin)." %}</li>
+      <li><strong>{% trans "Hisobotlar" %}</strong> — {% trans "davomat, kechikish va jarima hisobotlari (kun/hafta/oy/yil); Excelga yuklash." %}</li>
+      <li><strong>{% trans "Ish grafiklari" %}</strong> (admin) — {% trans "xodimlarga tayinlanadigan grafiklar; grafik bo'yicha kechikish hisoblanadi." %}</li>
+      <li><strong>{% trans "Integratsiya" %}</strong> (admin) — {% trans "qurilma IP, webhook, API va platforma sozlamalari." %}</li>
+      <li><strong>Telegram</strong> (admin) — {% trans "bot va guruh sozlamalari; kechikish xabarlari guruhga yuboriladi." %}</li>
     </ul>
   </section>
 
   <section class="bg-white rounded-xl shadow border border-slate-200 p-6 mb-6">
     <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
       <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-      Ishlab chiquvchi — Geeks Soft
+      {% trans "Ishlab chiquvchi" %} — Geeks Soft
     </h2>
     <ul class="space-y-2 text-slate-700">
       <li class="flex items-center gap-2">
-        <span class="text-slate-500 w-20">Vebsayt:</span>
+        <span class="text-slate-500 w-20">{% trans "Vebsayt" %}:</span>
         <a href="https://geeks-soft.uz" target="_blank" rel="noopener" class="link-primary">geeks-soft.uz</a>
       </li>
       <li class="flex items-center gap-2">
-        <span class="text-slate-500 w-20">Telefon:</span>
+        <span class="text-slate-500 w-20">{% trans "Telefon" %}:</span>
         <a href="tel:+998902113123" class="link-primary">+998 90 211 31 23</a>
       </li>
       <li class="flex items-center gap-2">
@@ -50,7 +51,7 @@
   <section class="bg-white rounded-xl shadow border border-slate-200 p-6">
     <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
       <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-      Muallif — Abdurahmon Rashidov
+      {% trans "Muallif" %} — Abdurahmon Rashidov
     </h2>
     <ul class="space-y-2 text-slate-700">
       <li class="flex items-center gap-2">

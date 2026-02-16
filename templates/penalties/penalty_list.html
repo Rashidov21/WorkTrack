@@ -1,29 +1,29 @@
 {% extends "base.html" %}
-{% load core_extras %}
-{% block title %}Jarimalar — {{ APP_NAME }}{% endblock %}
+{% load core_extras i18n %}
+{% block title %}{% trans "Jarimalar" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Jarimalar</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Jarimalar" %}</h1>
 <div class="flex gap-4 mb-4">
   <form method="get" class="flex gap-2 flex-wrap items-center">
-    <input type="text" name="employee_id" placeholder="Xodim ID" value="{{ request.GET.employee_id }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px]">
-    <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Filtr</button>
+    <input type="text" name="employee_id" placeholder="{% trans 'Xodim ID' %}" value="{{ request.GET.employee_id }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px]">
+    <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Filtr" %}</button>
   </form>
   {% if user.role == 'admin' %}
-  <a href="{% url 'penalties:add_manual' %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Qo‘lda jarima qo‘shish</a>
-  <a href="{% url 'penalties:rule_list' %}" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700">Jarima qoidalari</a>
+  <a href="{% url 'penalties:add_manual' %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Qo'lda jarima qo'shish" %}</a>
+  <a href="{% url 'penalties:rule_list' %}" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700">{% trans "Jarima qoidalari" %}</a>
   {% endif %}
 </div>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Xodim</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Summa</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Qoida</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Sabab</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Sana</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Qo‘lda</th>
-        {% if user.role == 'admin' %}<th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Amallar</th>{% endif %}
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Xodim" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Summa" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Qoida" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Sabab" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Sana" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Qo'lda" %}</th>
+        {% if user.role == 'admin' %}<th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Amallar" %}</th>{% endif %}
       </tr>
     </thead>
     <tbody>
@@ -41,7 +41,7 @@
       <tr><td colspan="{% if user.role == 'admin' %}7{% else %}6{% endif %}" class="px-4 py-10 text-center">
         <div class="flex flex-col items-center gap-2 text-slate-500">
           <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span>Jarimalar yo‘q.</span>
+          <span>{% trans "Jarimalar yo'q." %}</span>
         </div>
       </td></tr>
       {% endfor %}

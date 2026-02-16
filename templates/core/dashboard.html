@@ -1,54 +1,55 @@
 {% extends "base.html" %}
-{% load humanize core_extras %}
-{% block title %}Boshqaruv paneli — {{ APP_NAME }}{% endblock %}
+{% load humanize core_extras i18n %}
+{% block title %}{% trans "Boshqaruv paneli" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-6">Boshqaruv paneli</h1>
-<p class="text-slate-600 mb-4">{{ today }} uchun umumiy ko‘rinish</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-6">{% trans "Boshqaruv paneli" %}</h1>
+<p class="text-slate-600 mb-4">{% blocktrans with date=today %}{{ date }} uchun umumiy ko‘rinish{% endblocktrans %}</p>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
-    <p class="text-sm text-slate-500 uppercase tracking-wider">Keldi</p>
+    <p class="text-sm text-slate-500 uppercase tracking-wider">{% trans "Keldi" %}</p>
     <p class="text-3xl font-bold text-emerald-600 mt-1">{{ present_count|intcomma }}</p>
   </div>
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
-    <p class="text-sm text-slate-500 uppercase tracking-wider">Kechikkan</p>
+    <p class="text-sm text-slate-500 uppercase tracking-wider">{% trans "Kechikkan" %}</p>
     <p class="text-3xl font-bold text-amber-600 mt-1">{{ late_count|intcomma }}</p>
   </div>
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
-    <p class="text-sm text-slate-500 uppercase tracking-wider">Kelmadi</p>
+    <p class="text-sm text-slate-500 uppercase tracking-wider">{% trans "Kelmadi" %}</p>
     <p class="text-3xl font-bold text-slate-600 mt-1">{{ absent_count|intcomma }}</p>
   </div>
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
-    <p class="text-sm text-slate-500 uppercase tracking-wider">Bugungi jarimalar</p>
+    <p class="text-sm text-slate-500 uppercase tracking-wider">{% trans "Bugungi jarimalar" %}</p>
     <p class="text-3xl font-bold text-rose-600 mt-1">{{ total_penalties_today|format_uzs }}</p>
   </div>
 </div>
-<div class="bg-white rounded-xl shadow p-6 border border-slate-200 mb-6 transition-shadow hover:shadow-md">
-  <h2 class="text-lg font-medium text-slate-800 mb-4">Davomat trendi (oxirgi 7 kun)</h2>
-  <div class="h-48 max-w-xs">
-    <canvas id="dashboardChart" width="280" height="192"></canvas>
+<div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 mb-6 items-start">
+  <div class="bg-white rounded-xl shadow p-4 border border-slate-200 transition-shadow hover:shadow-md w-fit">
+    <h2 class="text-lg font-medium text-slate-800 mb-3">{% trans "Davomat trendi (oxirgi 7 kun)" %}</h2>
+    <div class="h-48 w-72">
+      <canvas id="dashboardChart" width="288" height="192"></canvas>
+    </div>
   </div>
-</div>
-
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
-    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Haftalik (kelganlar)</p>
-    <p class="text-2xl font-bold text-slate-800 mt-1">{{ week_came_count|intcomma }}</p>
-    <p class="text-xs text-slate-500 mt-1">Kechikkan: {{ week_late_count|intcomma }} · Jarima: {{ week_penalties_sum|format_uzs }}</p>
-  </div>
-  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
-    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Oylik (kelganlar)</p>
-    <p class="text-2xl font-bold text-slate-800 mt-1">{{ month_came_count|intcomma }}</p>
-    <p class="text-xs text-slate-500 mt-1">Kechikkan: {{ month_late_count|intcomma }} · Jarima: {{ month_penalties_sum|format_uzs }}</p>
-  </div>
-  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
-    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Jarima statistikasi (oy)</p>
-    <p class="text-2xl font-bold text-rose-600 mt-1">{{ month_penalties_sum|format_uzs }}</p>
-    <p class="text-xs text-slate-500 mt-1">Jami {{ month_penalties_count|intcomma }} ta jarima</p>
-  </div>
-  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
-    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Xodimlar</p>
-    <p class="text-2xl font-bold text-slate-800 mt-1">{{ employees_active_count|intcomma }} faol</p>
-    <p class="text-xs text-slate-500 mt-1">Jami {{ employees_total_count|intcomma }} ta</p>
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 min-w-0">
+    <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Haftalik (kelganlar)" %}</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1">{{ week_came_count|intcomma }}</p>
+      <p class="text-xs text-slate-500 mt-1">{% trans "Kechikkan" %}: {{ week_late_count|intcomma }} · {% trans "Jarima" %}: {{ week_penalties_sum|format_uzs }}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Oylik (kelganlar)" %}</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1">{{ month_came_count|intcomma }}</p>
+      <p class="text-xs text-slate-500 mt-1">{% trans "Kechikkan" %}: {{ month_late_count|intcomma }} · {% trans "Jarima" %}: {{ month_penalties_sum|format_uzs }}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Jarima statistikasi (oy)" %}</p>
+      <p class="text-2xl font-bold text-rose-600 mt-1">{{ month_penalties_sum|format_uzs }}</p>
+      <p class="text-xs text-slate-500 mt-1">{% trans "Jami" %} {{ month_penalties_count|intcomma }} {% trans "ta jarima" %}</p>
+    </div>
+    <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Xodimlar" %}</p>
+      <p class="text-2xl font-bold text-slate-800 mt-1">{{ employees_active_count|intcomma }} {% trans "faol" %}</p>
+      <p class="text-xs text-slate-500 mt-1">{% trans "Jami" %} {{ employees_total_count|intcomma }} {% trans "ta" %}</p>
+    </div>
   </div>
 </div>
 
@@ -56,27 +57,27 @@
 <div class="bg-white rounded-xl shadow border border-amber-200 p-4 mb-6">
   <h2 class="text-lg font-medium text-slate-800 mb-3 flex items-center gap-2">
     <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-    Kechikkanlar (bugun)
+    {% trans "Kechikkanlar (bugun)" %}
   </h2>
   <ul class="space-y-1.5 text-sm text-slate-700">
     {% for s in late_today %}
-    <li>{{ s.employee.get_full_name }} ({{ s.employee.employee_id }}) — {{ s.minutes_late }} daqiqa kechikdi</li>
+    <li>{% blocktrans with name=s.employee.get_full_name id=s.employee.employee_id min=s.minutes_late %}{{ name }} ({{ id }}) — {{ min }} daqiqa kechikdi{% endblocktrans %}</li>
     {% endfor %}
   </ul>
 </div>
 {% endif %}
 
 <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
-  <h2 class="text-lg font-medium text-slate-800 p-4 border-b">Bugungi xulosa</h2>
+  <h2 class="text-lg font-medium text-slate-800 p-4 border-b">{% trans "Bugungi xulosa" %}</h2>
   <div class="overflow-x-auto">
     <table class="min-w-full divide-y divide-slate-200">
       <thead class="bg-slate-50">
         <tr>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Xodim</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Holat</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kelish</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Ishlash (daq)</th>
-          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kechikish (daq)</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Xodim" %}</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Holat" %}</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kelish" %}</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Ishlash (daq)" %}</th>
+          <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kechikish (daq)" %}</th>
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-200">
@@ -92,14 +93,14 @@
         <tr><td colspan="5" class="px-4 py-10 text-center">
           <div class="flex flex-col items-center gap-2 text-slate-500">
             <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            <span>Bugun davomat ma’lumoti yo‘q.</span>
+            <span>{% trans "Bugun davomat ma'lumoti yo'q." %}</span>
           </div>
         </td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
-  <div class="p-2 border-t"><a href="{% url 'attendance:summary_list' %}?date={{ today|date:'Y-m-d' }}" class="link-primary text-sm inline-flex items-center gap-1">To‘liq kunlik xulosani ko‘rish <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a></div>
+  <div class="p-2 border-t"><a href="{% url 'attendance:summary_list' %}?date={{ today|date:'Y-m-d' }}" class="link-primary text-sm inline-flex items-center gap-1">{% trans "To'liq kunlik xulosani ko'rish" %} <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

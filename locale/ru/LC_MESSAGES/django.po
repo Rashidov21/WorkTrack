@@ -1,0 +1,451 @@
+# Russian translations for WorkTrack.
+# Copyright (C) 2025
+# This file is distributed under the same license as the WorkTrack project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WorkTrack\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-14 12:00+0000\n"
+"PO-Revision-Date: 2025-02-14 12:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: templates/base.html
+msgid "Boshqaruv paneli"
+msgstr "Панель управления"
+
+#: templates/base.html
+msgid "Xodimlar"
+msgstr "Сотрудники"
+
+#: templates/base.html
+msgid "Davomat"
+msgstr "Посещаемость"
+
+#: templates/base.html
+msgid "Kunlik xulosa"
+msgstr "Итог за день"
+
+#: templates/base.html
+msgid "Jarimalar"
+msgstr "Штрафы"
+
+#: templates/base.html
+msgid "Hisobotlar"
+msgstr "Отчёты"
+
+#: templates/base.html
+msgid "Ish grafiklari"
+msgstr "Графики работы"
+
+#: templates/base.html
+msgid "Integratsiya"
+msgstr "Интеграция"
+
+#: templates/base.html
+msgid "Yordam"
+msgstr "Помощь"
+
+#: templates/base.html
+msgid "Chiqish"
+msgstr "Выход"
+
+#: templates/accounts/login.html
+msgid "Kirish"
+msgstr "Вход"
+
+#: templates/accounts/login.html
+msgid "Tizimga kirish"
+msgstr "Вход в систему"
+
+#: templates/accounts/login.html
+msgid "Xodimlar davomati va kechikishlarni kuzatuvchi tizim"
+msgstr "Система учёта посещаемости и опозданий сотрудников"
+
+#: templates/accounts/login.html
+msgid "Foydalanuvchi nomi"
+msgstr "Имя пользователя"
+
+#: templates/accounts/login.html
+msgid "Parol"
+msgstr "Пароль"
+
+#: templates/accounts/login.html
+msgid "Ishlab chiquvchi"
+msgstr "Разработчик"
+
+#: templates/accounts/login.html
+msgid "Muallif"
+msgstr "Автор"
+
+#: templates/core/dashboard.html
+msgid "Boshqaruv paneli"
+msgstr "Панель управления"
+
+#: templates/core/dashboard.html
+msgid "{{ date }} uchun umumiy ko'rinish"
+msgstr "Обзор за {{ date }}"
+
+#: templates/core/dashboard.html
+msgid "Keldi"
+msgstr "Пришёл"
+
+#: templates/core/dashboard.html
+msgid "Kechikkan"
+msgstr "Опоздал"
+
+#: templates/core/dashboard.html
+msgid "Kelmadi"
+msgstr "Не пришёл"
+
+#: templates/core/dashboard.html
+msgid "Bugungi jarimalar"
+msgstr "Штрафы за сегодня"
+
+#: templates/core/dashboard.html
+msgid "Davomat trendi (oxirgi 7 kun)"
+msgstr "Тренд посещаемости (последние 7 дней)"
+
+#: templates/core/dashboard.html
+msgid "Haftalik (kelganlar)"
+msgstr "За неделю (пришли)"
+
+#: templates/core/dashboard.html
+msgid "Jarima"
+msgstr "Штраф"
+
+#: templates/core/dashboard.html
+msgid "Oylik (kelganlar)"
+msgstr "За месяц (пришли)"
+
+#: templates/core/dashboard.html
+msgid "Jarima statistikasi (oy)"
+msgstr "Статистика штрафов (месяц)"
+
+#: templates/core/dashboard.html
+msgid "Jami"
+msgstr "Всего"
+
+#: templates/core/dashboard.html
+msgid "ta jarima"
+msgstr "штрафов"
+
+#: templates/core/dashboard.html
+msgid "faol"
+msgstr "активных"
+
+#: templates/core/dashboard.html
+msgid "ta"
+msgstr "шт."
+
+#: templates/core/dashboard.html
+msgid "Kechikkanlar (bugun)"
+msgstr "Опоздавшие (сегодня)"
+
+#: templates/core/dashboard.html
+msgid "{{ name }} ({{ id }}) — {{ min }} daqiqa kechikdi"
+msgstr "{{ name }} ({{ id }}) — опоздание {{ min }} мин."
+
+#: templates/core/dashboard.html
+msgid "Bugungi xulosa"
+msgstr "Итог за сегодня"
+
+#: templates/core/dashboard.html
+msgid "Xodim"
+msgstr "Сотрудник"
+
+#: templates/core/dashboard.html
+msgid "Holat"
+msgstr "Статус"
+
+#: templates/core/dashboard.html
+msgid "Kelish"
+msgstr "Приход"
+
+#: templates/core/dashboard.html
+msgid "Ishlash (daq)"
+msgstr "Работа (мин)"
+
+#: templates/core/dashboard.html
+msgid "Kechikish (daq)"
+msgstr "Опоздание (мин)"
+
+#: templates/core/dashboard.html
+msgid "Bugun davomat ma'lumoti yo'q."
+msgstr "Нет данных посещаемости за сегодня."
+
+#: templates/core/dashboard.html
+msgid "To'liq kunlik xulosani ko'rish"
+msgstr "Смотреть полный итог за день"
+
+#: templates/employees/employee_list.html
+msgid "Bo'lim"
+msgstr "Отдел"
+
+#: templates/employees/employee_list.html
+msgid "Hammasi"
+msgstr "Все"
+
+#: templates/employees/employee_list.html
+msgid "Faol"
+msgstr "Активный"
+
+#: templates/employees/employee_list.html
+msgid "Nofaol"
+msgstr "Неактивный"
+
+#: templates/employees/employee_list.html
+msgid "Filtr"
+msgstr "Фильтр"
+
+#: templates/employees/employee_list.html
+msgid "Xodim qo'shish"
+msgstr "Добавить сотрудника"
+
+#: templates/employees/employee_list.html
+msgid "F.I.SH"
+msgstr "Ф.И.О."
+
+#: templates/employees/employee_list.html
+msgid "Grafik"
+msgstr "График"
+
+#: templates/employees/employee_list.html
+msgid "Boshlash / Tugash"
+msgstr "Начало / Конец"
+
+#: templates/employees/employee_list.html
+msgid "Muhlat"
+msgstr "Льгота"
+
+#: templates/employees/employee_list.html
+msgid "Amallar"
+msgstr "Действия"
+
+#: templates/employees/employee_list.html
+msgid "Tahrirlash"
+msgstr "Изменить"
+
+#: templates/employees/employee_list.html
+msgid "O'chirish"
+msgstr "Удалить"
+
+#: templates/employees/employee_list.html
+msgid "Rostan ham bu xodimni o'chirmoqchimisiz?"
+msgstr "Вы уверены, что хотите удалить этого сотрудника?"
+
+#: templates/employees/employee_list.html
+msgid "Xodimlar topilmadi."
+msgstr "Сотрудники не найдены."
+
+#: templates/penalties/penalty_list.html
+msgid "Xodim ID"
+msgstr "ID сотрудника"
+
+#: templates/penalties/penalty_list.html
+msgid "Qo'lda jarima qo'shish"
+msgstr "Добавить штраф вручную"
+
+#: templates/penalties/penalty_list.html
+msgid "Jarima qoidalari"
+msgstr "Правила штрафов"
+
+#: templates/penalties/penalty_list.html
+msgid "Summa"
+msgstr "Сумма"
+
+#: templates/penalties/penalty_list.html
+msgid "Qoida"
+msgstr "Правило"
+
+#: templates/penalties/penalty_list.html
+msgid "Sabab"
+msgstr "Причина"
+
+#: templates/penalties/penalty_list.html
+msgid "Sana"
+msgstr "Дата"
+
+#: templates/penalties/penalty_list.html
+msgid "Qo'lda"
+msgstr "Вручную"
+
+#: templates/penalties/penalty_list.html
+msgid "Jarimalar yo'q."
+msgstr "Штрафов нет."
+
+#: templates/core/support.html
+msgid "Platformadan foydalanish qo'llanmasi va bog'lanish."
+msgstr "Инструкция по использованию платформы и контакты."
+
+#: templates/core/support.html
+msgid "Bo'limlar va foydalanish"
+msgstr "Разделы и использование"
+
+#: templates/core/support.html
+msgid "bugungi davomat xulosasi (keldi, kechikkan, kelmadi), jarimalar va kunlik jadval."
+msgstr "итог посещаемости за день (пришёл, опоздал, не пришёл), штрафы и расписание на день."
+
+#: templates/core/support.html
+msgid "xodimlarni ro'yxatdan o'tkazish, tahrirlash; ism-familiyaga bosib xodim kartasi (davomat, kechikish, jarimalar)."
+msgstr "учёт и редактирование сотрудников; карточка сотрудника по Ф.И.О. (посещаемость, опоздания, штрафы)."
+
+#: templates/core/support.html
+msgid "qurilma yoki qo'lda kiritilgan barcha kelish/ketish yozuvlari; filtrlash (xodim, tur, sana)."
+msgstr "все записи прихода/ухода с устройства или вручную; фильтры (сотрудник, тип, дата)."
+
+#: templates/core/support.html
+msgid "tanlangan sana bo'yicha har bir xodimning holati, kelish/ketish vaqti, ishlash daqiqasi, kechikish."
+msgstr "по выбранной дате: статус каждого сотрудника, время прихода/ухода, минуты работы, опоздание."
+
+#: templates/core/support.html
+msgid "kechikish va boshqa sabablar bo'yicha jarimalar ro'yxati; qo'lda jarima qo'shish; jarima qoidalari (admin)."
+msgstr "список штрафов за опоздания и другие причины; добавление штрафа вручную; правила штрафов (админ)."
+
+#: templates/core/support.html
+msgid "davomat, kechikish va jarima hisobotlari (kun/hafta/oy/yil); Excelga yuklash."
+msgstr "отчёты по посещаемости, опозданиям и штрафам (день/неделя/месяц/год); выгрузка в Excel."
+
+#: templates/core/support.html
+msgid "xodimlarga tayinlanadigan grafiklar; grafik bo'yicha kechikish hisoblanadi."
+msgstr "графики, назначаемые сотрудникам; опоздания считаются по графику."
+
+#: templates/core/support.html
+msgid "qurilma IP, webhook, API va platforma sozlamalari."
+msgstr "IP устройства, webhook, API и настройки платформы."
+
+#: templates/core/support.html
+msgid "bot va guruh sozlamalari; kechikish xabarlari guruhga yuboriladi."
+msgstr "настройки бота и группы; уведомления об опозданиях отправляются в группу."
+
+#: templates/core/support.html
+msgid "Vebsayt"
+msgstr "Сайт"
+
+#: templates/core/support.html
+msgid "Telefon"
+msgstr "Телефон"
+
+# Models (accounts)
+msgid "Administrator"
+msgstr "Администратор"
+
+msgid "Menejer"
+msgstr "Менеджер"
+
+msgid "Ko'ruvchi"
+msgstr "Наблюдатель"
+
+msgid "User"
+msgstr "Пользователь"
+
+msgid "Users"
+msgstr "Пользователи"
+
+# Models (attendance)
+msgid "Kelish"
+msgstr "Приход"
+
+msgid "Ketish"
+msgstr "Уход"
+
+msgid "Attendance Log"
+msgstr "Журнал посещаемости"
+
+msgid "Attendance Logs"
+msgstr "Журналы посещаемости"
+
+msgid "Keldi"
+msgstr "Пришёл"
+
+msgid "Kechikdi"
+msgstr "Опоздал"
+
+msgid "Kelmadi"
+msgstr "Не пришёл"
+
+msgid "Ta'tilda"
+msgstr "В отпуске"
+
+msgid "Daily Summary"
+msgstr "Итог за день"
+
+msgid "Daily Summaries"
+msgstr "Итоги за день"
+
+msgid "Lateness Record"
+msgstr "Запись об опоздании"
+
+msgid "Lateness Records"
+msgstr "Записи об опозданиях"
+
+# Models (penalties)
+msgid "Har daqiqaga"
+msgstr "За минуту"
+
+msgid "Qat'iy summa"
+msgstr "Фиксированная сумма"
+
+msgid "Boshqa"
+msgstr "Другое"
+
+msgid "Penalty Rule"
+msgstr "Правило штрафа"
+
+msgid "Penalty Rules"
+msgstr "Правила штрафов"
+
+msgid "Penalty"
+msgstr "Штраф"
+
+msgid "Penalties"
+msgstr "Штрафы"
+
+# Models (employees)
+msgid "Nomi"
+msgstr "Название"
+
+msgid "Ish boshlanish vaqti"
+msgstr "Время начала работы"
+
+msgid "Ish tugash vaqti"
+msgstr "Время окончания работы"
+
+msgid "Ruxsat etilgan muhlat (daqika)"
+msgstr "Разрешённая льгота (мин)"
+
+msgid "Ish boshlanish vaqtidan keyin shuncha daqiqa kechikishga ruxsat"
+msgstr "Столько минут после начала работы разрешено до учёта опоздания"
+
+msgid "Ish kunlari: vergul bilan ajratilgan (0=Du..6=Ya). Masalan 0,1,2,3,4 = Du-Ju"
+msgstr "Рабочие дни: через запятую (0=Пн..6=Вс). Например 0,1,2,3,4 = Пн–Пт"
+
+msgid "Ish grafigi"
+msgstr "График работы"
+
+msgid "Ish grafiklari"
+msgstr "Графики работы"
+
+msgid "Ish boshlanish (grafik tanlanmasa ishlatiladi)"
+msgstr "Начало работы (если график не назначен)"
+
+msgid "Ish tugash (grafik tanlanmasa ishlatiladi)"
+msgstr "Конец работы (если график не назначен)"
+
+msgid "Ruxsat etilgan muhlat daqiqada (grafik tanlanmasa ishlatiladi)"
+msgstr "Льгота в минутах (если график не назначен)"
+
+msgid "Telegram username (ixtiyoriy)"
+msgstr "Telegram username (необязательно)"
+
+msgid "Xodim"
+msgstr "Сотрудник"
+
+msgid "Xodimlar"
+msgstr "Сотрудники"

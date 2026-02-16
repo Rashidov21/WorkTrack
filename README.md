@@ -18,7 +18,8 @@ Production-ready employee attendance and lateness monitoring web application int
 - cd /root/WorkTrack   # yoki loyiha yo‘lingiz
 - git pull
 - 2. Migration (yangi telegram_username uchun)
-- source .venv/bin/activatepython manage.py migrate
+- source .venv/bin/activate
+- python manage.py migrate
 - 3. Servislarni qayta ishga tushirish
 - sudo systemctl restart worktrack
 - sudo systemctl restart worktrack-celery
@@ -130,6 +131,22 @@ Example: `DATABASE_URL=postgres://user:pass@localhost:5432/worktrack`
 - **Admin:** Full access, settings (integration, platform, Telegram), penalty rules, manual penalties.
 - **Manager:** View reports, employees, attendance, penalties (no edit on settings/penalty rules).
 - **Viewer:** Read-only (same as manager in current UI; can be restricted further if needed).
+
+## Internationalization (i18n)
+
+The interface supports **Uzbek (default)** and **Russian**. Language can be switched via the sidebar (authenticated) or on the login page.
+
+- **Translations:** `locale/ru/LC_MESSAGES/django.po` contains Russian `msgstr` for all `msgid` strings (templates and models).
+- **Compile messages (optional):** If you have [GNU gettext](https://www.gnu.org/software/gettext/) installed, run:
+  ```bash
+  python manage.py compilemessages
+  ```
+  to build `locale/ru/LC_MESSAGES/django.mo`. Without this step, Django can still use the `.po` file in some setups; with compiled `.mo`, language switching is faster.
+- **Extract new strings:** After adding new `{% trans %}` or `gettext_lazy` in code, run:
+  ```bash
+  python manage.py makemessages -l ru
+  ```
+  then fill in the new `msgstr` in `locale/ru/LC_MESSAGES/django.po`.
 
 ## License
 

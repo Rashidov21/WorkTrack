@@ -1,19 +1,20 @@
 {% extends "base.html" %}
-{% block title %}Xodimlar — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Xodimlar" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Xodimlar</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Xodimlar" %}</h1>
 <div class="flex flex-wrap gap-4 mb-4">
   <form method="get" class="flex gap-2 flex-wrap items-center">
-    <input type="text" name="department" placeholder="Bo‘lim" value="{{ request.GET.department }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px]">
+    <input type="text" name="department" placeholder="{% trans "Bo'lim" %}" value="{{ request.GET.department }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px]">
     <select name="active" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]">
-      <option value="">Hammasi</option>
-      <option value="1" {% if request.GET.active == '1' %}selected{% endif %}>Faol</option>
-      <option value="0" {% if request.GET.active == '0' %}selected{% endif %}>Nofaol</option>
+      <option value="">{% trans "Hammasi" %}</option>
+      <option value="1" {% if request.GET.active == '1' %}selected{% endif %}>{% trans "Faol" %}</option>
+      <option value="0" {% if request.GET.active == '0' %}selected{% endif %}>{% trans "Nofaol" %}</option>
     </select>
-    <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Filtr</button>
+    <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Filtr" %}</button>
   </form>
   {% if user.role == 'admin' %}
-  <a href="{% url 'employees:add' %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Xodim qo‘shish</a>
+  <a href="{% url 'employees:add' %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Xodim qo'shish" %}</a>
   {% endif %}
 </div>
 <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
@@ -21,13 +22,13 @@
     <thead class="bg-slate-50">
       <tr>
         <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">ID</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">F.I.SH</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Bo‘lim</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Grafik</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Boshlash / Tugash</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Muhlat</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Holat</th>
-        {% if user.role == 'admin' %}<th class="px-4 py-2 text-right text-xs font-medium text-slate-600 uppercase">Amallar</th>{% endif %}
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "F.I.SH" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Bo'lim" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Grafik" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Boshlash / Tugash" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Muhlat" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Holat" %}</th>
+        {% if user.role == 'admin' %}<th class="px-4 py-2 text-right text-xs font-medium text-slate-600 uppercase">{% trans "Amallar" %}</th>{% endif %}
       </tr>
     </thead>
     <tbody class="divide-y divide-slate-200">
@@ -40,12 +41,12 @@
         <td class="px-4 py-2">{{ e.work_start_time|time:"H:i" }} / {{ e.work_end_time|time:"H:i" }}</td>
         <td class="px-4 py-2">{{ e.grace_period_minutes }} daq</td>
         <td class="px-4 py-2">
-          <span class="px-2 py-0.5 rounded text-sm {% if e.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{{ e.is_active|yesno:"Faol,Nofaol" }}</span>
+          <span class="px-2 py-0.5 rounded text-sm {% if e.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{% if e.is_active %}{% trans "Faol" %}{% else %}{% trans "Nofaol" %}{% endif %}</span>
         </td>
         {% if user.role == 'admin' %}
         <td class="px-4 py-2 text-right">
-          <a href="{% url 'employees:edit' e.pk %}" class="inline-flex p-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400" title="Tahrirlash" aria-label="Tahrirlash"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a>
-          <a href="{% url 'employees:delete' e.pk %}" class="inline-flex p-1.5 rounded border border-red-200 text-red-600 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 ml-1" title="O‘chirish" aria-label="O‘chirish" data-confirm="Rostan ham bu xodimni o‘chirmoqchimisiz?"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
+          <a href="{% url 'employees:edit' e.pk %}" class="inline-flex p-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400" title="{% trans 'Tahrirlash' %}" aria-label="{% trans 'Tahrirlash' %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a>
+          <a href="{% url 'employees:delete' e.pk %}" class="inline-flex p-1.5 rounded border border-red-200 text-red-600 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 ml-1" title="{% trans 'O\'chirish' %}" aria-label="{% trans 'O\'chirish' %}" data-confirm="{% trans 'Rostan ham bu xodimni o\'chirmoqchimisiz?' %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
         </td>
         {% endif %}
       </tr>
@@ -53,7 +54,7 @@
       <tr><td colspan="{% if user.role == 'admin' %}8{% else %}7{% endif %}" class="px-4 py-10 text-center">
         <div class="flex flex-col items-center gap-2 text-slate-500">
           <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-          <span>Xodimlar topilmadi.</span>
+          <span>{% trans "Xodimlar topilmadi." %}</span>
         </div>
       </td></tr>
       {% endfor %}

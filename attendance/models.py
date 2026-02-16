@@ -1,13 +1,14 @@
 """Attendance logs and daily summaries."""
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class AttendanceLog(models.Model):
     """Raw check-in/check-out event from device or manual entry."""
     EVENT_CHOICES = [
-        ("check_in", "Kelish"),
-        ("check_out", "Ketish"),
+        ("check_in", _("Kelish")),
+        ("check_out", _("Ketish")),
     ]
     employee = models.ForeignKey(
         "employees.Employee",
@@ -34,8 +35,8 @@ class AttendanceLog(models.Model):
             models.Index(fields=["employee", "timestamp"]),
             models.Index(fields=["timestamp"]),
         ]
-        verbose_name = "Attendance Log"
-        verbose_name_plural = "Attendance Logs"
+        verbose_name = _("Attendance Log")
+        verbose_name_plural = _("Attendance Logs")
 
     def __str__(self):
         return f"{self.employee_id} {self.event_type} @ {self.timestamp}"
@@ -48,10 +49,10 @@ class DailySummary(models.Model):
     STATUS_ABSENT = "absent"
     STATUS_LEAVE = "leave"
     STATUS_CHOICES = [
-        (STATUS_PRESENT, "Keldi"),
-        (STATUS_LATE, "Kechikdi"),
-        (STATUS_ABSENT, "Kelmadi"),
-        (STATUS_LEAVE, "Ta'tilda"),
+        (STATUS_PRESENT, _("Keldi")),
+        (STATUS_LATE, _("Kechikdi")),
+        (STATUS_ABSENT, _("Kelmadi")),
+        (STATUS_LEAVE, _("Ta'tilda")),
     ]
 
     employee = models.ForeignKey(
@@ -71,8 +72,8 @@ class DailySummary(models.Model):
     class Meta:
         ordering = ["-date", "employee"]
         unique_together = [["employee", "date"]]
-        verbose_name = "Daily Summary"
-        verbose_name_plural = "Daily Summaries"
+        verbose_name = _("Daily Summary")
+        verbose_name_plural = _("Daily Summaries")
 
     def __str__(self):
         return f"{self.employee} {self.date} {self.status}"
@@ -93,8 +94,8 @@ class LatenessRecord(models.Model):
 
     class Meta:
         ordering = ["-date"]
-        verbose_name = "Lateness Record"
-        verbose_name_plural = "Lateness Records"
+        verbose_name = _("Lateness Record")
+        verbose_name_plural = _("Lateness Records")
 
     def __str__(self):
         return f"{self.employee} {self.date} ({self.minutes_late} min late)"

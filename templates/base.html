@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="{{ request.LANGUAGE_CODE|default:'uz' }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ APP_NAME }}{% endblock %}</title>
-  {% load static %}
+  {% load static i18n %}
   <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -33,37 +33,37 @@
     <nav class="mt-4 space-y-1 flex-1">
       <a href="{% url 'core:dashboard' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'dashboard' %}bg-slate-700{% endif %}">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        Boshqaruv paneli
+        {% trans "Boshqaruv paneli" %}
       </a>
       <a href="{% url 'employees:list' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'employees' and request.resolver_match.url_name == 'list' %}bg-slate-700{% endif %}">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-        Xodimlar
+        {% trans "Xodimlar" %}
       </a>
       <a href="{% url 'attendance:log_list' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'attendance' and request.resolver_match.url_name == 'log_list' %}bg-slate-700{% endif %}">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Davomat
+        {% trans "Davomat" %}
       </a>
       <a href="{% url 'attendance:summary_list' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'attendance' and request.resolver_match.url_name == 'summary_list' %}bg-slate-700{% endif %}">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-        Kunlik xulosa
+        {% trans "Kunlik xulosa" %}
       </a>
       <a href="{% url 'penalties:list' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'penalties' and request.resolver_match.url_name == 'list' %}bg-slate-700{% endif %}">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        Jarimalar
+        {% trans "Jarimalar" %}
       </a>
       <a href="{% url 'reports:dashboard' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'reports' and request.resolver_match.url_name == 'dashboard' %}bg-slate-700{% endif %}">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.5a2 2 0 012 2v11a2 2 0 01-2 2z"/></svg>
-        Hisobotlar
+        {% trans "Hisobotlar" %}
       </a>
       {% if user.role == 'admin' %}
       <div class="pt-2 mt-2 border-t border-slate-600">
         <a href="{% url 'employees:schedule_list' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'employees' %}{% if request.resolver_match.url_name == 'schedule_list' or request.resolver_match.url_name == 'schedule_add' or request.resolver_match.url_name == 'schedule_edit' or request.resolver_match.url_name == 'schedule_delete' %}bg-slate-700{% endif %}{% endif %}">
           <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          Ish grafiklari
+          {% trans "Ish grafiklari" %}
         </a>
         <a href="{% url 'integrations:settings' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'integrations' and request.resolver_match.url_name == 'settings' %}bg-slate-700{% endif %}">
           <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-          Integratsiya
+          {% trans "Integratsiya" %}
         </a>
         <a href="{% url 'notifications:telegram_settings' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'notifications' %}bg-slate-700{% endif %}">
           <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
@@ -74,15 +74,22 @@
       <div class="pt-2 mt-2 border-t border-slate-600">
         <a href="{% url 'core:support' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'support' %}bg-slate-700{% endif %}">
           <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Yordam
+          {% trans "Yordam" %}
         </a>
       </div>
     </nav>
-    <div class="pt-4 mt-auto border-t border-slate-600">
+    <div class="pt-4 mt-auto border-t border-slate-600 space-y-2">
+      <form action="{% url 'set_language' %}" method="post" class="flex gap-1 flex-wrap">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+        {% for lang_code, lang_name in LANGUAGES %}
+        <button type="submit" name="language" value="{{ lang_code }}" class="text-xs px-2 py-1 rounded {% if request.LANGUAGE_CODE == lang_code %}bg-slate-600 text-white{% else %}text-slate-400 hover:text-white hover:bg-slate-600{% endif %}">{{ lang_name }}</button>
+        {% endfor %}
+      </form>
       <p class="text-sm text-slate-400">{{ user.username }} ({{ user.get_role_display }})</p>
       <form method="post" action="{% url 'accounts:logout' %}" class="inline">
         {% csrf_token %}
-        <button type="submit" class="text-sm text-amber-300 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded bg-transparent border-0 p-0 cursor-pointer">Chiqish</button>
+        <button type="submit" class="text-sm text-amber-300 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded bg-transparent border-0 p-0 cursor-pointer">{% trans "Chiqish" %}</button>
       </form>
     </div>
   </aside>

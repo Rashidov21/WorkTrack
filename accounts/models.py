@@ -1,19 +1,20 @@
 """Custom user with role (admin, manager, viewer)."""
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
     ROLE_CHOICES = [
-        ("admin", "Administrator"),
-        ("manager", "Menejer"),
-        ("viewer", "Ko‘ruvchi"),
+        ("admin", _("Administrator")),
+        ("manager", _("Menejer")),
+        ("viewer", _("Ko‘ruvchi")),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="viewer")
 
     class Meta:
-        verbose_name = "User"
-        verbose_name_plural = "Users"
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
 
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
