@@ -22,14 +22,14 @@
     <p class="text-3xl font-bold text-rose-600 mt-1">{{ total_penalties_today|format_uzs }}</p>
   </div>
 </div>
-<div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-4 mb-6 items-start">
-  <div class="bg-white rounded-xl shadow p-4 border border-slate-200 transition-shadow hover:shadow-md w-fit">
-    <h2 class="text-lg font-medium text-slate-800 mb-3">{% trans "Davomat trendi (oxirgi 7 kun)" %}</h2>
-    <div class="h-48 w-72">
-      <canvas id="dashboardChart" width="288" height="192"></canvas>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 items-stretch">
+  <div class="bg-white rounded-xl shadow p-4 border border-slate-200 transition-shadow hover:shadow-md flex flex-col min-h-0">
+    <h2 class="text-lg font-medium text-slate-800 mb-3">{% trans "Davomat trendi (oxirgi 30 kun)" %}</h2>
+    <div class="flex-1 min-h-[200px] lg:min-h-[240px]">
+      <canvas id="dashboardChart"></canvas>
     </div>
   </div>
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 min-w-0">
+  <div class="grid grid-cols-2 grid-rows-2 gap-4 min-w-0">
     <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
       <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Haftalik (kelganlar)" %}</p>
       <p class="text-2xl font-bold text-slate-800 mt-1">{{ week_came_count|intcomma }}</p>
@@ -61,7 +61,7 @@
   </h2>
   <ul class="space-y-1.5 text-sm text-slate-700">
     {% for s in late_today %}
-    <li>{% blocktrans with name=s.employee.get_full_name id=s.employee.employee_id min=s.minutes_late %}{{ name }} ({{ id }}) — {{ min }} daqiqa kechikdi{% endblocktrans %}</li>
+    <li><a href="{% url 'employees:detail' s.employee.pk %}" class="link-primary">{{ s.employee.get_full_name }}</a> ({{ s.employee.employee_id }}) — {{ s.minutes_late }} {% trans "daqiqa kechikdi" %}</li>
     {% endfor %}
   </ul>
 </div>
@@ -83,7 +83,7 @@
       <tbody class="divide-y divide-slate-200">
         {% for s in summaries_today %}
         <tr class="hover:bg-slate-50">
-          <td class="px-4 py-2">{{ s.employee.employee_id }} — {{ s.employee.get_full_name }}</td>
+          <td class="px-4 py-2"><a href="{% url 'employees:detail' s.employee.pk %}" class="link-primary">{{ s.employee.employee_id }} — {{ s.employee.get_full_name }}</a></td>
           <td class="px-4 py-2">{{ s.get_status_display }}</td>
           <td class="px-4 py-2">{{ s.check_in_time|time:"H:i"|default:"—" }}</td>
           <td class="px-4 py-2">{{ s.working_minutes }}</td>
@@ -123,7 +123,7 @@
       plugins: { legend: { display: false } },
       scales: {
         y: { beginAtZero: true, ticks: { stepSize: 1 } },
-        x: { maxBarThickness: 36 }
+        x: { maxBarThickness: 24 }
       }
     }
   });

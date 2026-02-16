@@ -39,12 +39,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         )["s"] or 0
         context["summaries_today"] = summaries_list[:20]
 
-        # Chart: oxirgi 7 kun — har kuni kelganlar soni (present + late)
-        week_ago = today - timedelta(days=6)
+        # Chart: oxirgi 30 kun (1 oy) — har kuni kelganlar soni (present + late)
+        month_ago = today - timedelta(days=29)
         chart_labels = []
         chart_data = []
-        for i in range(7):
-            d = today - timedelta(days=6 - i)
+        for i in range(30):
+            d = month_ago + timedelta(days=i)
             chart_labels.append(d.strftime("%d.%m"))
             cnt = DailySummary.objects.filter(
                 date=d,
@@ -58,6 +58,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context["late_today"] = [s for s in summaries_list if s.status == DailySummary.STATUS_LATE]
 
         # Haftalik (oxirgi 7 kun)
+        week_ago = today - timedelta(days=6)
         context["week_came_count"] = DailySummary.objects.filter(
             date__gte=week_ago, date__lte=today,
             status__in=[DailySummary.STATUS_PRESENT, DailySummary.STATUS_LATE],

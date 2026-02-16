@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% block title %}{% if schedule %}Grafikni tahrirlash{% else %}Grafik qo‘shish{% endif %} — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% if schedule %}{% trans "Grafikni tahrirlash" %}{% else %}{% trans "Grafik qo'shish" %}{% endif %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if schedule %}Grafikni tahrirlash{% else %}Grafik qo‘shish{% endif %}</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if schedule %}{% trans "Grafikni tahrirlash" %}{% else %}{% trans "Grafik qo'shish" %}{% endif %}</h1>
 <form method="post" class="max-w-xl space-y-6">
   {% csrf_token %}
   {% if form.non_field_errors %}<div class="text-red-600">{{ form.non_field_errors }}</div>{% endif %}
@@ -13,7 +14,7 @@
   </div>
 
   <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4">
-    <h2 class="text-sm font-semibold text-slate-700">Ish vaqtlari</h2>
+    <h2 class="text-sm font-semibold text-slate-700">{% trans "Ish vaqtlari" %}</h2>
     <div>
       <label for="{{ form.work_start_time.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_start_time.label }}</label>
       {{ form.work_start_time }}
@@ -53,8 +54,8 @@
   {% if form.is_active.errors %}<p class="text-red-600 text-sm">{{ form.is_active.errors.0 }}</p>{% endif %}
 
   <div class="flex gap-2 pt-2">
-    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Saqlash</button>
-    <a href="{% url 'employees:schedule_list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
+    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Saqlash" %}</button>
+    <a href="{% url 'employees:schedule_list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Bekor qilish" %}</a>
   </div>
 </form>
 {% endblock %}

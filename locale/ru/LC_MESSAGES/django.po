@@ -108,6 +108,9 @@ msgstr "Штрафы за сегодня"
 msgid "Davomat trendi (oxirgi 7 kun)"
 msgstr "Тренд посещаемости (последние 7 дней)"
 
+msgid "Davomat trendi (oxirgi 30 kun)"
+msgstr "Тренд посещаемости (последние 30 дней)"
+
 #: templates/core/dashboard.html
 msgid "Haftalik (kelganlar)"
 msgstr "За неделю (пришли)"
@@ -423,3 +426,40 @@ msgstr "Льгота в минутах (если график не назнач�
 
 msgid "Telegram username (ixtiyoriy)"
 msgstr "Telegram username (необязательно)"
+
+# New template strings
+msgid "daqiqa kechikdi"
+msgstr "мин. опоздал"
+
+msgid "Rostan ham bu yozuvni o'chirmoqchimisiz?"
+msgstr "Вы уверены, что хотите удалить эту запись?"
+
+msgid "Rostan ham bu qoidani o'chirmoqchimisiz?"
+msgstr "Вы уверены, что хотите удалить это правило?"
+
+msgid "Rostan ham bu xodimni o'chirmoqchimisiz?"
+msgstr "Вы уверены, что хотите удалить этого сотрудника?"
+
+msgid "Rostan ham bu grafikni o'chirmoqchimisiz?"
+msgstr "Вы уверены, что хотите удалить этот график?"
+
+msgid "Qo'llash"
+msgstr "Применить"
+
+msgid "Excelga yuklash"
+msgstr "Скачать Excel"
+
+msgid "Qo'lda jarima"
+msgstr "Ручной штраф"
+
+msgid "Qo'lda jarima qo'shish"
+msgstr "Добавить ручной штраф"
+
+msgid "Qo'lda"
+msgstr "Вручную"
+
+msgid "Ha, o'chirish"
+msgstr "Да, удалить"
+
+msgid "Test xabar yuborish"
+msgstr "Отправить тестовое сообщение"

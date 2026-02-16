@@ -1,35 +1,36 @@
 {% extends "base.html" %}
-{% block title %}Davomat hisoboti — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Davomat hisoboti" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Davomat hisoboti</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Davomat hisoboti" %}</h1>
 <form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
-  <select name="period" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="day" {% if period == 'day' %}selected{% endif %}>Kun</option><option value="week" {% if period == 'week' %}selected{% endif %}>Hafta</option><option value="month" {% if period == 'month' %}selected{% endif %}>Oy</option><option value="year" {% if period == 'year' %}selected{% endif %}>Yil</option></select>
-  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Qo‘llash</button>
-  <a href="{% url 'reports:export_attendance' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 ml-2">Excelga yuklash</a>
+  <select name="period" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="day" {% if period == 'day' %}selected{% endif %}>{% trans "Kun" %}</option><option value="week" {% if period == 'week' %}selected{% endif %}>{% trans "Hafta" %}</option><option value="month" {% if period == 'month' %}selected{% endif %}>{% trans "Oy" %}</option><option value="year" {% if period == 'year' %}selected{% endif %}>{% trans "Yil" %}</option></select>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Qo'llash" %}</button>
+  <a href="{% url 'reports:export_attendance' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 ml-2">{% trans "Excelga yuklash" %}</a>
 </form>
-<p class="text-slate-600 mb-4">{{ start }} dan {{ end }} gacha</p>
+<p class="text-slate-600 mb-4">{% blocktrans with start=start end=end %}{{ start }} dan {{ end }} gacha{% endblocktrans %}</p>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Sana</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Xodim</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Holat</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Ishlash (daq)</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Kechikish (daq)</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Sana" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Xodim" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Holat" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Ishlash (daq)" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Kechikish (daq)" %}</th>
       </tr>
     </thead>
     <tbody>
       {% for s in summaries %}
       <tr class="hover:bg-slate-50">
         <td class="px-4 py-2">{{ s.date }}</td>
-        <td class="px-4 py-2">{{ s.employee.employee_id }} — {{ s.employee.get_full_name }}</td>
+        <td class="px-4 py-2"><a href="{% url 'employees:detail' s.employee.pk %}" class="link-primary">{{ s.employee.employee_id }} — {{ s.employee.get_full_name }}</a></td>
         <td class="px-4 py-2">{{ s.get_status_display }}</td>
         <td class="px-4 py-2">{{ s.working_minutes }}</td>
         <td class="px-4 py-2">{{ s.minutes_late }}</td>
       </tr>
       {% empty %}
-      <tr><td colspan="5" class="px-4 py-10 text-center"><div class="flex flex-col items-center gap-2 text-slate-500"><svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg><span>Ma’lumot yo‘q.</span></div></td></tr>
+      <tr><td colspan="5" class="px-4 py-10 text-center"><div class="flex flex-col items-center gap-2 text-slate-500"><svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg><span>{% trans "Ma'lumot yo'q." %}</span></div></td></tr>
       {% endfor %}
     </tbody>
   </table>

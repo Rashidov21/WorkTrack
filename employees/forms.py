@@ -1,15 +1,16 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from .models import Employee, WorkSchedule
 
 # 0=Dushanba, 1=Seshanba, ... 6=Yakshanba (Python weekday)
 WEEKDAY_CHOICES = [
-    (0, "Dushanba"),
-    (1, "Seshanba"),
-    (2, "Chorshanba"),
-    (3, "Payshanba"),
-    (4, "Juma"),
-    (5, "Shanba"),
-    (6, "Yakshanba"),
+    (0, _("Dushanba")),
+    (1, _("Seshanba")),
+    (2, _("Chorshanba")),
+    (3, _("Payshanba")),
+    (4, _("Juma")),
+    (5, _("Shanba")),
+    (6, _("Yakshanba")),
 ]
 
 
@@ -19,22 +20,22 @@ class WorkScheduleForm(forms.ModelForm):
         choices=WEEKDAY_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False,
-        label="Ish kunlari",
-        help_text="Ish ishlanadigan hafta kunlarini tanlang.",
+        label=_("Ish kunlari"),
+        help_text=_("Ish ishlanadigan hafta kunlarini tanlang."),
     )
 
     class Meta:
         model = WorkSchedule
         fields = ["name", "work_start_time", "work_end_time", "grace_period_minutes", "is_active"]
         labels = {
-            "name": "Grafik nomi",
-            "work_start_time": "Ish boshlanish vaqti",
-            "work_end_time": "Ish tugash vaqti",
-            "grace_period_minutes": "Ruxsat etilgan muhlat (daqika)",
-            "is_active": "Faol",
+            "name": _("Grafik nomi"),
+            "work_start_time": _("Ish boshlanish vaqti"),
+            "work_end_time": _("Ish tugash vaqti"),
+            "grace_period_minutes": _("Ruxsat etilgan muhlat (daqika)"),
+            "is_active": _("Faol"),
         }
         help_texts = {
-            "grace_period_minutes": "Ish boshlanish vaqtidan keyin shuncha daqiqa kechikishga ruxsat.",
+            "grace_period_minutes": _("Ish boshlanish vaqtidan keyin shuncha daqiqa kechikishga ruxsat."),
         }
         input_class = "mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400"
         checkbox_class = "rounded border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-500 h-4 w-4"
@@ -78,17 +79,17 @@ class EmployeeForm(forms.ModelForm):
             "is_active", "device_person_id", "telegram_username",
         ]
         labels = {
-            "employee_id": "Xodim ID",
-            "first_name": "Ism",
-            "last_name": "Familiya",
-            "department": "Bo‘lim",
-            "work_schedule": "Ish grafigi",
-            "work_start_time": "Ish boshlanish vaqti (grafik tanlanmasa)",
-            "work_end_time": "Ish tugash vaqti (grafik tanlanmasa)",
-            "grace_period_minutes": "Ruxsat etilgan muhlat (grafik tanlanmasa)",
-            "is_active": "Faol",
-            "device_person_id": "Qurilma shaxs ID",
-            "telegram_username": "Telegram username (ixtiyoriy)",
+            "employee_id": _("Xodim ID"),
+            "first_name": _("Ism"),
+            "last_name": _("Familiya"),
+            "department": _("Bo'lim"),
+            "work_schedule": _("Ish grafigi"),
+            "work_start_time": _("Ish boshlanish vaqti (grafik tanlanmasa)"),
+            "work_end_time": _("Ish tugash vaqti (grafik tanlanmasa)"),
+            "grace_period_minutes": _("Ruxsat etilgan muhlat (grafik tanlanmasa)"),
+            "is_active": _("Faol"),
+            "device_person_id": _("Qurilma shaxs ID"),
+            "telegram_username": _("Telegram username (ixtiyoriy)"),
         }
         input_class = "mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400"
         checkbox_class = "rounded border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-500 h-4 w-4"

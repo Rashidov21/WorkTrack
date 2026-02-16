@@ -29,7 +29,7 @@
     <tbody>
       {% for p in penalties %}
       <tr class="hover:bg-slate-50">
-        <td class="px-4 py-2"><a href="{% url 'penalties:employee_history' p.employee_id %}" class="link-primary">{{ p.employee.employee_id }} {{ p.employee.get_full_name }}</a></td>
+        <td class="px-4 py-2"><a href="{% url 'employees:detail' p.employee.pk %}" class="link-primary">{{ p.employee.employee_id }} {{ p.employee.get_full_name }}</a></td>
         <td class="px-4 py-2 font-medium text-rose-700">{{ p.amount|format_uzs }}</td>
         <td class="px-4 py-2">{{ p.rule.name|default:"—" }}</td>
         <td class="px-4 py-2">{{ p.reason|default:"—" }}</td>

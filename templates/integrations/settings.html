@@ -1,35 +1,36 @@
 {% extends "base.html" %}
-{% block title %}Integratsiya sozlamalari — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Integratsiya sozlamalari" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Integratsiya sozlamalari</h1>
-<p class="text-slate-600 mb-4">Hikvision qurilma (DS-K1T343) va webhook.</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Integratsiya sozlamalari" %}</h1>
+<p class="text-slate-600 mb-4">{% trans "Hikvision qurilma (DS-K1T343) va webhook." %}</p>
 <form method="post" class="max-w-xl space-y-4">
   {% csrf_token %}
   <div>
-    <label class="block text-sm font-medium text-slate-700">Qurilma IP</label>
+    <label class="block text-sm font-medium text-slate-700">{% trans "Qurilma IP" %}</label>
     <input type="text" name="device_ip" value="{{ integration.device_ip }}" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="192.168.1.100">
   </div>
   <div>
-    <label class="block text-sm font-medium text-slate-700">API foydalanuvchi nomi</label>
+    <label class="block text-sm font-medium text-slate-700">{% trans "API foydalanuvchi nomi" %}</label>
     <input type="text" name="api_username" value="{{ integration.api_username }}" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400">
   </div>
   <div>
-    <label class="block text-sm font-medium text-slate-700">API parol</label>
-    <input type="password" name="api_password" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="O‘zgartirmaslik uchun bo‘sh qoldiring">
+    <label class="block text-sm font-medium text-slate-700">{% trans "API parol" %}</label>
+    <input type="password" name="api_password" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="{% trans "O'zgartirmaslik uchun bo'sh qoldiring" %}">
   </div>
   <div class="flex items-center gap-2">
     <input type="checkbox" name="webhook_enabled" {% if integration.webhook_enabled %}checked{% endif %} class="rounded border-slate-300 text-slate-700 focus:ring-2 focus:ring-slate-500 h-4 w-4">
-    <label class="text-sm font-medium text-slate-700">Webhook yoqilgan (qurilmadan hodisalar qabul qilish)</label>
+    <label class="text-sm font-medium text-slate-700">{% trans "Webhook yoqilgan (qurilmadan hodisalar qabul qilish)" %}</label>
   </div>
   <div>
-    <label class="block text-sm font-medium text-slate-700">Webhook maxfiy kalit (ixtiyoriy)</label>
-    <input type="password" name="webhook_secret" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="Saqlash uchun bo‘sh qoldiring. Qurilma X-Webhook-Secret yuboradi">
+    <label class="block text-sm font-medium text-slate-700">{% trans "Webhook maxfiy kalit (ixtiyoriy)" %}</label>
+    <input type="password" name="webhook_secret" class="mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400" placeholder="{% trans "Saqlash uchun bo'sh qoldiring. Qurilma X-Webhook-Secret yuboradi" %}">
   </div>
-  <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">Saqlash</button>
+  <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg">{% trans "Saqlash" %}</button>
 </form>
 <div class="mt-6 p-4 bg-slate-100 rounded-lg">
-  <p class="text-sm font-medium text-slate-700">Webhook URL (POST JSON)</p>
+  <p class="text-sm font-medium text-slate-700">{% trans "Webhook URL (POST JSON)" %}</p>
   <p class="font-mono text-sm break-all mt-1">/integrations/webhook/</p>
-  <p class="text-slate-600 text-sm mt-2">Qurilmani ushbu URL ga hodisa yuborish uchun sozlang. Maxfiy kalit kiritilsa, qurilma <code class="bg-slate-200 px-1">X-Webhook-Secret</code> sarlavhasida yuborishi kerak. Namuna payload uchun README ga qarang.</p>
+  <p class="text-slate-600 text-sm mt-2">{% trans "Qurilmani ushbu URL ga hodisa yuborish uchun sozlang. Maxfiy kalit kiritilsa, qurilma X-Webhook-Secret sarlavhasida yuborishi kerak. Namuna payload uchun README ga qarang." %}</p>
 </div>
 {% endblock %}

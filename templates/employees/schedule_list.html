@@ -1,20 +1,21 @@
 {% extends "base.html" %}
-{% block title %}Ish grafiklari — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Ish grafiklari" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Ish grafiklari</h1>
-<p class="text-slate-600 mb-4">Xodimlarga tayinlangan grafik bo‘yicha kechikish va jarimalar hisoblanadi. Grafik tanlanmagan xodimlar o‘z vaqtlariga ega.</p>
-<a href="{% url 'employees:schedule_add' %}" class="inline-block px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 mb-4">Grafik qo‘shish</a>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Ish grafiklari" %}</h1>
+<p class="text-slate-600 mb-4">{% trans "Xodimlarga tayinlangan grafik bo'yicha kechikish va jarimalar hisoblanadi. Grafik tanlanmagan xodimlar o'z vaqtlariga ega." %}</p>
+<a href="{% url 'employees:schedule_add' %}" class="inline-block px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 mb-4">{% trans "Grafik qo'shish" %}</a>
 <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Nomi</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Boshlash</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Tugash</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Muhlat (daq)</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Ish kunlari</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Faol</th>
-        <th class="px-4 py-2 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">Amallar</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">{% trans "Nomi" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">{% trans "Boshlash" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">{% trans "Tugash" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">{% trans "Muhlat (daq)" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">{% trans "Ish kunlari" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">{% trans "Faol" %}</th>
+        <th class="px-4 py-2 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">{% trans "Amallar" %}</th>
       </tr>
     </thead>
     <tbody>
@@ -26,18 +27,18 @@
         <td class="px-4 py-2">{{ s.grace_period_minutes }}</td>
         <td class="px-4 py-2 text-sm text-slate-600">{{ s.working_days }}</td>
         <td class="px-4 py-2">
-          <span class="px-2 py-0.5 rounded text-sm {% if s.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{{ s.is_active|yesno:"Ha,Yo‘q" }}</span>
+          <span class="px-2 py-0.5 rounded text-sm {% if s.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{% if s.is_active %}{% trans "Ha" %}{% else %}{% trans "Yo'q" %}{% endif %}</span>
         </td>
         <td class="px-4 py-2 text-right">
-          <a href="{% url 'employees:schedule_edit' s.pk %}" class="inline-flex p-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" title="Tahrirlash" aria-label="Tahrirlash"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a>
-          <a href="{% url 'employees:schedule_delete' s.pk %}" class="inline-flex p-1.5 rounded border border-red-200 text-red-600 hover:bg-red-50 ml-1" title="O‘chirish" aria-label="O‘chirish" data-confirm="Rostan ham bu grafikni o‘chirmoqchimisiz?"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
+          <a href="{% url 'employees:schedule_edit' s.pk %}" class="inline-flex p-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" title="{% trans 'Tahrirlash' %}" aria-label="{% trans 'Tahrirlash' %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a>
+          <a href="{% url 'employees:schedule_delete' s.pk %}" class="inline-flex p-1.5 rounded border border-red-200 text-red-600 hover:bg-red-50 ml-1" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu grafikni o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
         </td>
       </tr>
       {% empty %}
       <tr><td colspan="7" class="px-4 py-10 text-center">
         <div class="flex flex-col items-center gap-2 text-slate-500">
           <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <span>Ish grafiklari yo‘q. Grafik qo‘shing yoki xodimlarda shaxsiy vaqtlardan foydalaning.</span>
+          <span>{% trans "Ish grafiklari yo'q. Grafik qo'shing yoki xodimlarda shaxsiy vaqtlardan foydalaning." %}</span>
         </div>
       </td></tr>
       {% endfor %}

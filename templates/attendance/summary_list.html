@@ -1,28 +1,29 @@
 {% extends "base.html" %}
-{% block title %}Kunlik xulosa — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Kunlik xulosa" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Kunlik xulosa</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Kunlik xulosa" %}</h1>
 <form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
   <input type="date" name="date" value="{{ selected_date }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 min-h-[42px]">
-  <select name="status" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="">Hammasi</option><option value="present">Keldi</option><option value="late">Kechikdi</option><option value="absent">Kelmadi</option></select>
-  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Qo‘llash</button>
+  <select name="status" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="">{% trans "Hammasi" %}</option><option value="present">{% trans "Keldi" %}</option><option value="late">{% trans "Kechikdi" %}</option><option value="absent">{% trans "Kelmadi" %}</option></select>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Qo'llash" %}</button>
 </form>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Xodim</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Holat</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Kelish</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Ketish</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Ishlash (daq)</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Kechikish (daq)</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Xodim" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Holat" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Kelish" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Ketish" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Ishlash (daq)" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Kechikish (daq)" %}</th>
       </tr>
     </thead>
     <tbody>
       {% for s in summaries %}
       <tr class="hover:bg-slate-50">
-        <td class="px-4 py-2">{{ s.employee.employee_id }} {{ s.employee.get_full_name }}</td>
+        <td class="px-4 py-2"><a href="{% url 'employees:detail' s.employee.pk %}" class="link-primary">{{ s.employee.employee_id }} {{ s.employee.get_full_name }}</a></td>
         <td class="px-4 py-2">{{ s.get_status_display }}</td>
         <td class="px-4 py-2">{% if s.check_in_time %}{{ s.check_in_time|time:"H:i" }}{% else %}—{% endif %}</td>
         <td class="px-4 py-2">{% if s.check_out_time %}{{ s.check_out_time|time:"H:i" }}{% else %}—{% endif %}</td>
@@ -33,7 +34,7 @@
       <tr><td colspan="6" class="px-4 py-10 text-center">
         <div class="flex flex-col items-center gap-2 text-slate-500">
           <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <span>Ushbu sana uchun ma’lumot yo‘q.</span>
+          <span>{% trans "Ushbu sana uchun ma'lumot yo'q." %}</span>
         </div>
       </td></tr>
       {% endfor %}

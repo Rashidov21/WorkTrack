@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Xodimni o‘chirish — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Xodimni o'chirish" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Xodimni o‘chirish</h1>
-<p class="mb-4"><strong>{{ employee.get_full_name }} ({{ employee.employee_id }})</strong> ni rostdan ham o‘chirmoqchimisiz?</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Xodimni o'chirish" %}</h1>
+<p class="mb-4">{% blocktrans with name=employee.get_full_name eid=employee.employee_id %}<strong>{{ name }} ({{ eid }})</strong> ni rostdan ham o'chirmoqchimisiz?{% endblocktrans %}</p>
 <form method="post">
   {% csrf_token %}
-  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">O‘chirish</button>
-  <a href="{% url 'employees:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
+  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">{% trans "O'chirish" %}</button>
+  <a href="{% url 'employees:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Bekor qilish" %}</a>
 </form>
 {% endblock %}

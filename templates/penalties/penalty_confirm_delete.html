@@ -1,17 +1,18 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load core_extras %}
-{% block title %}Jarimani o‘chirish — {{ APP_NAME }}{% endblock %}
+{% block title %}{% trans "Jarimani o'chirish" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Jarimani o‘chirish</h1>
-<p class="mb-4 text-slate-600">Haqiqatan ham bu jarimani o‘chirmoqchimisiz?</p>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Jarimani o'chirish" %}</h1>
+<p class="mb-4 text-slate-600">{% trans "Haqiqatan ham bu jarimani o'chirmoqchimisiz?" %}</p>
 <div class="bg-slate-50 rounded-lg p-4 mb-4 max-w-md">
   <p><strong>{{ penalty.employee.employee_id }}</strong> {{ penalty.employee.get_full_name }}</p>
-  <p>Summa: {{ penalty.amount|format_uzs }}</p>
-  <p>Sana: {{ penalty.created_at|date }}</p>
+  <p>{% trans "Summa" %}: {{ penalty.amount|format_uzs }}</p>
+  <p>{% trans "Sana" %}: {{ penalty.created_at|date }}</p>
 </div>
 <form method="post">
   {% csrf_token %}
-  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">O‘chirish</button>
-  <a href="{% url 'penalties:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
+  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">{% trans "O'chirish" %}</button>
+  <a href="{% url 'penalties:list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Bekor qilish" %}</a>
 </form>
 {% endblock %}

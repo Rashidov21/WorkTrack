@@ -1,17 +1,18 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load core_extras %}
 {% block title %}{{ employee.get_full_name }} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
   <div>
-    <a href="{% url 'employees:list' %}" class="link-primary text-sm mb-2 inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg> Xodimlar</a>
+    <a href="{% url 'employees:list' %}" class="link-primary text-sm mb-2 inline-flex items-center gap-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg> {% trans "Xodimlar" %}</a>
     <h1 class="text-2xl font-semibold text-slate-800">{{ employee.get_full_name }}</h1>
     <p class="text-slate-600 mt-1 font-mono">{{ employee.employee_id }}{% if employee.department %} · {{ employee.department }}{% endif %}</p>
   </div>
   {% if user.role == 'admin' %}
   <div class="flex gap-2">
-    <a href="{% url 'employees:edit' employee.pk %}" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700">Tahrirlash</a>
-    <a href="{% url 'employees:delete' employee.pk %}" class="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50" data-confirm="Rostan ham bu xodimni o‘chirmoqchimisiz?">O‘chirish</a>
+    <a href="{% url 'employees:edit' employee.pk %}" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700">{% trans "Tahrirlash" %}</a>
+    <a href="{% url 'employees:delete' employee.pk %}" class="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50" data-confirm="{% trans "Rostan ham bu xodimni o'chirmoqchimisiz?" %}">{% trans "O'chirish" %}</a>
   </div>
   {% endif %}
 </div>
@@ -22,8 +23,8 @@
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
     </span>
     <div>
-      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Grafik</p>
-      <p class="mt-1 text-slate-800">{% if employee.work_schedule %}{{ employee.work_schedule.name }}{% else %}Shaxsiy vaqtlar{% endif %}</p>
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Grafik" %}</p>
+      <p class="mt-1 text-slate-800">{% if employee.work_schedule %}{{ employee.work_schedule.name }}{% else %}{% trans "Shaxsiy vaqtlar" %}{% endif %}</p>
     </div>
   </div>
   <div class="bg-white rounded-xl shadow p-4 border border-slate-200 flex items-start gap-3">
@@ -31,7 +32,7 @@
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
     </span>
     <div>
-      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Ish vaqti</p>
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Ish vaqti" %}</p>
       <p class="mt-1 text-slate-800">{{ employee.work_start_time|time:"H:i" }} — {{ employee.work_end_time|time:"H:i" }}</p>
     </div>
   </div>
@@ -40,8 +41,8 @@
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
     </span>
     <div>
-      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Holat</p>
-      <p class="mt-1"><span class="px-2 py-0.5 rounded text-sm {% if employee.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{{ employee.is_active|yesno:"Faol,Nofaol" }}</span></p>
+      <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">{% trans "Holat" %}</p>
+      <p class="mt-1"><span class="px-2 py-0.5 rounded text-sm {% if employee.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{% if employee.is_active %}{% trans "Faol" %}{% else %}{% trans "Nofaol" %}{% endif %}</span></p>
     </div>
   </div>
 </div>
@@ -50,18 +51,18 @@
   <section class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
     <h2 class="text-lg font-medium text-slate-800 p-4 border-b border-slate-200 flex items-center gap-2">
       <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-      Kunlik xulosa (oxirgi 30)
+      {% trans "Kunlik xulosa (oxirgi 30)" %}
     </h2>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Sana</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Holat</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kelish</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Ketish</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Ishlash (daq)</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kechikish (daq)</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sana" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Holat" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kelish" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Ketish" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Ishlash (daq)" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kechikish (daq)" %}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
@@ -75,25 +76,25 @@
             <td class="px-4 py-2">{{ s.minutes_late|default:"0" }}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">Kunlik xulosa yo‘q.</td></tr>
+          <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">{% trans "Kunlik xulosa yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <div class="p-2 border-t"><a href="{% url 'attendance:summary_list' %}?employee_id={{ employee.employee_id }}" class="link-primary text-sm inline-flex items-center gap-1">To‘liq kunlik xulosa <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a></div>
+    <div class="p-2 border-t"><a href="{% url 'attendance:summary_list' %}?employee_id={{ employee.employee_id }}" class="link-primary text-sm inline-flex items-center gap-1">{% trans "To'liq kunlik xulosa" %} <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a></div>
   </section>
 
   <section class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
     <h2 class="text-lg font-medium text-slate-800 p-4 border-b border-slate-200 flex items-center gap-2">
       <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      Davomat logi (oxirgi 50)
+      {% trans "Davomat logi (oxirgi 50)" %}
     </h2>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Tur</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Vaqt</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Tur" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Vaqt" %}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
@@ -103,26 +104,26 @@
             <td class="px-4 py-2">{{ log.timestamp|date:"Y-m-d H:i" }}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="2" class="px-4 py-8 text-center text-slate-500">Davomat logi yo‘q.</td></tr>
+          <tr><td colspan="2" class="px-4 py-8 text-center text-slate-500">{% trans "Davomat logi yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-    <div class="p-2 border-t"><a href="{% url 'attendance:log_list' %}?employee_id={{ employee.employee_id }}" class="link-primary text-sm inline-flex items-center gap-1">To‘liq davomat logi <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a></div>
+    <div class="p-2 border-t"><a href="{% url 'attendance:log_list' %}?employee_id={{ employee.employee_id }}" class="link-primary text-sm inline-flex items-center gap-1">{% trans "To'liq davomat logi" %} <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a></div>
   </section>
 
   <section class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
     <h2 class="text-lg font-medium text-slate-800 p-4 border-b border-slate-200 flex items-center gap-2">
       <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      Kechikishlar (oxirgi 30)
+      {% trans "Kechikishlar (oxirgi 30)" %}
     </h2>
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Sana</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kechikish (daq)</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Kelish vaqti</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sana" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kechikish (daq)" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kelish vaqti" %}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
@@ -133,7 +134,7 @@
             <td class="px-4 py-2">{{ r.check_in_time|date:"Y-m-d H:i" }}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="3" class="px-4 py-8 text-center text-slate-500">Kechikish yozuvlari yo‘q.</td></tr>
+          <tr><td colspan="3" class="px-4 py-8 text-center text-slate-500">{% trans "Kechikish yozuvlari yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -146,18 +147,18 @@
         <span class="flex items-center justify-center w-9 h-9 rounded-lg bg-rose-100 text-rose-600">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </span>
-        Jarimalar (oxirgi 30)
+        {% trans "Jarimalar (oxirgi 30)" %}
       </h2>
-      <a href="{% url 'penalties:list' %}?employee_id={{ employee.employee_id }}" class="link-primary text-sm font-medium inline-flex items-center gap-1">Barcha jarimalar <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+      <a href="{% url 'penalties:list' %}?employee_id={{ employee.employee_id }}" class="link-primary text-sm font-medium inline-flex items-center gap-1">{% trans "Barcha jarimalar" %} <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
     </div>
     <div class="overflow-x-auto bg-white">
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Summa</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Sabab</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Sana</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">Qo‘lda</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Summa" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sabab" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sana" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Qo'lda" %}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
@@ -166,10 +167,10 @@
             <td class="px-4 py-2 font-medium text-rose-700">{{ p.amount|format_uzs }}</td>
             <td class="px-4 py-2">{{ p.reason|default:"—" }}</td>
             <td class="px-4 py-2">{{ p.created_at|date }}</td>
-            <td class="px-4 py-2">{{ p.is_manual|yesno:"Ha,Yo‘q" }}</td>
+            <td class="px-4 py-2">{% if p.is_manual %}{% trans "Ha" %}{% else %}{% trans "Yo'q" %}{% endif %}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">Jarimalar yo‘q.</td></tr>
+          <tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">{% trans "Jarimalar yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% block title %}{% if employee %}Tahrirlash{% else %}Qo‘shish{% endif %} — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% if employee %}{% trans "Tahrirlash" %}{% else %}{% trans "Qo'shish" %}{% endif %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if employee %}Xodimni tahrirlash{% else %}Xodim qo‘shish{% endif %}</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% if employee %}{% trans "Xodimni tahrirlash" %}{% else %}{% trans "Xodim qo'shish" %}{% endif %}</h1>
 <form method="post" class="max-w-xl space-y-6">
   {% csrf_token %}
   {% if form.non_field_errors %}<div class="text-red-600">{{ form.non_field_errors }}</div>{% endif %}
@@ -30,13 +31,13 @@
   <div>
     <label for="{{ form.work_schedule.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_schedule.label }}</label>
     {{ form.work_schedule }}
-    <p class="mt-1.5 text-xs text-slate-500">Umumiy grafik tanlang yoki bo‘sh qoldiring — bo‘sh qoldirsangiz, quyidagi shaxsiy vaqtlar ishlatiladi (har bir xodim uchun individual grafik).</p>
+    <p class="mt-1.5 text-xs text-slate-500">{% trans "Umumiy grafik tanlang yoki bo'sh qoldiring — bo'sh qoldirsangiz, quyidagi shaxsiy vaqtlar ishlatiladi (har bir xodim uchun individual grafik)." %}</p>
     {% if form.work_schedule.errors %}<p class="text-red-600 text-sm mt-1">{{ form.work_schedule.errors.0 }}</p>{% endif %}
   </div>
 
   <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4">
-    <h2 class="text-sm font-semibold text-slate-700">Shaxsiy ish vaqtlari (grafik tanlanmasa)</h2>
-    <p class="text-xs text-slate-500">Ish grafigi tanlanmagan xodimlar uchun bu vaqtlar ishlatiladi — har bir xodim uchun individual.</p>
+    <h2 class="text-sm font-semibold text-slate-700">{% trans "Shaxsiy ish vaqtlari (grafik tanlanmasa)" %}</h2>
+    <p class="text-xs text-slate-500">{% trans "Ish grafigi tanlanmagan xodimlar uchun bu vaqtlar ishlatiladi — har bir xodim uchun individual." %}</p>
     <div>
       <label for="{{ form.work_start_time.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.work_start_time.label }}</label>
       {{ form.work_start_time }}
@@ -69,13 +70,13 @@
   <div>
     <label for="{{ form.telegram_username.id_for_label }}" class="block text-sm font-medium text-slate-700">{{ form.telegram_username.label }}</label>
     {{ form.telegram_username }}
-    <p class="mt-1 text-xs text-slate-500">Kechikish xabarlarida guruhda tag qilish uchun (@ siz, masalan: john_doe)</p>
+    <p class="mt-1 text-xs text-slate-500">{% trans "Kechikish xabarlarida guruhda tag qilish uchun (@ siz, masalan: john_doe)" %}</p>
     {% if form.telegram_username.errors %}<p class="text-red-600 text-sm mt-1">{{ form.telegram_username.errors.0 }}</p>{% endif %}
   </div>
 
   <div class="flex gap-2 pt-2">
-    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">Saqlash</button>
-    <a href="{% url 'employees:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Bekor qilish</a>
+    <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Saqlash" %}</button>
+    <a href="{% url 'employees:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Bekor qilish" %}</a>
   </div>
 </form>
 {% endblock %}

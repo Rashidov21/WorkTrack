@@ -1,33 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Kechikishlar hisoboti — {{ APP_NAME }}{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Kechikishlar hisoboti" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-semibold text-slate-800 mb-4">Kechikishlar hisoboti</h1>
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Kechikishlar hisoboti" %}</h1>
 <form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
-  <select name="period" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="day" {% if period == 'day' %}selected{% endif %}>Kun</option><option value="week" {% if period == 'week' %}selected{% endif %}>Hafta</option><option value="month" {% if period == 'month' %}selected{% endif %}>Oy</option><option value="year" {% if period == 'year' %}selected{% endif %}>Yil</option></select>
-  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">Qo‘llash</button>
-  <a href="{% url 'reports:export_lateness' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 ml-2">Excelga yuklash</a>
+  <select name="period" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="day" {% if period == 'day' %}selected{% endif %}>{% trans "Kun" %}</option><option value="week" {% if period == 'week' %}selected{% endif %}>{% trans "Hafta" %}</option><option value="month" {% if period == 'month' %}selected{% endif %}>{% trans "Oy" %}</option><option value="year" {% if period == 'year' %}selected{% endif %}>{% trans "Yil" %}</option></select>
+  <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Qo'llash" %}</button>
+  <a href="{% url 'reports:export_lateness' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 ml-2">{% trans "Excelga yuklash" %}</a>
 </form>
-<p class="text-slate-600 mb-4">{{ start }} dan {{ end }} gacha</p>
+<p class="text-slate-600 mb-4">{% blocktrans with start=start end=end %}{{ start }} dan {{ end }} gacha{% endblocktrans %}</p>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Sana</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Xodim</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Kechikish (daq)</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">Kelish vaqti</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Sana" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Xodim" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Kechikish (daq)" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Kelish vaqti" %}</th>
       </tr>
     </thead>
     <tbody>
       {% for r in records %}
       <tr class="hover:bg-slate-50">
         <td class="px-4 py-2">{{ r.date }}</td>
-        <td class="px-4 py-2">{{ r.employee.employee_id }} — {{ r.employee.get_full_name }}</td>
+        <td class="px-4 py-2"><a href="{% url 'employees:detail' r.employee.pk %}" class="link-primary">{{ r.employee.employee_id }} — {{ r.employee.get_full_name }}</a></td>
         <td class="px-4 py-2">{{ r.minutes_late }}</td>
         <td class="px-4 py-2">{{ r.check_in_time|date:"Y-m-d H:i" }}</td>
       </tr>
       {% empty %}
-      <tr><td colspan="4" class="px-4 py-10 text-center"><div class="flex flex-col items-center gap-2 text-slate-500"><svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>Kechikish yozuvlari yo‘q.</span></div></td></tr>
+      <tr><td colspan="4" class="px-4 py-10 text-center"><div class="flex flex-col items-center gap-2 text-slate-500"><svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>{% trans "Kechikish yozuvlari yo'q." %}</span></div></td></tr>
       {% endfor %}
     </tbody>
   </table>
