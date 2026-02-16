@@ -1,9 +1,10 @@
 """Core views: dashboard and settings redirect."""
+import json
 from django.views.generic import TemplateView, RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Sum
 from django.utils import timezone
-from datetime import date
+from datetime import date, timedelta
 
 from employees.models import Employee
 from attendance.models import AttendanceLog, DailySummary
@@ -37,7 +38,57 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             s=Sum("amount")
         )["s"] or 0
         context["summaries_today"] = summaries_list[:20]
-        context["chart_placeholder"] = True
+
+        # Chart: oxirgi 7 kun — har kuni kelganlar soni (present + late)
+        week_ago = today - timedelta(days=6)
+        chart_labels = []
+        chart_data = []
+        for i in range(7):
+            d = today - timedelta(days=6 - i)
+            chart_labels.append(d.strftime("%d.%m"))
+            cnt = DailySummary.objects.filter(
+                date=d,
+                status__in=[DailySummary.STATUS_PRESENT, DailySummary.STATUS_LATE],
+            ).count()
+            chart_data.append(cnt)
+        context["chart_labels_json"] = json.dumps(chart_labels)
+        context["chart_data_json"] = json.dumps(chart_data)
+
+        # Kechikkanlar (bugun)
+        context["late_today"] = [s for s in summaries_list if s.status == DailySummary.STATUS_LATE]
+
+        # Haftalik (oxirgi 7 kun)
+        context["week_came_count"] = DailySummary.objects.filter(
+            date__gte=week_ago, date__lte=today,
+            status__in=[DailySummary.STATUS_PRESENT, DailySummary.STATUS_LATE],
+        ).count()
+        context["week_late_count"] = DailySummary.objects.filter(
+            date__gte=week_ago, date__lte=today, status=DailySummary.STATUS_LATE,
+        ).count()
+        w_pen = Penalty.objects.filter(
+            created_at__date__gte=week_ago, created_at__date__lte=today,
+        ).aggregate(s=Sum("amount"))
+        context["week_penalties_sum"] = int(w_pen["s"] or 0)
+
+        # Oylik (joriy oy)
+        month_start = today.replace(day=1)
+        context["month_came_count"] = DailySummary.objects.filter(
+            date__gte=month_start, date__lte=today,
+            status__in=[DailySummary.STATUS_PRESENT, DailySummary.STATUS_LATE],
+        ).count()
+        context["month_late_count"] = DailySummary.objects.filter(
+            date__gte=month_start, date__lte=today, status=DailySummary.STATUS_LATE,
+        ).count()
+        m_pen = Penalty.objects.filter(
+            created_at__date__gte=month_start, created_at__date__lte=today,
+        ).aggregate(s=Sum("amount"), c=Count("id"))
+        context["month_penalties_sum"] = int(m_pen["s"] or 0)
+        context["month_penalties_count"] = m_pen["c"] or 0
+
+        # Xodimlar
+        context["employees_active_count"] = Employee.objects.filter(is_active=True).count()
+        context["employees_total_count"] = Employee.objects.count()
+
         return context
 
 

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load core_extras %}
 {% block title %}{{ employee.get_full_name }} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -162,7 +163,7 @@
         <tbody class="divide-y divide-slate-200">
           {% for p in penalties %}
           <tr class="hover:bg-slate-50">
-            <td class="px-4 py-2 font-medium text-rose-700">{{ p.amount }}</td>
+            <td class="px-4 py-2 font-medium text-rose-700">{{ p.amount|format_uzs }}</td>
             <td class="px-4 py-2">{{ p.reason|default:"—" }}</td>
             <td class="px-4 py-2">{{ p.created_at|date }}</td>
             <td class="px-4 py-2">{{ p.is_manual|yesno:"Ha,Yo‘q" }}</td>

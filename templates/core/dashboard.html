@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load humanize %}
+{% load humanize core_extras %}
 {% block title %}Boshqaruv paneli — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-6">Boshqaruv paneli</h1>
@@ -19,13 +19,53 @@
   </div>
   <div class="bg-white rounded-xl shadow p-5 border border-slate-200 transition-shadow hover:shadow-md">
     <p class="text-sm text-slate-500 uppercase tracking-wider">Bugungi jarimalar</p>
-    <p class="text-3xl font-bold text-rose-600 mt-1">{{ total_penalties_today|intcomma }}</p>
+    <p class="text-3xl font-bold text-rose-600 mt-1">{{ total_penalties_today|format_uzs }}</p>
   </div>
 </div>
 <div class="bg-white rounded-xl shadow p-6 border border-slate-200 mb-6 transition-shadow hover:shadow-md">
-  <h2 class="text-lg font-medium text-slate-800 mb-4">Davomat trendi (joy egasi)</h2>
-  <div class="h-48 flex items-center justify-center bg-slate-50 rounded-lg text-slate-400 text-sm">Grafik joyi</div>
+  <h2 class="text-lg font-medium text-slate-800 mb-4">Davomat trendi (oxirgi 7 kun)</h2>
+  <div class="h-48 max-w-xs">
+    <canvas id="dashboardChart" width="280" height="192"></canvas>
+  </div>
 </div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Haftalik (kelganlar)</p>
+    <p class="text-2xl font-bold text-slate-800 mt-1">{{ week_came_count|intcomma }}</p>
+    <p class="text-xs text-slate-500 mt-1">Kechikkan: {{ week_late_count|intcomma }} · Jarima: {{ week_penalties_sum|format_uzs }}</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Oylik (kelganlar)</p>
+    <p class="text-2xl font-bold text-slate-800 mt-1">{{ month_came_count|intcomma }}</p>
+    <p class="text-xs text-slate-500 mt-1">Kechikkan: {{ month_late_count|intcomma }} · Jarima: {{ month_penalties_sum|format_uzs }}</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Jarima statistikasi (oy)</p>
+    <p class="text-2xl font-bold text-rose-600 mt-1">{{ month_penalties_sum|format_uzs }}</p>
+    <p class="text-xs text-slate-500 mt-1">Jami {{ month_penalties_count|intcomma }} ta jarima</p>
+  </div>
+  <div class="bg-white rounded-xl shadow p-4 border border-slate-200">
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-wider">Xodimlar</p>
+    <p class="text-2xl font-bold text-slate-800 mt-1">{{ employees_active_count|intcomma }} faol</p>
+    <p class="text-xs text-slate-500 mt-1">Jami {{ employees_total_count|intcomma }} ta</p>
+  </div>
+</div>
+
+{% if late_today %}
+<div class="bg-white rounded-xl shadow border border-amber-200 p-4 mb-6">
+  <h2 class="text-lg font-medium text-slate-800 mb-3 flex items-center gap-2">
+    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    Kechikkanlar (bugun)
+  </h2>
+  <ul class="space-y-1.5 text-sm text-slate-700">
+    {% for s in late_today %}
+    <li>{{ s.employee.get_full_name }} ({{ s.employee.employee_id }}) — {{ s.minutes_late }} daqiqa kechikdi</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
 <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
   <h2 class="text-lg font-medium text-slate-800 p-4 border-b">Bugungi xulosa</h2>
   <div class="overflow-x-auto">
@@ -61,4 +101,31 @@
   </div>
   <div class="p-2 border-t"><a href="{% url 'attendance:summary_list' %}?date={{ today|date:'Y-m-d' }}" class="link-primary text-sm inline-flex items-center gap-1">To‘liq kunlik xulosani ko‘rish <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a></div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {
+  var canvas = document.getElementById('dashboardChart');
+  if (!canvas) return;
+  var labels = {{ chart_labels_json|safe }};
+  var data = {{ chart_data_json|safe }};
+  if (!labels || !data || labels.length === 0) return;
+  new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{ label: 'Kelganlar', data: data, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderColor: 'rgb(5, 150, 105)', borderWidth: 1 }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1 } },
+        x: { maxBarThickness: 36 }
+      }
+    }
+  });
+})();
+</script>
 {% endblock %}
