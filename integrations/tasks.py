@@ -51,7 +51,14 @@ def process_device_event(self, payload: dict):
         if lateness:
             penalty = apply_penalty_for_lateness(lateness)
             if penalty:
-                send_telegram_message.delay(
-                    f"⚠️ Late: {log.employee.get_full_name()} ({log.employee.employee_id}) — {summary.minutes_late} min late. Penalty: {penalty.amount}"
-                )
+                emp = log.employee
+                name = emp.get_full_name()
+                msg_lines = [
+                    f"⏰ Kechikish: {name} (ID: {emp.employee_id}) — {summary.minutes_late} daqiqa kechikdi.",
+                    f"💰 Jarima: {penalty.amount} so'm.",
+                ]
+                if getattr(emp, "telegram_username", None) and str(emp.telegram_username).strip():
+                    username = str(emp.telegram_username).strip().lstrip("@")
+                    msg_lines.append(f"@{username}")
+                send_telegram_message.delay("\n".join(msg_lines))
     return {"ok": True, "created": created, "log_id": log.pk}

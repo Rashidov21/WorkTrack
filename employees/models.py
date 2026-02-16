@@ -70,6 +70,8 @@ class Employee(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     # Optional: Hikvision person ID for device matching
     device_person_id = models.CharField(max_length=100, blank=True)
+    # Optional: Telegram username for notifications (without @); bot will tag in group
+    telegram_username = models.CharField(max_length=100, blank=True, verbose_name="Telegram username (ixtiyoriy)")
 
     class Meta:
         ordering = ["employee_id"]

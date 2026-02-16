@@ -18,22 +18,25 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         today = timezone.now().date()
 
-        # Summaries for today
-        summaries_today = DailySummary.objects.filter(date=today).select_related("employee")
-        present_ids = list(summaries_today.filter(status=DailySummary.STATUS_PRESENT).values_list("employee_id", flat=True))
-        late_ids = list(summaries_today.filter(status=DailySummary.STATUS_LATE).values_list("employee_id", flat=True))
+        # One query for today's summaries
+        summaries_list = list(
+            DailySummary.objects.filter(date=today).select_related("employee").order_by("employee__employee_id")
+        )
+        present_ids = [s.employee_id for s in summaries_list if s.status == DailySummary.STATUS_PRESENT]
+        late_ids = [s.employee_id for s in summaries_list if s.status == DailySummary.STATUS_LATE]
+        present_ids.extend(late_ids)
         absent_ids = list(
-            Employee.objects.filter(is_active=True).exclude(id__in=present_ids + late_ids).values_list("id", flat=True)
+            Employee.objects.filter(is_active=True).exclude(id__in=present_ids).values_list("id", flat=True)
         )
 
         context["today"] = today
-        context["present_count"] = len(present_ids) + len(late_ids)  # present includes on-time + late
+        context["present_count"] = len(summaries_list)
         context["late_count"] = len(late_ids)
         context["absent_count"] = len(absent_ids)
         context["total_penalties_today"] = Penalty.objects.filter(created_at__date=today).aggregate(
             s=Sum("amount")
         )["s"] or 0
-        context["summaries_today"] = summaries_today[:20]
+        context["summaries_today"] = summaries_list[:20]
         context["chart_placeholder"] = True
         return context
 

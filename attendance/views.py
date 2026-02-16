@@ -46,6 +46,9 @@ class DailySummaryListView(LoginRequiredMixin, ListView):
         status = self.request.GET.get("status")
         if status:
             qs = qs.filter(status=status)
+        employee_id = self.request.GET.get("employee_id")
+        if employee_id:
+            qs = qs.filter(employee__employee_id=employee_id)
         return qs.order_by("employee__employee_id")
 
     def get_context_data(self, **kwargs):

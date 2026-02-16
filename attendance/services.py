@@ -21,25 +21,30 @@ def get_employee_by_identifier(employee_id: str = None, device_person_id: str = 
 def create_log_idempotent(employee_id: str, event_type: str, timestamp, source_id: str = "", source: str = "device"):
     """
     Create attendance log if not already present (idempotent by source_id).
+    When source_id is empty, use synthetic key (employee, event_type, minute) to avoid duplicates.
     Returns (log, created).
     """
     employee = get_employee_by_identifier(employee_id=employee_id)
     if not employee:
         return None, False
 
-    if source_id and AttendanceLog.objects.filter(source_id=source_id).exists():
-        return AttendanceLog.objects.get(source_id=source_id), False
-
     if isinstance(timestamp, (str,)):
         timestamp = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
     if timestamp and timezone.is_naive(timestamp):
         timestamp = timezone.make_aware(timestamp)
 
+    if not (source_id and source_id.strip()):
+        start = timestamp.replace(second=0, microsecond=0)
+        source_id = f"gen_{employee.pk}_{event_type}_{start.isoformat()}"
+
+    if AttendanceLog.objects.filter(source_id=source_id).exists():
+        return AttendanceLog.objects.get(source_id=source_id), False
+
     log = AttendanceLog.objects.create(
         employee=employee,
         event_type=event_type,
         timestamp=timestamp,
-        source_id=source_id or "",
+        source_id=source_id,
         source=source,
     )
     return log, True

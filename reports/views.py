@@ -1,6 +1,7 @@
 """Reports: daily/weekly/monthly/yearly with Excel export."""
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, time
 from django.views.generic import TemplateView
+from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.db.models import Sum
@@ -57,7 +58,7 @@ class ReportLatenessView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         start, end, period = get_report_date_range(self.request)
-        context["records"] = LatenessRecord.objects.filter(date__gte=start, date__lte=end).select_related("employee").order_by("-date", "employee__employee_id")
+        context["records"] = LatenessRecord.objects.filter(date__gte=start, date__lte=end).select_related("employee").order_by("-date", "employee__employee_id")[:500]
         context["start"], context["end"] = start, end
         context["period"] = period
         return context
@@ -70,9 +71,12 @@ class ReportPenaltyView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         start, end, period = get_report_date_range(self.request)
-        qs = Penalty.objects.filter(created_at__date__gte=start, created_at__date__lte=end).select_related("employee", "rule").order_by("-created_at")
+        tz = timezone.get_current_timezone()
+        start_dt = timezone.make_aware(datetime.combine(start, time.min), tz)
+        end_dt = timezone.make_aware(datetime.combine(end, time.max), tz)
+        qs = Penalty.objects.filter(created_at__gte=start_dt, created_at__lte=end_dt).select_related("employee", "rule").order_by("-created_at")[:500]
         context["penalties"] = qs
-        context["total"] = qs.aggregate(s=Sum("amount"))["s"] or 0
+        context["total"] = Penalty.objects.filter(created_at__gte=start_dt, created_at__lte=end_dt).aggregate(s=Sum("amount"))["s"] or 0
         context["start"], context["end"] = start, end
         context["period"] = period
         return context

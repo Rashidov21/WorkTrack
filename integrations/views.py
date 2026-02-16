@@ -67,7 +67,7 @@ def _hikvision_event_to_payload(data):
         "employee_id": employee_id or "",
         "event_type": event_type,
         "timestamp": timestamp,
-        "event_id": str(event_id).strip() or "",
+        "event_id": str(event_id).strip() if event_id else "",
     }
 
 

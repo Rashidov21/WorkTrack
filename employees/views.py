@@ -1,5 +1,5 @@
 """Employee CRUD (admin/manager) and WorkSchedule CRUD."""
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
@@ -28,6 +28,22 @@ class EmployeeListView(LoginRequiredMixin, ListView):
         elif active == "0":
             qs = qs.filter(is_active=False)
         return qs.order_by("employee_id")
+
+
+@method_decorator(manager_required, name="dispatch")
+class EmployeeDetailView(LoginRequiredMixin, DetailView):
+    model = Employee
+    template_name = "employees/employee_detail.html"
+    context_object_name = "employee"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        emp = self.object
+        context["attendance_logs"] = emp.attendance_logs.all()[:50]
+        context["daily_summaries"] = emp.daily_summaries.all().order_by("-date")[:30]
+        context["lateness_records"] = emp.lateness_records.all().order_by("-date")[:30]
+        context["penalties"] = emp.penalties.all()[:30]
+        return context
 
 
 @method_decorator(admin_required, name="dispatch")

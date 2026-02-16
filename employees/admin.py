@@ -10,6 +10,6 @@ class WorkScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ["employee_id", "first_name", "last_name", "department", "work_schedule", "work_start_time", "is_active"]
+    list_display = ["employee_id", "first_name", "last_name", "department", "work_schedule", "work_start_time", "telegram_username", "is_active"]
     list_filter = ["is_active", "department", "work_schedule"]
-    search_fields = ["employee_id", "first_name", "last_name"]
+    search_fields = ["employee_id", "first_name", "last_name", "telegram_username"]
