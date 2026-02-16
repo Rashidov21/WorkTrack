@@ -9,8 +9,12 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@tailwindcss/forms@0.5.7"></script>
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
   <div class="w-full max-w-md bg-white rounded-xl shadow-lg border border-slate-200 p-6">
+    <div class="flex items-center justify-center gap-3 mb-6">
+      <img src="{% static 'favicon.svg' %}" alt="" class="w-14 h-14 rounded-xl" aria-hidden="true">
+      <span class="text-2xl font-bold text-slate-800">{{ APP_NAME }}</span>
+    </div>
     <h1 class="text-xl font-semibold text-slate-800 mb-2">Tizimga kirish</h1>
     <p class="text-slate-500 text-sm mb-6">Xodimlar davomati va kechikishlarni kuzatuvchi tizim</p>
     {% if form and form.non_field_errors %}
@@ -34,6 +38,28 @@
       </div>
       <button type="submit" class="w-full bg-slate-800 text-white py-2.5 rounded-lg hover:bg-slate-700 font-medium">Kirish</button>
     </form>
+  </div>
+
+  <div class="w-full max-w-md mt-8 text-center text-sm text-slate-500 space-y-3">
+    <p>
+      <span class="font-medium text-slate-600">Ishlab chiquvchi:</span>
+      <a href="https://geeks-soft.uz" target="_blank" rel="noopener" class="text-blue-600 hover:underline ml-1">Geeks Soft</a>
+      ·
+      <a href="tel:+998902113123" class="text-blue-600 hover:underline">+998 90 211 31 23</a>
+      ·
+      <a href="https://t.me/geeks_support" target="_blank" rel="noopener" class="text-blue-600 hover:underline">@geeks_support</a>
+    </p>
+    <p>
+      <span class="font-medium text-slate-600">Muallif:</span>
+      <a href="https://instagram.com/rashidov_21" target="_blank" rel="noopener" class="text-blue-600 hover:underline ml-1">Instagram</a>
+      ·
+      <a href="https://t.me/abdurahmonrashidov" target="_blank" rel="noopener" class="text-blue-600 hover:underline">Telegram</a>
+      ·
+      <a href="https://youtube.com/@rashidov_21" target="_blank" rel="noopener" class="text-blue-600 hover:underline">YouTube</a>
+      ·
+      <a href="https://linkedin.com/in/rashidov_21" target="_blank" rel="noopener" class="text-blue-600 hover:underline">LinkedIn</a>
+      <span class="text-slate-400"> — Abdurahmon Rashidov</span>
+    </p>
   </div>
 </body>
 </html>
