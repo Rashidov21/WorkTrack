@@ -18,6 +18,46 @@ from .tasks import process_device_event
 logger = logging.getLogger(__name__)
 
 
+def _hikvision_event_to_payload(data):
+    """
+    Hikvision AccessControllerEvent JSON ni WorkTrack payload ga aylantiradi.
+    data: loyiha qabul qiladigan dict (employee_id, event_type, timestamp, event_id).
+    """
+    inner = data.get("AccessControllerEvent") or {}
+    timestamp = data.get("dateTime") or ""
+    employee_id = (
+        data.get("personId")
+        or data.get("cardNo")
+        or data.get("employee_id")
+        or inner.get("personId")
+        or inner.get("cardNo")
+        or inner.get("employee_id")
+    )
+    if employee_id is None:
+        serial_no = inner.get("serialNo") or data.get("serialNo")
+        if serial_no is not None:
+            employee_id = str(serial_no)
+    if employee_id is not None:
+        employee_id = str(employee_id)
+    sub_event = inner.get("subEventType") or data.get("subEventType")
+    event_type = "check_in"
+    if sub_event is not None:
+        if sub_event in (1025, 2049):
+            event_type = "check_out"
+        elif sub_event in (1024, 2048):
+            event_type = "check_in"
+    event_id = (
+        data.get("event_id")
+        or f"{data.get('shortSerialNumber', '')}_{timestamp}_{inner.get('serialNo', '')}"
+    )
+    return {
+        "employee_id": employee_id or "",
+        "event_type": event_type,
+        "timestamp": timestamp,
+        "event_id": str(event_id).strip() or "",
+    }
+
+
 def _get_client_ip(request):
     xff = request.META.get("HTTP_X_FORWARDED_FOR")
     return (xff.split(",")[0].strip() if xff else None) or request.META.get("REMOTE_ADDR") or "unknown"
@@ -30,24 +70,36 @@ class DeviceWebhookView(View):
     CSRF exempt; rate limit per IP. Secret tekshirilmaydi (qurilma yuborolmaydi).
     """
     def post(self, request):
-        # Qurilma qanday formatda yuborayotganini bilish uchun (keyin o‘chirish mumkin)
-        content_type = request.META.get("CONTENT_TYPE", "")
-        raw_body = request.body[:2000] if request.body else b""
-        logger.warning(
-            "webhook raw: content_type=%s body=%s",
-            content_type,
-            raw_body,
-        )
-        try:
-            body = json.loads(request.body)
-        except json.JSONDecodeError:
-            return HttpResponseBadRequest("Invalid JSON")
+        content_type = request.META.get("CONTENT_TYPE", "").lower()
+
+        if "multipart/form-data" in content_type:
+            raw = request.POST.get("AccessControllerEvent")
+            if not raw:
+                logger.warning("webhook multipart: AccessControllerEvent part missing")
+                return HttpResponseBadRequest("Missing AccessControllerEvent")
+            try:
+                data = json.loads(raw)
+            except json.JSONDecodeError as e:
+                logger.warning("webhook multipart: invalid JSON in AccessControllerEvent: %s", e)
+                return HttpResponseBadRequest("Invalid JSON in AccessControllerEvent")
+            payload = _hikvision_event_to_payload(data)
+            if not payload.get("employee_id"):
+                logger.warning("webhook multipart: no employee_id/personId/serialNo in payload")
+            items = [payload]
+        else:
+            try:
+                body = json.loads(request.body)
+            except json.JSONDecodeError:
+                return HttpResponseBadRequest("Invalid JSON")
+            if not isinstance(body, dict):
+                items = body if isinstance(body, list) else [body]
+            else:
+                items = [body]
 
         integration = IntegrationSettings.get_settings()
         if not integration.webhook_enabled:
             return JsonResponse({"ok": False, "reason": "webhook_disabled"}, status=503)
 
-        # Rate limit by IP
         ip = _get_client_ip(request)
         minute_bucket = int(time.time() // 60)
         cache_key = f"webhook_rate_{ip}_{minute_bucket}"
@@ -57,13 +109,8 @@ class DeviceWebhookView(View):
             return JsonResponse({"ok": False, "reason": "rate_limit_exceeded"}, status=429)
         cache.set(cache_key, current + 1, timeout=120)
 
-        if not isinstance(body, dict):
-            body = body if isinstance(body, list) else [body]
-        else:
-            body = [body]
-
         results = []
-        for item in body:
+        for item in items:
             process_device_event.delay(item)
             results.append({"queued": True})
 
