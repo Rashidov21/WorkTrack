@@ -545,3 +545,31 @@ msgstr "Вперёд"
 
 msgid "{{ n }} / {{ p }} sahifa, jami {{ c }} ta"
 msgstr "{{ n }} / {{ p }} стр., всего {{ c }}"
+
+# Oylikdan foiz jarima qoidasi
+msgid "Oylikdan foiz"
+msgstr "Процент от оклада"
+
+msgid "Chegara (daq)"
+msgstr "Лимит (мин)"
+
+msgid "Foiz (≤ chegara)"
+msgstr "Процент (≤ лимит)"
+
+msgid "Foiz (> chegara)"
+msgstr "Процент (> лимит)"
+
+msgid "Summa / foiz"
+msgstr "Сумма / процент"
+
+msgid "Foiz (%)"
+msgstr "Процент (%)"
+
+msgid "daq"
+msgstr "мин"
+
+msgid "Kechikish %(min)s daq — oylikdan %(p)s%%"
+msgstr "Опоздание %(min)s мин — %(p)s%% от оклада"
+
+msgid "Late %(min)s min on %(date)s"
+msgstr "Опоздание %(min)s мин за %(date)s"

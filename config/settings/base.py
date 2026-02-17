@@ -132,6 +132,16 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_DEFAULT_QUEUE = "worktrack"
 
+# Kun oxirida (20:00) davomat xulosasi va jarimalar bir marta hisoblanadi
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    "run-daily-summary-and-penalties": {
+        "task": "attendance.tasks.run_daily_summary_and_penalties",
+        "schedule": crontab(hour=20, minute=0),
+    },
+}
+
 # Audit log (simple file or DB; extend as needed)
 AUDIT_LOG_ENABLED = True
 WEBHOOK_RATE_LIMIT = env("WEBHOOK_RATE_LIMIT")

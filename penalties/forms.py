@@ -12,12 +12,36 @@ TEXTAREA_CLASS = "mt-1 block w-full rounded-lg border border-slate-300 shadow-sm
 class PenaltyRuleForm(forms.ModelForm):
     class Meta:
         model = PenaltyRule
-        fields = ["name", "rule_type", "amount_per_unit", "is_active"]
-        labels = {"name": _("Nomi"), "rule_type": _("Turi"), "amount_per_unit": _("Summa / birlik"), "is_active": _("Faol")}
+        fields = [
+            "name", "rule_type",
+            "threshold_minutes", "percent_if_late_le_threshold", "percent_if_late_gt_threshold",
+            "amount_per_unit", "max_amount_per_day",
+            "is_active",
+        ]
+        labels = {
+            "name": _("Nomi"),
+            "rule_type": _("Turi"),
+            "threshold_minutes": _("Chegara (daq)"),
+            "percent_if_late_le_threshold": _("Foiz (≤ chegara)"),
+            "percent_if_late_gt_threshold": _("Foiz (> chegara)"),
+            "amount_per_unit": _("Summa / birlik"),
+            "max_amount_per_day": _("Kunlik maksimum (so'm)"),
+            "is_active": _("Faol"),
+        }
+        help_texts = {
+            "threshold_minutes": _("Oylikdan foiz: shu daqiqagacha birinchi foiz, undan keyin ikkinchi foiz (masalan 30)."),
+            "percent_if_late_le_threshold": _("Kechikish chegara daqiqagacha bo'lsa (masalan 1 = 1%)."),
+            "percent_if_late_gt_threshold": _("Kechikish chegaradan oshsa (masalan 2 = 2%)."),
+            "max_amount_per_day": _("Bir xodim uchun shu kundagi jami jarima shu summandan oshmasin. Faqat har daqiqaga/qat'iy summa uchun."),
+        }
         widgets = {
             "name": forms.TextInput(attrs={"class": INPUT_CLASS}),
             "rule_type": forms.Select(attrs={"class": SELECT_CLASS}),
+            "threshold_minutes": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "30"}),
+            "percent_if_late_le_threshold": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "1", "step": "0.01"}),
+            "percent_if_late_gt_threshold": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "2", "step": "0.01"}),
             "amount_per_unit": forms.NumberInput(attrs={"class": INPUT_CLASS}),
+            "max_amount_per_day": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "50000"}),
             "is_active": forms.CheckboxInput(attrs={"class": CHECKBOX_CLASS}),
         }
 
