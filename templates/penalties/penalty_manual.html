@@ -3,10 +3,36 @@
 {% block title %}{% trans "Qo'lda jarima" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Qo'lda jarima qo'shish" %}</h1>
-<form method="post" class="max-w-xl space-y-4">{% csrf_token %}{% for field in form %}<div><label class="block text-sm font-medium text-slate-700">{{ field.label }}</label>{{ field }}{% if field.errors %}<p class="text-red-600 text-sm">{{ field.errors.0 }}</p>{% endif %}</div>{% endfor %}
+<form method="post" class="max-w-xl space-y-4" id="manual-penalty-form">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="manual-penalty-field" data-field="{{ field.name }}">
+    <label class="block text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field }}
+    {% if field.help_text %}<p class="text-slate-500 text-xs mt-0.5">{{ field.help_text }}</p>{% endif %}
+    {% if field.errors %}<p class="text-red-600 text-sm">{{ field.errors.0 }}</p>{% endif %}
+  </div>
+  {% endfor %}
   <div class="flex gap-2">
     <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Saqlash" %}</button>
     <a href="{% url 'penalties:list' %}" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Bekor qilish" %}</a>
   </div>
 </form>
+<script>
+(function() {
+  var ruleTypes = {{ rule_types_by_id_json|safe }};
+  var ruleSelect = document.querySelector('#manual-penalty-form select[name="rule"]');
+  var amountWrap = document.querySelector('#manual-penalty-form .manual-penalty-field[data-field="amount"]');
+  var percentWrap = document.querySelector('#manual-penalty-form .manual-penalty-field[data-field="penalty_percent"]');
+  if (!ruleSelect || !amountWrap || !percentWrap) return;
+  function toggle() {
+    var id = ruleSelect.value;
+    var isPercent = id && ruleTypes[id] === 'percent_of_salary';
+    amountWrap.style.display = isPercent ? 'none' : '';
+    percentWrap.style.display = isPercent ? '' : 'none';
+  }
+  ruleSelect.addEventListener('change', toggle);
+  toggle();
+})();
+</script>
 {% endblock %}

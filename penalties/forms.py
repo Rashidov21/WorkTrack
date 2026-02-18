@@ -47,15 +47,51 @@ class PenaltyRuleForm(forms.ModelForm):
 
 
 class ManualPenaltyForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["rule"].queryset = PenaltyRule.objects.filter(is_active=True).order_by("name")
+        self.fields["rule"].required = False
+        self.fields["rule"].empty_label = _("— Qoida tanlanmagan —")
+        self.fields["amount"].required = False
+        self.fields["penalty_percent"].required = False
+
     class Meta:
         model = Penalty
-        fields = ["employee", "amount", "reason"]
-        labels = {"employee": _("Xodim"), "amount": _("Summa"), "reason": _("Sabab")}
+        fields = ["employee", "rule", "amount", "penalty_percent", "reason"]
+        labels = {
+            "employee": _("Xodim"),
+            "rule": _("Qoida (turi)"),
+            "amount": _("Summa (so'm)"),
+            "penalty_percent": _("Jarima foizi (%)"),
+            "reason": _("Sabab"),
+        }
+        help_texts = {
+            "rule": _("Qaysi jarima qoidasiga bog'lash. Oylikdan foiz tanlasangiz, foiz (%) ni kiriting."),
+            "penalty_percent": _("Faqat «Oylikdan foiz» qoidasi uchun (masalan 1 yoki 2)."),
+        }
         widgets = {
             "employee": forms.Select(attrs={"class": SELECT_CLASS}),
-            "amount": forms.NumberInput(attrs={"class": INPUT_CLASS}),
+            "rule": forms.Select(attrs={"class": SELECT_CLASS}),
+            "amount": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "0"}),
+            "penalty_percent": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "1 yoki 2", "step": "0.01"}),
             "reason": forms.Textarea(attrs={"rows": 2, "class": TEXTAREA_CLASS}),
         }
+
+    def clean(self):
+        data = super().clean()
+        rule = data.get("rule")
+        amount = data.get("amount")
+        penalty_percent = data.get("penalty_percent")
+        if rule and rule.rule_type == "percent_of_salary":
+            if penalty_percent is None:
+                self.add_error("penalty_percent", _("Oylikdan foiz qoidasi uchun foiz (%) kiriting."))
+            data["amount"] = 0
+        else:
+            if amount is None or amount < 0:
+                self.add_error("amount", _("Summa kiriting."))
+            if penalty_percent is not None:
+                data["penalty_percent"] = None
+        return data
 
 
 class PenaltyEditForm(forms.ModelForm):

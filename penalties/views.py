@@ -1,4 +1,5 @@
 """Penalty rules and penalty list; manual penalty (admin)."""
+import json
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
@@ -57,15 +58,25 @@ class ManualPenaltyCreateView(LoginRequiredMixin, CreateView):
     template_name = "penalties/penalty_manual.html"
     success_url = reverse_lazy("penalties:list")
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        rule_types = {
+            str(r.id): r.rule_type for r in PenaltyRule.objects.filter(is_active=True)
+        }
+        data["rule_types_by_id_json"] = json.dumps(rule_types)
+        return data
+
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.is_manual = True
         messages.success(self.request, "Jarima qo‘shildi.")
         response = super().form_valid(form)
-        # Notify via Telegram
-        send_telegram_message.delay(
-            f"Penalty (manual): {form.instance.employee.get_full_name()} ({form.instance.employee.employee_id}) — {form.instance.amount}. Reason: {form.instance.reason or 'N/A'}"
-        )
+        p = form.instance
+        if p.penalty_percent is not None:
+            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.penalty_percent}%. Reason: {p.reason or 'N/A'}"
+        else:
+            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.amount}. Reason: {p.reason or 'N/A'}"
+        send_telegram_message.delay(msg)
         return response
 
 
