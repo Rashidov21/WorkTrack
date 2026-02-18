@@ -17,12 +17,13 @@
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Xodim" %}</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Summa" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 w-12">№</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>{% trans "Xodim" %}</span></th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{% trans "Summa" %}</span></th>
         <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Foiz (%)" %}</th>
         <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Qoida" %}</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Sabab" %}</th>
-        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Sana" %}</th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>{% trans "Sabab" %}</span></th>
+        <th class="px-4 py-2 text-left text-xs font-medium text-slate-600"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{% trans "Sana" %}</span></th>
         <th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Qo'lda" %}</th>
         {% if user.role == 'admin' %}<th class="px-4 py-2 text-left text-xs font-medium text-slate-600">{% trans "Amallar" %}</th>{% endif %}
       </tr>
@@ -30,7 +31,13 @@
     <tbody>
       {% for p in penalties %}
       <tr class="hover:bg-slate-50">
-        <td class="px-4 py-2"><a href="{% url 'employees:detail' p.employee.pk %}" class="link-primary">{{ p.employee.employee_id }} {{ p.employee.get_full_name }}</a></td>
+        <td class="px-4 py-2 text-slate-500">{% if page_obj %}{{ page_obj.start_index|add:forloop.counter0 }}{% else %}{{ forloop.counter }}{% endif %}</td>
+        <td class="px-4 py-2">
+          <span class="inline-flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <a href="{% url 'employees:detail' p.employee.pk %}" class="link-primary">{{ p.employee.employee_id }} {{ p.employee.get_full_name }}</a>
+          </span>
+        </td>
         <td class="px-4 py-2 font-medium text-rose-700">{% if p.penalty_percent %}—{% else %}{{ p.amount|format_uzs }}{% endif %}</td>
         <td class="px-4 py-2">{% if p.penalty_percent %}{{ p.penalty_percent }}%{% else %}—{% endif %}</td>
         <td class="px-4 py-2">{{ p.rule.name|default:"—" }}</td>
@@ -40,7 +47,7 @@
         {% if user.role == 'admin' %}<td class="px-4 py-2"><a href="{% url 'penalties:edit' p.pk %}" class="inline-flex p-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100" title="{% trans "Tahrirlash" %}" aria-label="{% trans "Tahrirlash" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a> <a href="{% url 'penalties:delete' p.pk %}" class="inline-flex p-1.5 rounded border border-red-200 text-red-600 hover:bg-red-50 ml-1" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu jarimani o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a></td>{% endif %}
       </tr>
       {% empty %}
-      <tr><td colspan="{% if user.role == 'admin' %}8{% else %}7{% endif %}" class="px-4 py-10 text-center">
+      <tr><td colspan="{% if user.role == 'admin' %}9{% else %}8{% endif %}" class="px-4 py-10 text-center">
         <div class="flex flex-col items-center gap-2 text-slate-500">
           <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           <span>{% trans "Jarimalar yo'q." %}</span>

@@ -57,9 +57,10 @@
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sana" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase w-12">№</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{% trans "Sana" %}</span></th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Holat" %}</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kelish" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{% trans "Kelish" %}</span></th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Ketish" %}</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Ishlash (daq)" %}</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kechikish (daq)" %}</th>
@@ -68,6 +69,7 @@
         <tbody class="divide-y divide-slate-200">
           {% for s in daily_summaries %}
           <tr class="hover:bg-slate-50">
+            <td class="px-4 py-2 text-slate-500">{{ forloop.counter }}</td>
             <td class="px-4 py-2">{{ s.date }}</td>
             <td class="px-4 py-2">{{ s.get_status_display }}</td>
             <td class="px-4 py-2">{% if s.check_in_time %}{{ s.check_in_time|time:"H:i" }}{% else %}—{% endif %}</td>
@@ -76,7 +78,7 @@
             <td class="px-4 py-2">{{ s.minutes_late|default:"0" }}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">{% trans "Kunlik xulosa yo'q." %}</td></tr>
+          <tr><td colspan="7" class="px-4 py-8 text-center text-slate-500">{% trans "Kunlik xulosa yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -93,18 +95,20 @@
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase w-12">№</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Tur" %}</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Vaqt" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>{% trans "Vaqt" %}</span></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
           {% for log in attendance_logs %}
           <tr class="hover:bg-slate-50">
+            <td class="px-4 py-2 text-slate-500">{{ forloop.counter }}</td>
             <td class="px-4 py-2">{{ log.get_event_type_display }}</td>
             <td class="px-4 py-2">{{ log.timestamp|date:"Y-m-d H:i" }}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="2" class="px-4 py-8 text-center text-slate-500">{% trans "Davomat logi yo'q." %}</td></tr>
+          <tr><td colspan="3" class="px-4 py-8 text-center text-slate-500">{% trans "Davomat logi yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -121,7 +125,8 @@
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sana" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase w-12">№</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase"><span class="inline-flex items-center gap-1"><svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{% trans "Sana" %}</span></th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kechikish (daq)" %}</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Kelish vaqti" %}</th>
           </tr>
@@ -129,12 +134,13 @@
         <tbody class="divide-y divide-slate-200">
           {% for r in lateness_records %}
           <tr class="hover:bg-slate-50">
+            <td class="px-4 py-2 text-slate-500">{{ forloop.counter }}</td>
             <td class="px-4 py-2">{{ r.date }}</td>
             <td class="px-4 py-2">{{ r.minutes_late }}</td>
             <td class="px-4 py-2">{{ r.check_in_time|date:"Y-m-d H:i" }}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="3" class="px-4 py-8 text-center text-slate-500">{% trans "Kechikish yozuvlari yo'q." %}</td></tr>
+          <tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">{% trans "Kechikish yozuvlari yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
@@ -155,7 +161,9 @@
       <table class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50">
           <tr>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase w-12">№</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Summa" %}</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Foiz (%)" %}</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sabab" %}</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Sana" %}</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-slate-600 uppercase">{% trans "Qo'lda" %}</th>
@@ -164,13 +172,15 @@
         <tbody class="divide-y divide-slate-200">
           {% for p in penalties %}
           <tr class="hover:bg-slate-50">
-            <td class="px-4 py-2 font-medium text-rose-700">{{ p.amount|format_uzs }}</td>
+            <td class="px-4 py-2 text-slate-500">{{ forloop.counter }}</td>
+            <td class="px-4 py-2 font-medium text-rose-700">{% if p.penalty_percent %}—{% else %}{{ p.amount|format_uzs }}{% endif %}</td>
+            <td class="px-4 py-2">{% if p.penalty_percent %}{{ p.penalty_percent }}%{% else %}—{% endif %}</td>
             <td class="px-4 py-2">{{ p.reason|default:"—" }}</td>
             <td class="px-4 py-2">{{ p.created_at|date }}</td>
             <td class="px-4 py-2">{% if p.is_manual %}{% trans "Ha" %}{% else %}{% trans "Yo'q" %}{% endif %}</td>
           </tr>
           {% empty %}
-          <tr><td colspan="4" class="px-4 py-8 text-center text-slate-500">{% trans "Jarimalar yo'q." %}</td></tr>
+          <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">{% trans "Jarimalar yo'q." %}</td></tr>
           {% endfor %}
         </tbody>
       </table>
