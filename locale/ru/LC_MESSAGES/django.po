@@ -440,9 +440,6 @@ msgstr "Вы уверены, что хотите удалить эту запи�
 msgid "Rostan ham bu qoidani o'chirmoqchimisiz?"
 msgstr "Вы уверены, что хотите удалить это правило?"
 
-msgid "Rostan ham bu xodimni o'chirmoqchimisiz?"
-msgstr "Вы уверены, что хотите удалить этого сотрудника?"
-
 msgid "Rostan ham bu grafikni o'chirmoqchimisiz?"
 msgstr "Вы уверены, что хотите удалить этот график?"
 
@@ -454,12 +451,6 @@ msgstr "Скачать Excel"
 
 msgid "Qo'lda jarima"
 msgstr "Ручной штраф"
-
-msgid "Qo'lda jarima qo'shish"
-msgstr "Добавить ручной штраф"
-
-msgid "Qo'lda"
-msgstr "Вручную"
 
 msgid "Ha, o'chirish"
 msgstr "Да, удалить"
@@ -564,9 +555,6 @@ msgstr "Сумма / процент"
 
 msgid "Foiz (%)"
 msgstr "Процент (%)"
-
-msgid "daq"
-msgstr "мин"
 
 msgid "Kechikish %(min)s daq — oylikdan %(p)s%%"
 msgstr "Опоздание %(min)s мин — %(p)s%% от оклада"
