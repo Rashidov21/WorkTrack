@@ -2,7 +2,7 @@
 <html lang="{{ request.LANGUAGE_CODE|default:'uz' }}">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{% block title %}{{ APP_NAME }}{% endblock %}</title>
   {% load static i18n %}
   <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
@@ -15,21 +15,35 @@
     .link-primary { color: rgb(30 64 175); font-weight: 500; }
     .link-primary:hover { text-decoration: underline; color: rgb(29 78 216); }
     .link-primary:focus { outline: none; border-radius: 4px; box-shadow: 0 0 0 2px rgb(148 163 184); }
+    .safe-area-top { padding-top: env(safe-area-inset-top, 0); }
+    .safe-area-left { padding-left: env(safe-area-inset-left, 0); }
   </style>
 </head>
 <body class="bg-slate-100 min-h-screen">
   {% if user.is_authenticated %}
-  <!-- Mobile menu button -->
-    <button type="button" id="sidebar-toggle" class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-slate-800 text-white shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-800" aria-label="{% trans "Menyu" %}">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-  </button>
+  <!-- Mobile/tablet header: logo + burger -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 z-40 h-14 safe-area-top bg-slate-800 text-white flex items-center gap-3 safe-area-left pr-4 shadow-md">
+    <button type="button" id="sidebar-toggle" class="flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center -ml-1 rounded-lg hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset" aria-label="{% trans "Menyu" %}">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+    <a href="{% url 'core:dashboard' %}" class="flex items-center gap-2 font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 rounded min-w-0">
+      <img src="{% static 'favicon.svg' %}" alt="" class="w-8 h-8 rounded flex-shrink-0" aria-hidden="true">
+      <span class="truncate">{{ APP_NAME }}</span>
+    </a>
+  </header>
   <div id="sidebar-overlay" class="lg:hidden fixed inset-0 bg-black/50 z-30 hidden" aria-hidden="true"></div>
   <div class="flex min-h-screen w-full">
-  <aside id="sidebar" class="flex-shrink-0 fixed lg:static inset-y-0 left-0 z-40 w-56 min-h-screen bg-slate-800 text-white p-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out flex flex-col">
-    <a href="{% url 'core:dashboard' %}" class="flex items-center gap-2 font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 rounded">
-      <img src="{% static 'favicon.svg' %}" alt="" class="w-8 h-8 rounded" aria-hidden="true">
-      <span>{{ APP_NAME }}</span>
-    </a>
+  <aside id="sidebar" class="flex-shrink-0 fixed lg:static inset-y-0 left-0 z-40 w-56 min-h-screen bg-slate-800 text-white p-4 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out flex flex-col pt-14 lg:pt-4 safe-area-left">
+    <!-- Desktop: logo; Mobile: close btn + logo -->
+    <div class="flex items-center justify-between gap-2 mb-2 lg:mb-0">
+      <a href="{% url 'core:dashboard' %}" class="flex items-center gap-2 font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 rounded flex-1 min-w-0">
+        <img src="{% static 'favicon.svg' %}" alt="" class="w-8 h-8 rounded flex-shrink-0" aria-hidden="true">
+        <span class="truncate">{{ APP_NAME }}</span>
+      </a>
+      <button type="button" id="sidebar-close" class="lg:hidden flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label="{% trans "Yopish" %}">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
     <nav class="mt-4 space-y-1 flex-1">
       <a href="{% url 'core:dashboard' %}" class="nav-link flex items-center gap-2 py-2 px-2 rounded hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 {% if request.resolver_match.namespace == 'core' and request.resolver_match.url_name == 'dashboard' %}bg-slate-700{% endif %}">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
