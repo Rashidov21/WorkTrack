@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from .models import PenaltyRule, Penalty
 
@@ -54,26 +55,31 @@ class ManualPenaltyForm(forms.ModelForm):
         self.fields["rule"].empty_label = _("— Qoida tanlanmagan —")
         self.fields["amount"].required = False
         self.fields["penalty_percent"].required = False
+        if "penalty_date" in self.fields and not self.instance.pk:
+            self.fields["penalty_date"].initial = timezone.now().date()
 
     class Meta:
         model = Penalty
-        fields = ["employee", "rule", "amount", "penalty_percent", "reason"]
+        fields = ["employee", "rule", "amount", "penalty_percent", "penalty_date", "reason"]
         labels = {
             "employee": _("Xodim"),
             "rule": _("Qoida (turi)"),
             "amount": _("Summa (so'm)"),
             "penalty_percent": _("Jarima foizi (%)"),
+            "penalty_date": _("Jarima sanasi (qaysi kun uchun)"),
             "reason": _("Sabab"),
         }
         help_texts = {
             "rule": _("Qaysi jarima qoidasiga bog'lash. Oylikdan foiz tanlasangiz, foiz (%) ni kiriting."),
             "penalty_percent": _("Faqat «Oylikdan foiz» qoidasi uchun (masalan 1 yoki 2)."),
+            "penalty_date": _("Jarima qaysi kun (davomat sanasi) uchun ekanini belgilang."),
         }
         widgets = {
             "employee": forms.Select(attrs={"class": SELECT_CLASS}),
             "rule": forms.Select(attrs={"class": SELECT_CLASS}),
             "amount": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "0"}),
             "penalty_percent": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "1 yoki 2", "step": "0.01"}),
+            "penalty_date": forms.DateInput(attrs={"class": INPUT_CLASS, "type": "date"}),
             "reason": forms.Textarea(attrs={"rows": 2, "class": TEXTAREA_CLASS}),
         }
 
@@ -95,13 +101,14 @@ class ManualPenaltyForm(forms.ModelForm):
 
 
 class PenaltyEditForm(forms.ModelForm):
-    """Admin: jarima summa, sabab, qoidani tahrirlash."""
+    """Admin: jarima summa, sabab, sana, qoidani tahrirlash."""
     class Meta:
         model = Penalty
-        fields = ["amount", "reason", "rule"]
-        labels = {"amount": _("Summa"), "reason": _("Sabab"), "rule": _("Qoida")}
+        fields = ["amount", "reason", "penalty_date", "rule"]
+        labels = {"amount": _("Summa"), "reason": _("Sabab"), "penalty_date": _("Jarima sanasi"), "rule": _("Qoida")}
         widgets = {
             "amount": forms.NumberInput(attrs={"class": INPUT_CLASS}),
             "reason": forms.Textarea(attrs={"rows": 2, "class": TEXTAREA_CLASS}),
+            "penalty_date": forms.DateInput(attrs={"class": INPUT_CLASS, "type": "date"}),
             "rule": forms.Select(attrs={"class": SELECT_CLASS}),
         }

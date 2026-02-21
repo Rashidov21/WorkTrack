@@ -71,12 +71,9 @@ class ReportPenaltyView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         start, end, period = get_report_date_range(self.request)
-        tz = timezone.get_current_timezone()
-        start_dt = timezone.make_aware(datetime.combine(start, time.min), tz)
-        end_dt = timezone.make_aware(datetime.combine(end, time.max), tz)
-        qs = Penalty.objects.filter(created_at__gte=start_dt, created_at__lte=end_dt).select_related("employee", "rule").order_by("-created_at")[:500]
+        qs = Penalty.objects.filter(penalty_date__gte=start, penalty_date__lte=end).select_related("employee", "rule").order_by("-penalty_date", "-created_at")[:500]
         context["penalties"] = qs
-        context["total"] = Penalty.objects.filter(created_at__gte=start_dt, created_at__lte=end_dt).aggregate(s=Sum("amount"))["s"] or 0
+        context["total"] = Penalty.objects.filter(penalty_date__gte=start, penalty_date__lte=end).aggregate(s=Sum("amount"))["s"] or 0
         context["start"], context["end"] = start, end
         context["period"] = period
         return context

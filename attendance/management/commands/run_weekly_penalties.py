@@ -74,13 +74,16 @@ class Command(BaseCommand):
                     continue
                 emp = lateness.employee
                 name = emp.get_full_name()
+                date_str = getattr(penalty, "penalty_date", day_date)
                 if getattr(penalty, "penalty_percent", None) is not None:
                     msg_lines = [
+                        f"📅 Sana: {date_str}",
                         f"⏰ Kechikish: {name} (ID: {emp.employee_id}) — {lateness.minutes_late} daqiqa kechikdi.",
                         f"💰 Jarima: oylikdan {penalty.penalty_percent}%.",
                     ]
                 else:
                     msg_lines = [
+                        f"📅 Sana: {date_str}",
                         f"⏰ Kechikish: {name} (ID: {emp.employee_id}) — {lateness.minutes_late} daqiqa kechikdi.",
                         f"💰 Jarima: {penalty.amount} so'm.",
                     ]

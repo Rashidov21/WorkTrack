@@ -34,6 +34,7 @@ def apply_penalty_for_lateness(lateness_record):
             penalty_percent=penalty_percent,
             rule=rule,
             lateness_record=lateness_record,
+            penalty_date=lateness_record.date,
             reason=_("Kechikish %(min)s daq — oylikdan %(p)s%%") % {"min": lateness_record.minutes_late, "p": penalty_percent},
             is_manual=False,
         )
@@ -53,7 +54,7 @@ def apply_penalty_for_lateness(lateness_record):
         existing_total = (
             Penalty.objects.filter(
                 employee=lateness_record.employee,
-                created_at__date=lateness_record.date,
+                penalty_date=lateness_record.date,
             ).aggregate(s=Sum("amount"))["s"]
             or Decimal("0")
         )
@@ -67,6 +68,7 @@ def apply_penalty_for_lateness(lateness_record):
         amount=amount,
         rule=rule,
         lateness_record=lateness_record,
+        penalty_date=lateness_record.date,
         reason=_("Late %(min)s min on %(date)s") % {"min": lateness_record.minutes_late, "date": lateness_record.date},
         is_manual=False,
     )

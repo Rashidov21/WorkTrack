@@ -8,7 +8,7 @@
 <div class="bg-slate-50 rounded-lg p-4 mb-4 max-w-md">
   <p><strong>{{ penalty.employee.employee_id }}</strong> {{ penalty.employee.get_full_name }}</p>
   <p>{% trans "Summa" %}: {{ penalty.amount|format_uzs }}</p>
-  <p>{% trans "Sana" %}: {{ penalty.created_at|date }}</p>
+  <p>{% trans "Sana" %}: {{ penalty.penalty_date|date }}</p>
 </div>
 <form method="post">
   {% csrf_token %}

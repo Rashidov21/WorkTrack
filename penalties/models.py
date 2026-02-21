@@ -1,4 +1,5 @@
 """Penalty rules and penalty records."""
+from datetime import date
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -96,6 +97,11 @@ class Penalty(models.Model):
     )
     reason = models.CharField(max_length=255, blank=True)
     is_manual = models.BooleanField(default=False)
+    penalty_date = models.DateField(
+        default=date.today,
+        verbose_name=_("Jarima sanasi"),
+        help_text=_("Jarima qaysi kun uchun (davomat o'tgan sana)."),
+    )
     created_at = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(
         "accounts.User",
@@ -106,9 +112,9 @@ class Penalty(models.Model):
     )
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ["-penalty_date", "-created_at"]
         verbose_name = _("Penalty")
         verbose_name_plural = _("Penalties")
 
     def __str__(self):
-        return f"{self.employee} {self.amount} @ {self.created_at.date()}"
+        return f"{self.employee} {self.amount} @ {self.penalty_date}"

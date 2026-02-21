@@ -25,7 +25,7 @@ class PenaltyListView(LoginRequiredMixin, ListView):
         emp = self.request.GET.get("employee_id")
         if emp:
             qs = qs.filter(employee__employee_id=emp)
-        return qs.order_by("-created_at")
+        return qs.order_by("-penalty_date", "-created_at")
 
 
 @method_decorator(admin_required, name="dispatch")
@@ -72,10 +72,12 @@ class ManualPenaltyCreateView(LoginRequiredMixin, CreateView):
         messages.success(self.request, "Jarima qo‘shildi.")
         response = super().form_valid(form)
         p = form.instance
+        date_str = getattr(p, "penalty_date", None)
+        date_part = f" Sana: {date_str}." if date_str else ""
         if p.penalty_percent is not None:
-            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.penalty_percent}%. Reason: {p.reason or 'N/A'}"
+            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.penalty_percent}%.{date_part} Sabab: {p.reason or 'N/A'}"
         else:
-            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.amount}. Reason: {p.reason or 'N/A'}"
+            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.amount} so'm.{date_part} Sabab: {p.reason or 'N/A'}"
         send_telegram_message.delay(msg)
         return response
 
@@ -88,7 +90,7 @@ class PenaltyHistoryView(LoginRequiredMixin, ListView):
     paginate_by = 30
 
     def get_queryset(self):
-        return Penalty.objects.filter(employee_id=self.kwargs["pk"]).select_related("rule").order_by("-created_at")
+        return Penalty.objects.filter(employee_id=self.kwargs["pk"]).select_related("rule").order_by("-penalty_date", "-created_at")
 
 
 @method_decorator(admin_required, name="dispatch")

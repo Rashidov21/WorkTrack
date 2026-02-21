@@ -47,10 +47,19 @@ def run_daily_summary_and_penalties(self, day=None):
             if penalty:
                 emp = lateness.employee
                 name = emp.get_full_name()
-                msg_lines = [
-                    f"⏰ Kechikish: {name} (ID: {emp.employee_id}) — {lateness.minutes_late} daqiqa kechikdi.",
-                    f"💰 Jarima: {penalty.amount} so'm.",
-                ]
+                date_str = getattr(penalty, "penalty_date", day)
+                if getattr(penalty, "penalty_percent", None) is not None:
+                    msg_lines = [
+                        f"📅 Sana: {date_str}",
+                        f"⏰ Kechikish: {name} (ID: {emp.employee_id}) — {lateness.minutes_late} daqiqa kechikdi.",
+                        f"💰 Jarima: oylikdan {penalty.penalty_percent}%.",
+                    ]
+                else:
+                    msg_lines = [
+                        f"📅 Sana: {date_str}",
+                        f"⏰ Kechikish: {name} (ID: {emp.employee_id}) — {lateness.minutes_late} daqiqa kechikdi.",
+                        f"💰 Jarima: {penalty.amount} so'm.",
+                    ]
                 if getattr(emp, "telegram_username", None) and str(emp.telegram_username).strip():
                     username = str(emp.telegram_username).strip().lstrip("@")
                     msg_lines.append(f"@{username}")

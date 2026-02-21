@@ -63,9 +63,9 @@ def export_penalty_excel(start: date, end: date):
     for col, h in enumerate(headers, 1):
         ws.cell(row=1, column=col, value=h)
         ws.cell(row=1, column=col).font = Font(bold=True)
-    rows = Penalty.objects.filter(created_at__date__gte=start, created_at__date__lte=end).select_related("employee", "rule").order_by("created_at")
+    rows = Penalty.objects.filter(penalty_date__gte=start, penalty_date__lte=end).select_related("employee", "rule").order_by("penalty_date", "created_at")
     for row_idx, p in enumerate(rows, 2):
-        ws.cell(row=row_idx, column=1, value=p.created_at.strftime("%Y-%m-%d") if p.created_at else "")
+        ws.cell(row=row_idx, column=1, value=p.penalty_date.strftime("%Y-%m-%d") if p.penalty_date else "")
         ws.cell(row=row_idx, column=2, value=p.employee.employee_id)
         ws.cell(row=row_idx, column=3, value=p.employee.get_full_name())
         ws.cell(row=row_idx, column=4, value=float(p.amount))
