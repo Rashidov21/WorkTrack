@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load core_extras %}
+{% block title %}{% trans "Jarimadan ozodni o'chirish" %} — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Jarimadan ozodni o'chirish" %}</h1>
+<p class="mb-4 text-slate-600">{% trans "Haqiqatan ham bu jarimadan ozodni o'chirmoqchimisiz?" %}</p>
+<div class="bg-slate-50 rounded-lg p-4 mb-4 max-w-md">
+  <p><strong>{{ exemption.employee.employee_id }}</strong> {{ exemption.employee.get_full_name }}</p>
+  <p>{% trans "Dan" %}: {{ exemption.date_from|date }} — {% trans "Gacha" %}: {{ exemption.date_to|date }}</p>
+  <p>{% trans "Sabab" %}: {{ exemption.get_reason_type_display }}{% if exemption.reason_text %} ({{ exemption.reason_text }}){% endif %}</p>
+</div>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">{% trans "O'chirish" %}</button>
+  <a href="{% url 'penalties:exemption_list' %}" class="ml-2 px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Bekor qilish" %}</a>
+</form>
+{% endblock %}

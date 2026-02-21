@@ -118,3 +118,50 @@ class Penalty(models.Model):
 
     def __str__(self):
         return f"{self.employee} {self.amount} @ {self.penalty_date}"
+
+
+class PenaltyExemption(models.Model):
+    """Xodimning ma'lum sana(lar) uchun jarimadan ozod qilinishi (ta'til, kasallik, ruxsat)."""
+    REASON_CHOICES = [
+        ("sick_leave", _("Kasallik (bolnich)")),
+        ("leave_approved", _("Ishdan ruxsat tasdiqlangan")),
+        ("business_trip", _("Ish safari")),
+        ("other", _("Boshqa")),
+    ]
+    employee = models.ForeignKey(
+        "employees.Employee",
+        on_delete=models.CASCADE,
+        related_name="penalty_exemptions",
+    )
+    date_from = models.DateField(verbose_name=_("Dan"))
+    date_to = models.DateField(
+        verbose_name=_("Gacha"),
+        help_text=_("Bir kun uchun Dan = Gacha qiling."),
+    )
+    reason_type = models.CharField(
+        max_length=20,
+        choices=REASON_CHOICES,
+        default="other",
+        verbose_name=_("Sabab"),
+    )
+    reason_text = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name=_("Izoh"),
+    )
+    created_by = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_penalty_exemptions",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date_from"]
+        verbose_name = _("Jarimadan ozod")
+        verbose_name_plural = _("Jarimadan ozodlar")
+
+    def __str__(self):
+        return f"{self.employee} {self.date_from}–{self.date_to} ({self.get_reason_type_display()})"

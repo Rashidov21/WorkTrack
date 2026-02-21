@@ -4,13 +4,23 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.db.models import Sum
 
-from .models import PenaltyRule, Penalty
+from .models import PenaltyRule, Penalty, PenaltyExemption
+
+
+def is_penalty_exempt(employee, date):
+    """Shu xodim va sana uchun jarimadan ozod bormi."""
+    return PenaltyExemption.objects.filter(
+        employee=employee,
+        date_from__lte=date,
+        date_to__gte=date,
+    ).exists()
 
 
 def apply_penalty_for_lateness(lateness_record):
     """
     Apply penalty for a lateness record using first active rule (per_minute or fixed).
     Kunlik maksimum (max_amount_per_day) dan oshmasligi uchun cheklanadi.
+    Sababli (ta'til, kasallik, ruxsat) ozod bo'lgan kunlarda jarima yozilmaydi.
     Returns created Penalty or None.
     """
     rule = PenaltyRule.objects.filter(is_active=True).first()
@@ -19,6 +29,10 @@ def apply_penalty_for_lateness(lateness_record):
 
     # Avoid duplicate penalty for the same lateness
     if Penalty.objects.filter(lateness_record=lateness_record).exists():
+        return None
+
+    # Sababli jarima yozilmasin: shu kun uchun ozod mavjud bo'lsa
+    if is_penalty_exempt(lateness_record.employee, lateness_record.date):
         return None
 
     # Oylikdan foiz: faqat foiz yoziladi (1% yoki 2%), summa buqalter oy oxirida hisoblaydi

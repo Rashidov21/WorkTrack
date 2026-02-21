@@ -1,7 +1,7 @@
 from django import forms
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from .models import PenaltyRule, Penalty
+from .models import PenaltyRule, Penalty, PenaltyExemption
 
 
 INPUT_CLASS = "mt-1 block w-full rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400"
@@ -111,4 +111,43 @@ class PenaltyEditForm(forms.ModelForm):
             "reason": forms.Textarea(attrs={"rows": 2, "class": TEXTAREA_CLASS}),
             "penalty_date": forms.DateInput(attrs={"class": INPUT_CLASS, "type": "date"}),
             "rule": forms.Select(attrs={"class": SELECT_CLASS}),
+        }
+
+
+class PenaltyExemptionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk and "date_to" in self.fields:
+            today = timezone.now().date()
+            self.fields["date_from"].initial = today
+            self.fields["date_to"].initial = today
+
+    def clean(self):
+        data = super().clean()
+        date_from = data.get("date_from")
+        date_to = data.get("date_to")
+        if date_from and date_to and date_to < date_from:
+            self.add_error("date_to", _("Gacha sanasi Dan sanasidan keyin bo'lishi kerak."))
+        return data
+
+    class Meta:
+        model = PenaltyExemption
+        fields = ["employee", "date_from", "date_to", "reason_type", "reason_text"]
+        labels = {
+            "employee": _("Xodim"),
+            "date_from": _("Dan (sana)"),
+            "date_to": _("Gacha (sana)"),
+            "reason_type": _("Sabab"),
+            "reason_text": _("Izoh (ixtiyoriy)"),
+        }
+        help_texts = {
+            "date_from": _("Jarima yozilmasin, shu kundan boshlab."),
+            "date_to": _("Shu kungacha. Bir kun uchun Dan = Gacha qiling."),
+        }
+        widgets = {
+            "employee": forms.Select(attrs={"class": SELECT_CLASS}),
+            "date_from": forms.DateInput(attrs={"class": INPUT_CLASS, "type": "date"}),
+            "date_to": forms.DateInput(attrs={"class": INPUT_CLASS, "type": "date"}),
+            "reason_type": forms.Select(attrs={"class": SELECT_CLASS}),
+            "reason_text": forms.TextInput(attrs={"class": INPUT_CLASS, "placeholder": _("Qisqa izoh")}),
         }

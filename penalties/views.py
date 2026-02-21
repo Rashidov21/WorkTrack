@@ -8,8 +8,9 @@ from django.contrib import messages
 from core.decorators import manager_required, admin_required
 from django.utils.decorators import method_decorator
 
-from .models import Penalty, PenaltyRule
-from .forms import PenaltyRuleForm, ManualPenaltyForm, PenaltyEditForm
+from django.utils.translation import gettext as _
+from .models import Penalty, PenaltyRule, PenaltyExemption
+from .forms import PenaltyRuleForm, ManualPenaltyForm, PenaltyEditForm, PenaltyExemptionForm
 from notifications.tasks import send_telegram_message
 
 
@@ -69,7 +70,7 @@ class ManualPenaltyCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.is_manual = True
-        messages.success(self.request, "Jarima qo‘shildi.")
+        messages.success(self.request, "Jarima qo'shildi.")
         response = super().form_valid(form)
         p = form.instance
         date_str = getattr(p, "penalty_date", None)
@@ -109,7 +110,7 @@ class PenaltyUpdateView(LoginRequiredMixin, UpdateView):
 
 @method_decorator(admin_required, name="dispatch")
 class PenaltyDeleteView(LoginRequiredMixin, DeleteView):
-    """Admin: jarimani o‘chirish."""
+    """Admin: jarimani o'chirish."""
     model = Penalty
     template_name = "penalties/penalty_confirm_delete.html"
     context_object_name = "penalty"
@@ -117,13 +118,13 @@ class PenaltyDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         response = super().delete(request, *args, **kwargs)
-        messages.success(request, "Jarima o‘chirildi.")
+        messages.success(request, "Jarima o'chirildi.")
         return response
 
 
 @method_decorator(admin_required, name="dispatch")
 class PenaltyRuleDeleteView(LoginRequiredMixin, DeleteView):
-    """Admin: jarima qoidasini o‘chirish."""
+    """Admin: jarima qoidasini o'chirish."""
     model = PenaltyRule
     template_name = "penalties/rule_confirm_delete.html"
     context_object_name = "rule"
@@ -131,5 +132,60 @@ class PenaltyRuleDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         response = super().delete(request, *args, **kwargs)
-        messages.success(request, "Jarima qoidasi o‘chirildi.")
+        messages.success(request, "Jarima qoidasi o'chirildi.")
+        return response
+
+
+# ——— Jarimadan ozod ———
+@method_decorator(manager_required, name="dispatch")
+class PenaltyExemptionListView(LoginRequiredMixin, ListView):
+    model = PenaltyExemption
+    template_name = "penalties/exemption_list.html"
+    context_object_name = "exemptions"
+    paginate_by = 30
+
+    def get_queryset(self):
+        qs = PenaltyExemption.objects.select_related("employee", "created_by").order_by("-date_from")
+        emp = self.request.GET.get("employee_id")
+        if emp:
+            qs = qs.filter(employee__employee_id=emp)
+        return qs
+
+
+@method_decorator(admin_required, name="dispatch")
+class PenaltyExemptionCreateView(LoginRequiredMixin, CreateView):
+    model = PenaltyExemption
+    form_class = PenaltyExemptionForm
+    template_name = "penalties/exemption_form.html"
+    success_url = reverse_lazy("penalties:exemption_list")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        messages.success(self.request, _("Jarimadan ozod qo'shildi."))
+        return super().form_valid(form)
+
+
+@method_decorator(admin_required, name="dispatch")
+class PenaltyExemptionUpdateView(LoginRequiredMixin, UpdateView):
+    model = PenaltyExemption
+    form_class = PenaltyExemptionForm
+    template_name = "penalties/exemption_form.html"
+    context_object_name = "exemption"
+    success_url = reverse_lazy("penalties:exemption_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, _("Jarimadan ozod saqlandi."))
+        return super().form_valid(form)
+
+
+@method_decorator(admin_required, name="dispatch")
+class PenaltyExemptionDeleteView(LoginRequiredMixin, DeleteView):
+    model = PenaltyExemption
+    template_name = "penalties/exemption_confirm_delete.html"
+    context_object_name = "exemption"
+    success_url = reverse_lazy("penalties:exemption_list")
+
+    def delete(self, request, *args, **kwargs):
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, _("Jarimadan ozod o'chirildi."))
         return response

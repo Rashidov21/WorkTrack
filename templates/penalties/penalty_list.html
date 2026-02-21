@@ -10,6 +10,7 @@
   </form>
   {% if user.role == 'admin' %}
   <a href="{% url 'penalties:add_manual' %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Qo'lda jarima qo'shish" %}</a>
+  <a href="{% url 'penalties:exemption_list' %}" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">{% trans "Jarimadan ozodlar" %}</a>
   <a href="{% url 'penalties:rule_list' %}" class="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700">{% trans "Jarima qoidalari" %}</a>
   {% endif %}
 </div>
