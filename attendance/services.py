@@ -65,7 +65,7 @@ def recompute_daily_summary(employee, day: date):
         defaults={
             "check_in_time": check_in.timestamp if check_in else None,
             "check_out_time": check_out.timestamp if check_out else None,
-            "missing_check_out": check_in and not check_out,
+            "missing_check_out": bool(check_in and not check_out),
             "working_minutes": 0,
             "minutes_late": 0,
             "status": DailySummary.STATUS_ABSENT,
