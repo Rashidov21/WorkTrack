@@ -7,6 +7,7 @@ from django.db import transaction
 
 from employees.models import Employee
 from .models import AttendanceLog, DailySummary, LatenessRecord
+from penalties.models import PenaltyExemption
 
 
 def get_employee_by_identifier(employee_id: str = None, device_person_id: str = None):
@@ -71,6 +72,20 @@ def recompute_daily_summary(employee, day: date):
             "status": DailySummary.STATUS_ABSENT,
         },
     )
+
+    # Agar shu xodim va sana uchun jarimadan ozod (ruxsat olgan/ta'til/kasallik) bo'lsa,
+    # holatni "Ruxsat olgan" qilib, kechikish/jarimalarni hisoblamaymiz.
+    if PenaltyExemption.objects.filter(
+        employee=employee, date_from__lte=day, date_to__gte=day
+    ).exists():
+        summary.status = DailySummary.STATUS_LEAVE
+        summary.minutes_late = 0
+        summary.working_minutes = 0
+        summary.missing_check_out = False
+        # Shu kun uchun kechikish yozuvlarini ham olib tashlaymiz
+        LatenessRecord.objects.filter(employee=employee, date=day).delete()
+        summary.save()
+        return summary
 
     if not check_in:
         summary.save()

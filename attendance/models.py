@@ -52,7 +52,7 @@ class DailySummary(models.Model):
         (STATUS_PRESENT, _("Keldi")),
         (STATUS_LATE, _("Kechikdi")),
         (STATUS_ABSENT, _("Kelmadi")),
-        (STATUS_LEAVE, _("Ta'tilda")),
+        (STATUS_LEAVE, _("Ruxsat olgan")),
     ]
 
     employee = models.ForeignKey(
