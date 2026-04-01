@@ -16,6 +16,7 @@ env = environ.Env(
     CELERY_RESULT_BACKEND=(str, "redis://localhost:6379/0"),
     TIME_ZONE=(str, "Asia/Tashkent"),
     WEBHOOK_RATE_LIMIT=(int, 120),  # max requests per minute per IP for webhook
+    REDIS_CACHE_URL=(str, ""),  # bo'sh bo'lsa LocMemCache (webhook rate limit bitta processda)
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -145,6 +146,22 @@ CELERY_BEAT_SCHEDULE = {
 # Audit log (simple file or DB; extend as needed)
 AUDIT_LOG_ENABLED = True
 WEBHOOK_RATE_LIMIT = env("WEBHOOK_RATE_LIMIT")
+
+# Kesh: productionda Redis (masalan redis://127.0.0.1:6379/1) — webhook rate limit ko'p workerda ishlaydi
+if env("REDIS_CACHE_URL"):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": env("REDIS_CACHE_URL"),
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "worktrack",
+        }
+    }
 
 # Logging
 LOGGING = {

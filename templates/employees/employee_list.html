@@ -4,8 +4,26 @@
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Xodimlar" %}</h1>
 <div class="flex flex-wrap gap-4 mb-4">
-  <form method="get" class="flex gap-2 flex-wrap items-center">
-    <input type="text" name="department" placeholder="{% trans "Bo'lim" %}" value="{{ request.GET.department }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px]">
+  <form method="get" class="flex gap-2 flex-wrap items-end" data-auto-submit-selects>
+    <input type="search" name="q" placeholder="{% trans "Qidiruv (ism, ID, qurilma ID)" %}" value="{{ request.GET.q }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px] min-w-[12rem]">
+    <div class="flex flex-col gap-0.5">
+      <label class="text-xs text-slate-500">{% trans "Bo'lim" %}</label>
+      <select name="department" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px] min-w-[10rem]">
+        <option value="">{% trans "Hammasi" %}</option>
+        {% for d in department_list %}
+        <option value="{{ d }}" {% if request.GET.department == d %}selected{% endif %}>{{ d }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="flex flex-col gap-0.5">
+      <label class="text-xs text-slate-500">{% trans "Ish grafigi" %}</label>
+      <select name="schedule" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px] min-w-[10rem]">
+        <option value="">{% trans "Hammasi" %}</option>
+        {% for sid, sname in schedule_choices %}
+        <option value="{{ sid }}" {% if request.GET.schedule == sid %}selected{% endif %}>{{ sname }}</option>
+        {% endfor %}
+      </select>
+    </div>
     <select name="active" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]">
       <option value="">{% trans "Hammasi" %}</option>
       <option value="1" {% if request.GET.active == '1' %}selected{% endif %}>{% trans "Faol" %}</option>
@@ -18,6 +36,15 @@
   {% endif %}
 </div>
 <div class="bg-white rounded-xl shadow border border-slate-200 overflow-hidden">
+  {% if not employees %}
+  <div class="px-4 py-10 text-center">
+    <div class="flex flex-col items-center gap-2 text-slate-500">
+      <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+      <span>{% trans "Xodimlar topilmadi." %}</span>
+    </div>
+  </div>
+  {% else %}
+  <div class="hidden md:block overflow-x-auto">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
@@ -52,21 +79,37 @@
         </td>
         {% if user.role == 'admin' %}
         <td class="px-4 py-2 text-right">
-          <a href="{% url 'employees:edit' e.pk %}" class="inline-flex p-1.5 rounded border border-slate-300 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400" title="{% trans "Tahrirlash" %}" aria-label="{% trans "Tahrirlash" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a>
-          <a href="{% url 'employees:delete' e.pk %}" class="inline-flex p-1.5 rounded border border-red-200 text-red-600 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 ml-1" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu xodimni o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
+          <a href="{% url 'employees:edit' e.pk %}" class="btn-icon-touch border-slate-300 text-slate-600 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400" title="{% trans "Tahrirlash" %}" aria-label="{% trans "Tahrirlash" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a>
+          <a href="{% url 'employees:delete' e.pk %}" class="btn-icon-touch border-red-200 text-red-600 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 ml-1" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu xodimni o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
         </td>
         {% endif %}
       </tr>
-      {% empty %}
-      <tr><td colspan="{% if user.role == 'admin' %}9{% else %}8{% endif %}" class="px-4 py-10 text-center">
-        <div class="flex flex-col items-center gap-2 text-slate-500">
-          <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-          <span>{% trans "Xodimlar topilmadi." %}</span>
-        </div>
-      </td></tr>
       {% endfor %}
     </tbody>
   </table>
+  </div>
+  <div class="md:hidden divide-y divide-slate-200">
+    {% for e in employees %}
+    <article class="p-4 space-y-2">
+      <div class="flex justify-between gap-2 items-start">
+        <a href="{% url 'employees:detail' e.pk %}" class="link-primary font-medium">{{ e.get_full_name }}</a>
+        <span class="text-xs font-mono text-slate-500">{{ e.employee_id }}</span>
+      </div>
+      <p class="text-sm text-slate-600">{{ e.department|default:"—" }} · {% if e.work_schedule %}{{ e.work_schedule.name }}{% else %}—{% endif %}</p>
+      <p class="text-xs text-slate-500">{{ e.work_start_time|time:"H:i" }}–{{ e.work_end_time|time:"H:i" }} · {{ e.grace_period_minutes }} {% trans "daq" %}</p>
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="px-2 py-0.5 rounded text-sm {% if e.is_active %}bg-emerald-100 text-emerald-800{% else %}bg-slate-200 text-slate-600{% endif %}">{% if e.is_active %}{% trans "Faol" %}{% else %}{% trans "Nofaol" %}{% endif %}</span>
+        {% if user.role == 'admin' %}
+        <div class="flex gap-1">
+          <a href="{% url 'employees:edit' e.pk %}" class="btn-icon-touch border-slate-300 text-slate-600 hover:bg-slate-100" title="{% trans "Tahrirlash" %}" aria-label="{% trans "Tahrirlash" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828L18.172 5.172z"/></svg></a>
+          <a href="{% url 'employees:delete' e.pk %}" class="btn-icon-touch border-red-200 text-red-600 hover:bg-red-50" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu xodimni o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
+        </div>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% include "components/pagination.html" with page_obj=page_obj query_params=request.GET %}
 </div>
 {% endblock %}

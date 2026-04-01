@@ -1,6 +1,8 @@
 """Penalty rules and penalty records."""
 from datetime import date
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -52,6 +54,16 @@ class PenaltyRule(models.Model):
         verbose_name=_("Kunlik maksimum (so'm)"),
         help_text=_("Bir xodim uchun shu kundagi jami jarima shu summandan oshmasin. Bo'sh qoldirilsa cheklov yo'q."),
     )
+    department = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name=_("Bo'lim"),
+        help_text=_(
+            "Bo'sh qoldiring — barcha bo'limlar uchun umumiy qoida. To'ldiring — faqat shu nomdagi bo'lim "
+            "(xodim kartasidagi bo'lim bilan mos kelishi kerak). Bir vaqtda bir bo'lim uchun bitta faol qoida."
+        ),
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -59,6 +71,35 @@ class PenaltyRule(models.Model):
     class Meta:
         verbose_name = _("Penalty Rule")
         verbose_name_plural = _("Penalty Rules")
+
+    def clean(self):
+        super().clean()
+        dept = (self.department or "").strip()
+        self.department = dept or None
+        if not self.is_active:
+            return
+        qs = PenaltyRule.objects.filter(is_active=True)
+        if self.pk:
+            qs = qs.exclude(pk=self.pk)
+        if self.department:
+            if qs.filter(department__iexact=self.department).exists():
+                raise ValidationError(
+                    {
+                        "department": _(
+                            "Bu bo'lim uchun allaqachon boshqa faol qoida bor. Faqat bittasini faol qiling yoki "
+                            "oldingi qoidani o'chiring."
+                        )
+                    }
+                )
+        else:
+            if qs.filter(Q(department__isnull=True) | Q(department="")).exists():
+                raise ValidationError(
+                    {
+                        "department": _(
+                            "Umumiy (bo'sh bo'lim) faol qoida allaqachon mavjud. Bir vaqtda bitta umumiy faol qoida bo'lishi kerak."
+                        )
+                    }
+                )
 
     def __str__(self):
         return f"{self.name} ({self.get_rule_type_display()})"

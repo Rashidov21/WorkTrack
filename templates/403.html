@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Ruxsat yo'q" %} — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto bg-white rounded-xl shadow border border-slate-200 p-8 text-center">
+  <p class="text-6xl font-bold text-slate-300 mb-2">403</p>
+  <h1 class="text-xl font-semibold text-slate-800 mb-2">{% trans "Ruxsat yo'q" %}</h1>
+  <p class="text-slate-600 mb-6">{% trans "Bu sahifani ko'rish yoki amalni bajarish huquqingiz yo'q." %}</p>
+  <a href="{% url 'core:dashboard' %}" class="inline-flex px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700">{% trans "Boshqaruv paneli" %}</a>
+</div>
+{% endblock %}

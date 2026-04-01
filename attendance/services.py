@@ -19,13 +19,26 @@ def get_employee_by_identifier(employee_id: str = None, device_person_id: str = 
     return None
 
 
+def resolve_employee_from_device_string(identifier: str):
+    """
+    Qurilmadan kelgan bitta qator: avval WorkTrack xodim ID, keyin device_person_id bo‘yicha qidirish.
+    """
+    if not identifier or not str(identifier).strip():
+        return None
+    s = str(identifier).strip()
+    emp = Employee.objects.filter(employee_id=s, is_active=True).first()
+    if emp:
+        return emp
+    return Employee.objects.filter(device_person_id=s, is_active=True).first()
+
+
 def create_log_idempotent(employee_id: str, event_type: str, timestamp, source_id: str = "", source: str = "device"):
     """
     Create attendance log if not already present (idempotent by source_id).
     When source_id is empty, use synthetic key (employee, event_type, minute) to avoid duplicates.
     Returns (log, created).
     """
-    employee = get_employee_by_identifier(employee_id=employee_id)
+    employee = resolve_employee_from_device_string(employee_id)
     if not employee:
         return None, False
 

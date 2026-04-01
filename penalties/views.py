@@ -1,14 +1,18 @@
 """Penalty rules and penalty list; manual penalty (admin)."""
 import json
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.http import HttpResponse
 from core.decorators import manager_required, admin_required
 from django.utils.decorators import method_decorator
 
 from django.utils.translation import gettext as _
+from core.date_range import parse_date_range, query_string_for_export
+from reports.export import export_penalty_excel
+
 from .models import Penalty, PenaltyRule, PenaltyExemption
 from .forms import PenaltyRuleForm, ManualPenaltyForm, PenaltyEditForm, PenaltyExemptionForm
 from notifications.tasks import send_telegram_message
@@ -22,11 +26,41 @@ class PenaltyListView(LoginRequiredMixin, ListView):
     paginate_by = 30
 
     def get_queryset(self):
+        start, end, _ = parse_date_range(self.request, default_period="month")
         qs = super().get_queryset().select_related("employee", "rule")
+        qs = qs.filter(penalty_date__gte=start, penalty_date__lte=end)
         emp = self.request.GET.get("employee_id")
         if emp:
             qs = qs.filter(employee__employee_id=emp)
         return qs.order_by("-penalty_date", "-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        start, end, mode = parse_date_range(self.request, default_period="month")
+        context["filter_date_from"] = start.isoformat()
+        context["filter_date_to"] = end.isoformat()
+        context["period"] = "" if mode == "custom" else (self.request.GET.get("period") or "month")
+        context["export_query"] = query_string_for_export(
+            self.request,
+            allowed_keys={"date_from", "date_to", "period", "employee_id"},
+        )
+        return context
+
+
+@method_decorator(manager_required, name="dispatch")
+class PenaltyExportExcelView(LoginRequiredMixin, View):
+    """Filtrlangan jarimalarni Excelga (hisobot bilan bir xil stunlar)."""
+
+    def get(self, request, *args, **kwargs):
+        start, end, _ = parse_date_range(request, default_period="month")
+        emp = (request.GET.get("employee_id") or "").strip() or None
+        buf = export_penalty_excel(start, end, employee_id=emp)
+        response = HttpResponse(
+            buf.getvalue(),
+            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+        response["Content-Disposition"] = f'attachment; filename="penalties_list_{start}_{end}.xlsx"'
+        return response
 
 
 @method_decorator(admin_required, name="dispatch")

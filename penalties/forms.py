@@ -14,13 +14,16 @@ class PenaltyRuleForm(forms.ModelForm):
     class Meta:
         model = PenaltyRule
         fields = [
-            "name", "rule_type",
+            "name",
+            "department",
+            "rule_type",
             "threshold_minutes", "percent_if_late_le_threshold", "percent_if_late_gt_threshold",
             "amount_per_unit", "max_amount_per_day",
             "is_active",
         ]
         labels = {
             "name": _("Nomi"),
+            "department": _("Bo'lim"),
             "rule_type": _("Turi"),
             "threshold_minutes": _("Chegara (daq)"),
             "percent_if_late_le_threshold": _("Foiz (≤ chegara)"),
@@ -30,6 +33,9 @@ class PenaltyRuleForm(forms.ModelForm):
             "is_active": _("Faol"),
         }
         help_texts = {
+            "department": _(
+                "Bo'sh — barcha uchun umumiy qoida. To'ldiring — faqat shu bo'lim (xodim bo'limi bilan bir xil yozuv)."
+            ),
             "threshold_minutes": _("Oylikdan foiz: shu daqiqagacha birinchi foiz, undan keyin ikkinchi foiz (masalan 30)."),
             "percent_if_late_le_threshold": _("Kechikish chegara daqiqagacha bo'lsa (masalan 1 = 1%)."),
             "percent_if_late_gt_threshold": _("Kechikish chegaradan oshsa (masalan 2 = 2%)."),
@@ -37,6 +43,9 @@ class PenaltyRuleForm(forms.ModelForm):
         }
         widgets = {
             "name": forms.TextInput(attrs={"class": INPUT_CLASS}),
+            "department": forms.TextInput(
+                attrs={"class": INPUT_CLASS, "placeholder": _("Umumiy uchun bo'sh qoldiring")}
+            ),
             "rule_type": forms.Select(attrs={"class": SELECT_CLASS}),
             "threshold_minutes": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "30"}),
             "percent_if_late_le_threshold": forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "1", "step": "0.01"}),

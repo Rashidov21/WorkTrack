@@ -5,6 +5,7 @@ app_name = "penalties"
 
 urlpatterns = [
     path("", views.PenaltyListView.as_view(), name="list"),
+    path("export/excel/", views.PenaltyExportExcelView.as_view(), name="export_excel"),
     path("add-manual/", views.ManualPenaltyCreateView.as_view(), name="add_manual"),
     path("<int:pk>/edit/", views.PenaltyUpdateView.as_view(), name="edit"),
     path("<int:pk>/delete/", views.PenaltyDeleteView.as_view(), name="delete"),

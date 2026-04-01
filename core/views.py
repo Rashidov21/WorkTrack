@@ -1,5 +1,6 @@
 """Core views: dashboard and settings redirect."""
 import json
+from django.shortcuts import render
 from django.views.generic import TemplateView, RedirectView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Sum
@@ -32,12 +33,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         )
 
         context["today"] = today
-        context["present_count"] = len(summaries_list)
+        context["present_count"] = sum(
+            1 for s in summaries_list if s.status == DailySummary.STATUS_PRESENT
+        )
         context["late_count"] = len(late_ids)
         context["absent_count"] = len(absent_ids)
-        context["total_penalties_today"] = Penalty.objects.filter(created_at__date=today).aggregate(
-            s=Sum("amount")
-        )["s"] or 0
+        pen_today = Penalty.objects.filter(penalty_date=today)
+        context["total_penalties_today"] = pen_today.aggregate(s=Sum("amount"))["s"] or 0
+        context["percent_penalties_today_count"] = pen_today.filter(penalty_percent__isnull=False).count()
         context["summaries_today"] = summaries_list[:20]
 
         # Chart: oxirgi 30 kun (1 oy) — har kuni kelganlar soni (present + late)
@@ -68,10 +71,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context["week_late_count"] = DailySummary.objects.filter(
             date__gte=week_ago, date__lte=today, status=DailySummary.STATUS_LATE,
         ).count()
-        w_pen = Penalty.objects.filter(
-            created_at__date__gte=week_ago, created_at__date__lte=today,
-        ).aggregate(s=Sum("amount"))
-        context["week_penalties_sum"] = int(w_pen["s"] or 0)
+        w_pen = Penalty.objects.filter(penalty_date__gte=week_ago, penalty_date__lte=today)
+        context["week_penalties_sum"] = int(w_pen.aggregate(s=Sum("amount"))["s"] or 0)
+        context["week_percent_penalties_count"] = w_pen.filter(penalty_percent__isnull=False).count()
 
         # Oylik (joriy oy)
         month_start = today.replace(day=1)
@@ -82,11 +84,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context["month_late_count"] = DailySummary.objects.filter(
             date__gte=month_start, date__lte=today, status=DailySummary.STATUS_LATE,
         ).count()
-        m_pen = Penalty.objects.filter(
-            created_at__date__gte=month_start, created_at__date__lte=today,
-        ).aggregate(s=Sum("amount"), c=Count("id"))
+        m_pen_qs = Penalty.objects.filter(penalty_date__gte=month_start, penalty_date__lte=today)
+        m_pen = m_pen_qs.aggregate(s=Sum("amount"), c=Count("id"))
         context["month_penalties_sum"] = int(m_pen["s"] or 0)
         context["month_penalties_count"] = m_pen["c"] or 0
+        context["month_percent_penalties_count"] = m_pen_qs.filter(penalty_percent__isnull=False).count()
 
         # Xodimlar
         context["employees_active_count"] = Employee.objects.filter(is_active=True).count()
@@ -104,3 +106,15 @@ class SettingsRedirectView(LoginRequiredMixin, RedirectView):
 class SupportView(LoginRequiredMixin, TemplateView):
     """Yordam: qo‘llanma va bog‘lanish."""
     template_name = "core/support.html"
+
+
+def handler403(request, exception=None):
+    return render(request, "403.html", status=403)
+
+
+def handler404(request, exception):
+    return render(request, "404.html", status=404)
+
+
+def handler500(request):
+    return render(request, "500.html", status=500)

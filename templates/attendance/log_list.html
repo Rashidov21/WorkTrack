@@ -3,13 +3,38 @@
 {% block title %}{% trans "Davomat jurnali" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Davomat jurnali" %}</h1>
-<form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
+<form method="get" class="flex gap-2 mb-4 flex-wrap items-end" data-auto-submit-selects>
   <input type="text" name="employee_id" placeholder="{% trans "Xodim ID" %}" value="{{ request.GET.employee_id }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 placeholder-slate-400 min-h-[42px]">
   <select name="event_type" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="">{% trans "Hammasi" %}</option><option value="check_in" {% if request.GET.event_type == 'check_in' %}selected{% endif %}>{% trans "Kelish" %}</option><option value="check_out" {% if request.GET.event_type == 'check_out' %}selected{% endif %}>{% trans "Ketish" %}</option></select>
-  <input type="date" name="date" value="{{ request.GET.date }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 min-h-[42px]">
+  <div class="flex flex-col gap-0.5">
+    <label class="text-xs text-slate-500">{% trans "Dan" %}</label>
+    <input type="date" name="date_from" value="{{ filter_date_from }}" class="rounded-lg border border-slate-300 shadow-sm px-3 py-2 text-slate-900 min-h-[42px]">
+  </div>
+  <div class="flex flex-col gap-0.5">
+    <label class="text-xs text-slate-500">{% trans "Gacha" %}</label>
+    <input type="date" name="date_to" value="{{ filter_date_to }}" class="rounded-lg border border-slate-300 shadow-sm px-3 py-2 text-slate-900 min-h-[42px]">
+  </div>
+  <div class="flex flex-col gap-0.5">
+    <label class="text-xs text-slate-500">{% trans "Yoki davr" %}</label>
+    <select name="period" class="rounded-lg border border-slate-300 shadow-sm px-3 py-2 bg-white text-slate-900 min-h-[42px] min-w-[8rem]">
+      <option value="" {% if not period %}selected{% endif %}>— {% trans "qo'lda oralig'" %} —</option>
+      <option value="day" {% if period == 'day' %}selected{% endif %}>{% trans "Kun" %}</option>
+      <option value="week" {% if period == 'week' %}selected{% endif %}>{% trans "Hafta" %}</option>
+      <option value="month" {% if period == 'month' %}selected{% endif %}>{% trans "Oy (joriy)" %}</option>
+      <option value="year" {% if period == 'year' %}selected{% endif %}>{% trans "Yil (joriy)" %}</option>
+    </select>
+  </div>
   <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Filtr" %}</button>
+  <a href="{% url 'attendance:logs_export_excel' %}?{{ export_query }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Excelga yuklash" %}</a>
 </form>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
+  {% if not logs %}
+  <div class="px-4 py-10 text-center text-slate-500">
+    <svg class="w-12 h-12 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    <span>{% trans "Yozuvlar yo'q." %}</span>
+  </div>
+  {% else %}
+  <div class="hidden md:block overflow-x-auto">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
@@ -29,10 +54,26 @@
             <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <a href="{% url 'employees:detail' log.employee.pk %}" class="link-primary">{{ log.employee.employee_id }} — {{ log.employee.get_full_name }}</a>
           </span>
-        </td><td class="px-4 py-2">{{ log.get_event_type_display }}</td><td class="px-4 py-2">{{ log.timestamp|date:"d.m.Y H:i" }}</td><td class="px-4 py-2">{{ log.source }}</td>{% if user.role == 'admin' %}<td class="px-4 py-2"><a href="{% url 'attendance:log_delete' log.pk %}" class="inline-flex p-1.5 rounded border border-red-200 text-red-600 hover:bg-red-50" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu yozuvni o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a></td>{% endif %}</tr>
-    {% empty %}<tr><td colspan="{% if user.role == 'admin' %}6{% else %}5{% endif %}" class="px-4 py-10 text-center"><div class="flex flex-col items-center gap-2 text-slate-500"><svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span>{% trans "Yozuvlar yo'q." %}</span></div></td></tr>{% endfor %}
+        </td><td class="px-4 py-2">{{ log.get_event_type_display }}</td><td class="px-4 py-2">{{ log.timestamp|date:"d.m.Y H:i" }}</td><td class="px-4 py-2">{{ log.source }}</td>{% if user.role == 'admin' %}<td class="px-4 py-2"><a href="{% url 'attendance:log_delete' log.pk %}" class="btn-icon-touch border-red-200 text-red-600 hover:bg-red-50" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu yozuvni o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a></td>{% endif %}</tr>
+    {% endfor %}
     </tbody>
   </table>
+  </div>
+  <div class="md:hidden divide-y divide-slate-200">
+    {% for log in logs %}
+    <article class="p-4 space-y-1">
+      <a href="{% url 'employees:detail' log.employee.pk %}" class="link-primary font-medium text-sm block">{{ log.employee.employee_id }} — {{ log.employee.get_full_name }}</a>
+      <p class="text-xs text-slate-600">{{ log.get_event_type_display }} · {{ log.timestamp|date:"d.m.Y H:i" }}</p>
+      <p class="text-xs text-slate-500">{{ log.source }}</p>
+      {% if user.role == 'admin' %}
+      <div class="pt-1 flex justify-end">
+        <a href="{% url 'attendance:log_delete' log.pk %}" class="btn-icon-touch border-red-200 text-red-600 hover:bg-red-50" title="{% trans "O'chirish" %}" aria-label="{% trans "O'chirish" %}" data-confirm="{% trans "Rostan ham bu yozuvni o'chirmoqchimisiz?" %}"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></a>
+      </div>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% include "components/pagination.html" with page_obj=page_obj query_params=request.GET %}
 </div>
 {% endblock %}

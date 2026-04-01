@@ -76,13 +76,33 @@ def _get_client_ip(request):
     return (xff.split(",")[0].strip() if xff else None) or request.META.get("REMOTE_ADDR") or "unknown"
 
 
+def _webhook_secret_ok(request, integration) -> bool:
+    secret = (integration.webhook_secret or "").strip()
+    if not secret:
+        return True
+    got = (
+        request.META.get("HTTP_X_WEBHOOK_SECRET")
+        or request.GET.get("secret")
+        or ""
+    ).strip()
+    return got == secret
+
+
 @method_decorator(csrf_exempt, name="dispatch")
 class DeviceWebhookView(View):
     """
     Receive HTTP POST from Hikvision device (or simulator).
-    CSRF exempt; rate limit per IP. Secret tekshirilmaydi (qurilma yuborolmaydi).
+    CSRF exempt; rate limit per IP. Agar webhook_secret sozlangan bo‘lsa,
+    X-Webhook-Secret sarlavhasi yoki ?secret= majburiy.
     """
     def post(self, request):
+        integration = IntegrationSettings.get_settings()
+        if not integration.webhook_enabled:
+            return JsonResponse({"ok": False, "reason": "webhook_disabled"}, status=503)
+        if not _webhook_secret_ok(request, integration):
+            logger.info("webhook: unauthorized (secret mismatch or missing)")
+            return JsonResponse({"ok": False, "reason": "unauthorized"}, status=401)
+
         content_type = request.META.get("CONTENT_TYPE", "").lower()
 
         if "multipart/form-data" in content_type:
@@ -95,7 +115,7 @@ class DeviceWebhookView(View):
             except json.JSONDecodeError as e:
                 logger.warning("webhook multipart: invalid JSON in AccessControllerEvent: %s", e)
                 return HttpResponseBadRequest("Invalid JSON in AccessControllerEvent")
-            logger.warning(
+            logger.debug(
                 "webhook multipart keys: data=%s inner=%s",
                 list(data.keys()),
                 list((data.get("AccessControllerEvent") or {}).keys()),
@@ -110,10 +130,9 @@ class DeviceWebhookView(View):
                 items = []
             else:
                 payload = _hikvision_event_to_payload(data)
-                logger.warning(
-                    "webhook payload employee_id: repr=%s type=%s",
+                logger.debug(
+                    "webhook payload employee_id: repr=%s",
                     repr(payload.get("employee_id")),
-                    type(payload.get("employee_id")).__name__,
                 )
                 if not payload.get("employee_id"):
                     logger.warning("webhook multipart: no employee_id/personId/serialNo in payload")
@@ -127,10 +146,6 @@ class DeviceWebhookView(View):
                 items = body if isinstance(body, list) else [body]
             else:
                 items = [body]
-
-        integration = IntegrationSettings.get_settings()
-        if not integration.webhook_enabled:
-            return JsonResponse({"ok": False, "reason": "webhook_disabled"}, status=503)
 
         ip = _get_client_ip(request)
         minute_bucket = int(time.time() // 60)
@@ -157,6 +172,7 @@ class IntegrationSettingsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["integration"] = IntegrationSettings.get_settings()
+        context["webhook_post_url"] = self.request.build_absolute_uri("/integrations/webhook/")
         return context
 
     def post(self, request, *args, **kwargs):

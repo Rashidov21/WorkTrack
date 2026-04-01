@@ -3,18 +3,25 @@
 {% block title %}{% trans "Kunlik xulosa" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Kunlik xulosa" %}</h1>
-<form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
+<form method="get" class="flex gap-2 mb-4 flex-wrap items-center" data-auto-submit-filters>
   <input type="date" name="date" value="{{ selected_date }}" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 text-slate-900 min-h-[42px]">
   <select name="status" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]">
-    <option value="">{% trans "Hammasi" %}</option>
-    <option value="present">{% trans "Keldi" %}</option>
-    <option value="late">{% trans "Kechikdi" %}</option>
-    <option value="absent">{% trans "Kelmadi" %}</option>
-    <option value="leave">{% trans "Ruxsat olgan" %}</option>
+    <option value="" {% if not request.GET.status %}selected{% endif %}>{% trans "Hammasi" %}</option>
+    <option value="present" {% if request.GET.status == 'present' %}selected{% endif %}>{% trans "Keldi" %}</option>
+    <option value="late" {% if request.GET.status == 'late' %}selected{% endif %}>{% trans "Kechikdi" %}</option>
+    <option value="absent" {% if request.GET.status == 'absent' %}selected{% endif %}>{% trans "Kelmadi" %}</option>
+    <option value="leave" {% if request.GET.status == 'leave' %}selected{% endif %}>{% trans "Ruxsat olgan" %}</option>
   </select>
   <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Qo'llash" %}</button>
 </form>
 <div class="bg-white rounded-xl shadow border overflow-hidden">
+  {% if not summaries %}
+  <div class="px-4 py-10 text-center text-slate-500">
+    <svg class="w-12 h-12 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+    <span>{% trans "Ushbu sana uchun ma'lumot yo'q." %}</span>
+  </div>
+  {% else %}
+  <div class="hidden md:block overflow-x-auto">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">
       <tr>
@@ -63,16 +70,21 @@
         <td class="px-4 py-2">{{ s.working_minutes }}</td>
         <td class="px-4 py-2">{{ s.minutes_late }}</td>
       </tr>
-      {% empty %}
-      <tr><td colspan="7" class="px-4 py-10 text-center">
-        <div class="flex flex-col items-center gap-2 text-slate-500">
-          <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-          <span>{% trans "Ushbu sana uchun ma'lumot yo'q." %}</span>
-        </div>
-      </td></tr>
       {% endfor %}
     </tbody>
   </table>
+  </div>
+  <div class="md:hidden divide-y divide-slate-200">
+    {% for s in summaries %}
+    <article class="p-4 space-y-2">
+      <a href="{% url 'employees:detail' s.employee.pk %}" class="link-primary font-medium text-sm block">{{ s.employee.employee_id }} {{ s.employee.get_full_name }}</a>
+      <p class="text-sm">{{ s.get_status_display }}</p>
+      <p class="text-xs text-slate-600">{% trans "Kelish" %}: {% if s.check_in_time %}{{ s.check_in_time|time:"H:i" }}{% else %}—{% endif %} · {% trans "Ketish" %}: {% if s.check_out_time %}{{ s.check_out_time|time:"H:i" }}{% else %}—{% endif %}</p>
+      <p class="text-xs text-slate-500">{{ s.working_minutes }} {% trans "daq" %} · {% trans "Kechikish" %}: {{ s.minutes_late }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% include "components/pagination.html" with page_obj=page_obj query_params=request.GET %}
 </div>
 {% endblock %}

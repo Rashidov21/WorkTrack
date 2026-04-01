@@ -3,12 +3,32 @@
 {% block title %}{% trans "Kechikishlar hisoboti" %} — {{ APP_NAME }}{% endblock %}
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Kechikishlar hisoboti" %}</h1>
-<form method="get" class="flex gap-2 mb-4 flex-wrap items-center">
-  <select name="period" class="rounded-lg border border-slate-300 shadow-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 px-3 py-2 bg-white text-slate-900 min-h-[42px]"><option value="day" {% if period == 'day' %}selected{% endif %}>{% trans "Kun" %}</option><option value="week" {% if period == 'week' %}selected{% endif %}>{% trans "Hafta" %}</option><option value="month" {% if period == 'month' %}selected{% endif %}>{% trans "Oy" %}</option><option value="year" {% if period == 'year' %}selected{% endif %}>{% trans "Yil" %}</option></select>
+<form method="get" class="flex gap-2 mb-4 flex-wrap items-end">
+  <div class="flex flex-col gap-0.5">
+    <label class="text-xs text-slate-500">{% trans "Dan" %}</label>
+    <input type="date" name="date_from" value="{{ filter_date_from }}" class="rounded-lg border border-slate-300 shadow-sm px-3 py-2 text-slate-900 min-h-[42px]">
+  </div>
+  <div class="flex flex-col gap-0.5">
+    <label class="text-xs text-slate-500">{% trans "Gacha" %}</label>
+    <input type="date" name="date_to" value="{{ filter_date_to }}" class="rounded-lg border border-slate-300 shadow-sm px-3 py-2 text-slate-900 min-h-[42px]">
+  </div>
+  <div class="flex flex-col gap-0.5">
+    <label class="text-xs text-slate-500">{% trans "Yoki davr" %}</label>
+    <select name="period" class="rounded-lg border border-slate-300 shadow-sm px-3 py-2 bg-white text-slate-900 min-h-[42px] min-w-[8rem]">
+      <option value="" {% if not period %}selected{% endif %}>— {% trans "qo'lda oralig'" %} —</option>
+      <option value="day" {% if period == 'day' %}selected{% endif %}>{% trans "Kun" %}</option>
+      <option value="week" {% if period == 'week' %}selected{% endif %}>{% trans "Hafta" %}</option>
+      <option value="month" {% if period == 'month' %}selected{% endif %}>{% trans "Oy (joriy)" %}</option>
+      <option value="year" {% if period == 'year' %}selected{% endif %}>{% trans "Yil (joriy)" %}</option>
+    </select>
+  </div>
   <button type="submit" class="px-4 py-2 bg-slate-200 rounded-lg hover:bg-slate-300">{% trans "Qo'llash" %}</button>
-  <a href="{% url 'reports:export_lateness' %}?period={{ period }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 ml-2">{% trans "Excelga yuklash" %}</a>
+  <a href="{% url 'reports:export_lateness' %}?{{ export_query }}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700">{% trans "Excelga yuklash" %}</a>
 </form>
 <p class="text-slate-600 mb-4">{% blocktrans with start=start end=end %}{{ start }} dan {{ end }} gacha{% endblocktrans %}</p>
+{% if report_truncated %}
+<p class="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-900">{% blocktrans with limit=report_row_limit %}Jadvalda faqat birinchi {{ limit }} qator. To'liq ro'yxat uchun Excelni yuklab oling.{% endblocktrans %}</p>
+{% endif %}
 <div class="bg-white rounded-xl shadow border overflow-hidden">
   <table class="min-w-full divide-y divide-slate-200">
     <thead class="bg-slate-50">

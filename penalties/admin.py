@@ -4,7 +4,8 @@ from .models import PenaltyRule, Penalty, PenaltyExemption
 
 @admin.register(PenaltyRule)
 class PenaltyRuleAdmin(admin.ModelAdmin):
-    list_display = ["name", "rule_type", "amount_per_unit", "is_active"]
+    list_display = ["name", "department", "rule_type", "amount_per_unit", "is_active"]
+    list_filter = ["is_active"]
 
 
 @admin.register(Penalty)

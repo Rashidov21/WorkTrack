@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .toast-enter {
+    animation: toast-in 0.25s ease;
+  }
+  .toast-leave {
+    animation: toast-out 0.25s ease forwards;
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  @keyframes toast-out {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+  .link-primary {
+    color: rgb(30 64 175);
+    font-weight: 500;
+  }
+  .link-primary:hover {
+    text-decoration: underline;
+    color: rgb(29 78 216);
+  }
+  .link-primary:focus {
+    outline: none;
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px rgb(148 163 184);
+  }
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left, 0);
+  }
+  .btn-icon-touch {
+    @apply inline-flex items-center justify-center min-w-[2.75rem] min-h-[2.75rem] rounded border;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}

@@ -90,7 +90,16 @@ Admin can create **work schedules** (name, start/end time, grace period, working
 
 ## Device webhook
 
-POST JSON to `/integrations/webhook/`. If you set a **webhook secret** in Integration settings, the device must send it in the `X-Webhook-Secret` header (or `?secret=...`). Rate limit: configurable per IP per minute (default 120; set `WEBHOOK_RATE_LIMIT` in `.env`).
+POST JSON to `/integrations/webhook/`. If you set a **webhook secret** in Integration settings, requests **must** include the same value in the `X-Webhook-Secret` header or as `?secret=...`; otherwise the server returns `401`. If the secret field is left empty, the endpoint accepts requests without a secret (development only — use a secret in production).
+
+Rate limit: per IP per minute (default 120; `WEBHOOK_RATE_LIMIT` in `.env`). For multiple Gunicorn/Celery workers, set **`REDIS_CACHE_URL`** in `.env` (e.g. `redis://127.0.0.1:6379/1`) so the limit is shared via Redis.
+
+Employee matching: the payload `employee_id` / person id is resolved against **WorkTrack employee ID** first, then **`device_person_id`** on the employee record.
+
+### Filters and Excel
+
+- **Jarimalar** (`/penalties/`), **Davomat jurnali** (`/attendance/logs/`), **Hisobotlar** — sana: **Dan / Gacha** yoki **davr** (kun, hafta, joriy oy, joriy yil). Standart: joriy oy. Excel havolasi joriy filtr bilan bir xil `GET` parametrlarini yuboradi.
+- **Xodimlar** — bo‘lim (ro‘yxatdan), ish grafigi, qidiruv (ism, ID, qurilma ID).
 
 Each item can have:
 
@@ -111,6 +120,8 @@ Example (see `sample_webhook_payload.json`):
 ```
 
 Flow: Webhook → enqueue Celery task → save log → recompute daily summary → if late, apply penalty and send Telegram message.
+
+Run tests: `python manage.py test`
 
 ## Tailwind
 

@@ -1,8 +1,7 @@
 """Apply penalty from active rule for a lateness record."""
 from decimal import Decimal
-from django.utils import timezone
+from django.db.models import Q, Sum
 from django.utils.translation import gettext as _
-from django.db.models import Sum
 
 from .models import PenaltyRule, Penalty, PenaltyExemption
 
@@ -16,14 +15,36 @@ def is_penalty_exempt(employee, date):
     ).exists()
 
 
+def resolve_penalty_rule_for_employee(employee):
+    """
+    Faol qoida: avvalo xodim bo'limi bo'yicha, yo'q bo'lsa umumiy (department bo'sh).
+    Mos qoida bo'lmasa None — avtomatik jarima yozilmaydi (qo'lda jarima mumkin).
+    """
+    dept = (getattr(employee, "department", None) or "").strip()
+    if dept:
+        rule = (
+            PenaltyRule.objects.filter(is_active=True, department__iexact=dept)
+            .order_by("pk")
+            .first()
+        )
+        if rule:
+            return rule
+    return (
+        PenaltyRule.objects.filter(is_active=True)
+        .filter(Q(department__isnull=True) | Q(department=""))
+        .order_by("pk")
+        .first()
+    )
+
+
 def apply_penalty_for_lateness(lateness_record):
     """
-    Apply penalty for a lateness record using first active rule (per_minute or fixed).
+    Apply penalty for a lateness record using resolved active rule for employee's department (or global).
     Kunlik maksimum (max_amount_per_day) dan oshmasligi uchun cheklanadi.
     Sababli (ta'til, kasallik, ruxsat) ozod bo'lgan kunlarda jarima yozilmaydi.
     Returns created Penalty or None.
     """
-    rule = PenaltyRule.objects.filter(is_active=True).first()
+    rule = resolve_penalty_rule_for_employee(lateness_record.employee)
     if not rule:
         return None
 
