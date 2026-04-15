@@ -119,7 +119,7 @@ Example (see `sample_webhook_payload.json`):
 }
 ```
 
-Flow: Webhook → enqueue Celery task → save log → recompute daily summary → if late, apply penalty and send Telegram message.
+Flow: Webhook → enqueue Celery task → save log → recompute daily summary (kelish / kechikish yozuvi). **Jarima va Telegram** kun oxirida `run_daily_summary_and_penalties` (Celery Beat, masalan 20:00) yoki `manage.py run_weekly_penalties` orqali qo‘llanadi — webhook o‘zi jarima yozmaydi.
 
 Run tests: `python manage.py test`
 

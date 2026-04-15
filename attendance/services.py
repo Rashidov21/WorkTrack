@@ -3,7 +3,6 @@ Business logic: process attendance events, compute daily summary, lateness.
 """
 from datetime import datetime, date, timedelta
 from django.utils import timezone
-from django.db import transaction
 
 from employees.models import Employee
 from .models import AttendanceLog, DailySummary, LatenessRecord
@@ -101,6 +100,7 @@ def recompute_daily_summary(employee, day: date):
         return summary
 
     if not check_in:
+        LatenessRecord.objects.filter(employee=employee, date=day).delete()
         summary.save()
         return summary
 
@@ -130,9 +130,13 @@ def recompute_daily_summary(employee, day: date):
             )
         else:
             summary.status = DailySummary.STATUS_PRESENT
+            summary.minutes_late = 0
+            LatenessRecord.objects.filter(employee=employee, date=day).delete()
     else:
         # Dam olish kuni — kechikish hisoblanmaydi
         summary.status = DailySummary.STATUS_PRESENT
+        summary.minutes_late = 0
+        LatenessRecord.objects.filter(employee=employee, date=day).delete()
 
     summary.save()
     return summary
