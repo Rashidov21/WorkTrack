@@ -4,6 +4,33 @@
 {% block content %}
 <h1 class="text-2xl font-semibold text-slate-800 mb-4">{% trans "Integratsiya sozlamalari" %}</h1>
 <p class="text-slate-600 mb-4">{% trans "Hikvision qurilma (DS-K1T343) va webhook." %}</p>
+<div class="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+  <div class="p-3 rounded-lg border border-slate-200 bg-white">
+    <div class="text-xs text-slate-500">{% trans "Oxirgi webhook" %}</div>
+    <div class="text-sm font-semibold text-slate-800 mt-1">{{ health.last_webhook_at|date:"d.m.Y H:i:s"|default:"—" }}</div>
+  </div>
+  <div class="p-3 rounded-lg border border-slate-200 bg-white">
+    <div class="text-xs text-slate-500">{% trans "24 soat ichida" %}</div>
+    <div class="text-sm font-semibold text-slate-800 mt-1">{{ health.received_24h }}</div>
+  </div>
+  <div class="p-3 rounded-lg border border-amber-200 bg-amber-50">
+    <div class="text-xs text-amber-700">{% trans "Unmatched ochiq" %}</div>
+    <div class="text-sm font-semibold text-amber-900 mt-1">{{ health.unmatched_open }}</div>
+  </div>
+  <div class="p-3 rounded-lg border border-rose-200 bg-rose-50">
+    <div class="text-xs text-rose-700">{% trans "Failed ochiq" %}</div>
+    <div class="text-sm font-semibold text-rose-900 mt-1">{{ health.failed_open }}</div>
+  </div>
+  <div class="p-3 rounded-lg border border-blue-200 bg-blue-50">
+    <div class="text-xs text-blue-700">{% trans "Running importlar" %}</div>
+    <div class="text-sm font-semibold text-blue-900 mt-1">{{ health.running_imports }}</div>
+  </div>
+</div>
+<div class="mb-4">
+  <a href="{% url 'integrations:unmatched_events' %}" class="inline-flex items-center px-3 py-2 rounded-lg bg-amber-100 text-amber-900 hover:bg-amber-200 text-sm font-medium">
+    {% trans "Unmatched eventlarni ko'rish" %}
+  </a>
+</div>
 <form method="post" class="max-w-xl space-y-4">
   {% csrf_token %}
   <div>
@@ -45,6 +72,56 @@
       <li>{% trans "Webhook yoqilgan va Celery worker ishlamoqda" %}</li>
       <li>{% trans "Internet orqali: HTTPS va firewall 443 ochiq" %}</li>
     </ol>
+  </div>
+</div>
+<div class="mt-8 max-w-3xl space-y-4">
+  <div class="p-4 bg-white rounded-lg border border-slate-200">
+    <h2 class="text-lg font-semibold text-slate-800 mb-2">{% trans "Tarixiy import (backfill)" %}</h2>
+    <p class="text-sm text-slate-600 mb-3">{% trans "Qurilmadan tanlangan sana oralig'idagi eventlarni import qiladi." %}</p>
+    <form method="post" class="flex flex-wrap gap-3 items-end">
+      {% csrf_token %}
+      <input type="hidden" name="start_import" value="1">
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{% trans "Dan" %}</label>
+        <input type="date" name="import_date_from" required class="px-3 py-2 rounded-lg border border-slate-300">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">{% trans "Gacha" %}</label>
+        <input type="date" name="import_date_to" required class="px-3 py-2 rounded-lg border border-slate-300">
+      </div>
+      <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">{% trans "Importni boshlash" %}</button>
+    </form>
+  </div>
+  <div class="p-4 bg-white rounded-lg border border-slate-200">
+    <h3 class="text-base font-semibold text-slate-800 mb-2">{% trans "Oxirgi import joblar" %}</h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead class="bg-slate-50">
+          <tr class="text-left text-slate-600">
+            <th class="px-3 py-2">{% trans "Sana oralig'i" %}</th>
+            <th class="px-3 py-2">{% trans "Status" %}</th>
+            <th class="px-3 py-2">{% trans "Fetched" %}</th>
+            <th class="px-3 py-2">{% trans "Queued" %}</th>
+            <th class="px-3 py-2">{% trans "Failed" %}</th>
+            <th class="px-3 py-2">{% trans "Yaratilgan" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for j in recent_import_jobs %}
+          <tr class="border-t border-slate-100">
+            <td class="px-3 py-2">{{ j.date_from }} — {{ j.date_to }}</td>
+            <td class="px-3 py-2">{{ j.status }}</td>
+            <td class="px-3 py-2">{{ j.fetched_count }}</td>
+            <td class="px-3 py-2">{{ j.queued_count }}</td>
+            <td class="px-3 py-2">{{ j.failed_count }}</td>
+            <td class="px-3 py-2">{{ j.created_at|date:"d.m.Y H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="px-3 py-4 text-slate-500 text-center">{% trans "Import joblar yo'q." %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 <script>

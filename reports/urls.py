@@ -8,6 +8,7 @@ urlpatterns = [
     path("attendance/", views.ReportAttendanceView.as_view(), name="attendance"),
     path("lateness/", views.ReportLatenessView.as_view(), name="lateness"),
     path("penalty/", views.ReportPenaltyView.as_view(), name="penalty"),
+    path("reconciliation/", views.ReportReconciliationView.as_view(), name="reconciliation"),
     path("export/attendance/", views.ExportAttendanceExcelView.as_view(), name="export_attendance"),
     path("export/lateness/", views.ExportLatenessExcelView.as_view(), name="export_lateness"),
     path("export/penalty/", views.ExportPenaltyExcelView.as_view(), name="export_penalty"),

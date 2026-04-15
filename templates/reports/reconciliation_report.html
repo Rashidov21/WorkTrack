@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Reconciliation Report" %} — {{ APP_NAME }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-semibold text-slate-800 mb-3">{% trans "Reconciliation / Audit report" %}</h1>
+<p class="text-slate-600 mb-4">{% trans "Ingress, davomat va jarima ma'lumotlari orasidagi nomutanosibliklarni ko'rsatadi." %}</p>
+
+<form method="get" class="mb-6 p-4 bg-white border border-slate-200 rounded-lg flex flex-wrap gap-3 items-end">
+  <div>
+    <label class="block text-sm text-slate-700 mb-1">{% trans "Dan" %}</label>
+    <input type="date" name="date_from" value="{{ filter_date_from }}" class="px-3 py-2 rounded border border-slate-300">
+  </div>
+  <div>
+    <label class="block text-sm text-slate-700 mb-1">{% trans "Gacha" %}</label>
+    <input type="date" name="date_to" value="{{ filter_date_to }}" class="px-3 py-2 rounded border border-slate-300">
+  </div>
+  <button type="submit" class="px-4 py-2 rounded bg-slate-800 text-white hover:bg-slate-900">{% trans "Qo'llash" %}</button>
+</form>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+  <div class="p-3 rounded-lg border border-slate-200 bg-white"><div class="text-xs text-slate-500">Raw total</div><div class="text-xl font-semibold">{{ metrics.raw_total }}</div></div>
+  <div class="p-3 rounded-lg border border-amber-200 bg-amber-50"><div class="text-xs text-amber-700">Raw unmatched</div><div class="text-xl font-semibold text-amber-900">{{ metrics.raw_unmatched }}</div></div>
+  <div class="p-3 rounded-lg border border-rose-200 bg-rose-50"><div class="text-xs text-rose-700">Raw failed</div><div class="text-xl font-semibold text-rose-900">{{ metrics.raw_failed }}</div></div>
+  <div class="p-3 rounded-lg border border-indigo-200 bg-indigo-50"><div class="text-xs text-indigo-700">Processed w/o log</div><div class="text-xl font-semibold text-indigo-900">{{ metrics.processed_without_log }}</div></div>
+  <div class="p-3 rounded-lg border border-slate-200 bg-white"><div class="text-xs text-slate-500">Processed w/o external ID</div><div class="text-xl font-semibold">{{ metrics.processed_without_external_id }}</div></div>
+  <div class="p-3 rounded-lg border border-amber-200 bg-amber-50"><div class="text-xs text-amber-700">Lateness w/o penalty</div><div class="text-xl font-semibold text-amber-900">{{ metrics.lateness_without_penalty }}</div></div>
+  <div class="p-3 rounded-lg border border-rose-200 bg-rose-50"><div class="text-xs text-rose-700">Auto penalty w/o lateness</div><div class="text-xl font-semibold text-rose-900">{{ metrics.auto_penalty_without_lateness }}</div></div>
+  <div class="p-3 rounded-lg border border-slate-200 bg-white"><div class="text-xs text-slate-500">Duplicate check-ins</div><div class="text-xl font-semibold">{{ metrics.duplicate_checkins }}</div></div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+  <div class="bg-white border border-slate-200 rounded-lg p-4">
+    <h2 class="font-semibold text-slate-800 mb-2">Lateness without penalty</h2>
+    <div class="text-sm text-slate-600 space-y-1">
+      {% for row in lateness_without_penalty %}
+        <div>{{ row.date }} — {{ row.employee.employee_id }} ({{ row.minutes_late }} min)</div>
+      {% empty %}
+        <div class="text-slate-500">Yo'q.</div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="bg-white border border-slate-200 rounded-lg p-4">
+    <h2 class="font-semibold text-slate-800 mb-2">Auto penalty without lateness</h2>
+    <div class="text-sm text-slate-600 space-y-1">
+      {% for row in penalty_without_lateness %}
+        <div>{{ row.penalty_date }} — {{ row.employee.employee_id }} ({{ row.amount }})</div>
+      {% empty %}
+        <div class="text-slate-500">Yo'q.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="mt-4 bg-white border border-slate-200 rounded-lg p-4">
+  <h2 class="font-semibold text-slate-800 mb-2">Duplicate check-ins</h2>
+  <div class="text-sm text-slate-600 space-y-1">
+    {% for row in duplicate_checkins %}
+      <div>{{ row.timestamp__date }} — employee_id={{ row.employee_id }} ({{ row.c }} ta check-in)</div>
+    {% empty %}
+      <div class="text-slate-500">Yo'q.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

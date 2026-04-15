@@ -2,18 +2,22 @@
 import json
 import logging
 import time
+from datetime import datetime, timedelta
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views import View
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
+from django.contrib import messages
 from django.conf import settings as django_settings
 from django.core.cache import cache
+from django.utils import timezone
 from core.decorators import admin_required
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from .models import IntegrationSettings
-from .tasks import process_device_event
+from .models import IntegrationSettings, RawDeviceEvent, DeviceImportJob
+from .tasks import process_raw_device_event, run_device_import_job
+from employees.models import Employee
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +92,18 @@ def _webhook_secret_ok(request, integration) -> bool:
     return got == secret
 
 
+def _parse_event_time(value):
+    if not value:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if timezone.is_naive(dt):
+        dt = timezone.make_aware(dt)
+    return dt
+
+
 @method_decorator(csrf_exempt, name="dispatch")
 class DeviceWebhookView(View):
     """
@@ -158,10 +174,22 @@ class DeviceWebhookView(View):
 
         results = []
         for item in items:
-            process_device_event.delay(item)
-            results.append({"queued": True})
+            payload = item if isinstance(item, dict) else {"raw": item}
+            raw_event = RawDeviceEvent.objects.create(
+                device_ip=ip,
+                external_event_id=str(
+                    payload.get("event_id")
+                    or payload.get("id")
+                    or payload.get("serial_no")
+                    or ""
+                ),
+                payload_json=payload,
+                event_time_device=_parse_event_time(payload.get("timestamp")),
+            )
+            process_raw_device_event.delay(raw_event.pk)
+            results.append({"queued": True, "raw_event_id": raw_event.pk, "trace_id": str(raw_event.trace_id)})
 
-        return JsonResponse({"ok": True, "processed": len(results), "results": results})
+        return JsonResponse({"ok": True, "processed": len(results), "results": results}, status=202)
 
 
 # Settings pages (admin only)
@@ -173,11 +201,37 @@ class IntegrationSettingsView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["integration"] = IntegrationSettings.get_settings()
         context["webhook_post_url"] = self.request.build_absolute_uri("/integrations/webhook/")
+        context["recent_import_jobs"] = DeviceImportJob.objects.order_by("-created_at")[:10]
+        context["health"] = {
+            "last_webhook_at": RawDeviceEvent.objects.order_by("-received_at").values_list("received_at", flat=True).first(),
+            "received_24h": RawDeviceEvent.objects.filter(received_at__gte=timezone.now() - timedelta(hours=24)).count(),
+            "unmatched_open": RawDeviceEvent.objects.filter(status=RawDeviceEvent.STATUS_UNMATCHED).count(),
+            "failed_open": RawDeviceEvent.objects.filter(status=RawDeviceEvent.STATUS_FAILED).count(),
+            "running_imports": DeviceImportJob.objects.filter(status=DeviceImportJob.STATUS_RUNNING).count(),
+        }
         return context
 
     def post(self, request, *args, **kwargs):
         if not getattr(request.user, "role", None) == "admin":
             return redirect("core:dashboard")
+        if "start_import" in request.POST:
+            date_from = (request.POST.get("import_date_from") or "").strip()
+            date_to = (request.POST.get("import_date_to") or "").strip()
+            if not date_from or not date_to:
+                messages.error(request, "Import uchun sana oralig'ini kiriting.")
+                return redirect("integrations:settings")
+            try:
+                job = DeviceImportJob.objects.create(
+                    date_from=date_from,
+                    date_to=date_to,
+                )
+            except Exception:
+                messages.error(request, "Import job yaratishda xatolik yuz berdi.")
+                return redirect("integrations:settings")
+            run_device_import_job.delay(job.pk)
+            messages.success(request, "Import job ishga tushirildi.")
+            return redirect("integrations:settings")
+
         integration = IntegrationSettings.get_settings()
         integration.device_ip = request.POST.get("device_ip", "").strip()
         integration.api_username = request.POST.get("api_username", "").strip()
@@ -230,3 +284,71 @@ class PlatformSettingsView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+@method_decorator(admin_required, name="dispatch")
+class UnmatchedEventsView(LoginRequiredMixin, TemplateView):
+    """Admin page to inspect and resolve unmatched/failed raw events."""
+
+    template_name = "integrations/unmatched_events.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["events"] = (
+            RawDeviceEvent.objects.filter(
+                status__in=[RawDeviceEvent.STATUS_UNMATCHED, RawDeviceEvent.STATUS_FAILED]
+            )
+            .order_by("-received_at")[:200]
+        )
+        return context
+
+
+@method_decorator(admin_required, name="dispatch")
+class ResolveRawEventView(LoginRequiredMixin, View):
+    """Assign employee_id to raw event payload and replay processing."""
+
+    def post(self, request, pk, *args, **kwargs):
+        raw_event = RawDeviceEvent.objects.filter(pk=pk).first()
+        if not raw_event:
+            messages.error(request, "Raw event topilmadi.")
+            return redirect("integrations:unmatched_events")
+
+        employee_id = (request.POST.get("employee_id") or "").strip()
+        employee = Employee.objects.filter(employee_id=employee_id, is_active=True).first()
+        if not employee:
+            messages.error(request, "Xodim ID topilmadi yoki faol emas.")
+            return redirect("integrations:unmatched_events")
+
+        payload = dict(raw_event.payload_json or {})
+        payload["employee_id"] = employee.employee_id
+        raw_event.payload_json = payload
+        raw_event.status = RawDeviceEvent.STATUS_RECEIVED
+        raw_event.error_code = ""
+        raw_event.error_message = ""
+        raw_event.processed_at = None
+        raw_event.save(
+            update_fields=["payload_json", "status", "error_code", "error_message", "processed_at"]
+        )
+        process_raw_device_event.delay(raw_event.pk)
+        messages.success(request, "Raw event yangilandi va qayta ishlashga yuborildi.")
+        return redirect("integrations:unmatched_events")
+
+
+@method_decorator(admin_required, name="dispatch")
+class ReplayRawEventView(LoginRequiredMixin, View):
+    """Replay raw event without payload edits."""
+
+    def post(self, request, pk, *args, **kwargs):
+        raw_event = RawDeviceEvent.objects.filter(pk=pk).first()
+        if not raw_event:
+            messages.error(request, "Raw event topilmadi.")
+            return redirect("integrations:unmatched_events")
+
+        raw_event.status = RawDeviceEvent.STATUS_RECEIVED
+        raw_event.error_code = ""
+        raw_event.error_message = ""
+        raw_event.processed_at = None
+        raw_event.save(update_fields=["status", "error_code", "error_message", "processed_at"])
+        process_raw_device_event.delay(raw_event.pk)
+        messages.success(request, "Raw event qayta ishlashga yuborildi.")
+        return redirect("integrations:unmatched_events")

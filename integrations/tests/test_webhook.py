@@ -3,7 +3,7 @@ import json
 from django.test import TestCase, Client, override_settings
 from django.core.cache import cache
 
-from integrations.models import IntegrationSettings
+from integrations.models import IntegrationSettings, RawDeviceEvent
 
 
 @override_settings(
@@ -45,8 +45,10 @@ class WebhookSecretTests(TestCase):
             content_type="application/json",
             HTTP_X_WEBHOOK_SECRET="test-secret-xyz",
         )
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 202)
         self.assertTrue(r.json().get("ok"))
+        self.assertEqual(RawDeviceEvent.objects.count(), 1)
+        self.assertEqual(RawDeviceEvent.objects.first().status, RawDeviceEvent.STATUS_UNMATCHED)
 
     def test_accepts_query_secret(self):
         payload = json.dumps(
@@ -57,4 +59,5 @@ class WebhookSecretTests(TestCase):
             data=payload,
             content_type="application/json",
         )
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 202)
+        self.assertEqual(RawDeviceEvent.objects.count(), 1)

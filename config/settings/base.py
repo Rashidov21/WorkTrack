@@ -179,3 +179,4 @@ LOGGING = {
         "django.request": {"level": "ERROR", "handlers": ["console"]},
     },
 }
+    

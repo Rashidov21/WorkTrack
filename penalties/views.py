@@ -108,11 +108,24 @@ class ManualPenaltyCreateView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
         p = form.instance
         date_str = getattr(p, "penalty_date", None)
-        date_part = f" Sana: {date_str}." if date_str else ""
-        if p.penalty_percent is not None:
-            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.penalty_percent}%.{date_part} Sabab: {p.reason or 'N/A'}"
-        else:
-            msg = f"Penalty (manual): {p.employee.get_full_name()} ({p.employee.employee_id}) — {p.amount} so'm.{date_part} Sabab: {p.reason or 'N/A'}"
+        reason = p.reason or "Ko'rsatilmagan"
+        amount_line = (
+            f"{p.penalty_percent}%"
+            if p.penalty_percent is not None
+            else f"{p.amount} so'm"
+        )
+        msg_lines = [
+            "Qo'lda jarima qo'llandi:",
+            f"Xodim: {p.employee.get_full_name()}",
+            f"Xodim ID: {p.employee.employee_id}",
+            f"Jarima: {amount_line}",
+            f"Sana: {date_str}" if date_str else "Sana: ko'rsatilmagan",
+            f"Sabab: {reason}",
+        ]
+        username = (getattr(p.employee, "telegram_username", "") or "").strip().lstrip("@")
+        if username:
+            msg_lines.append(f"@{username}")
+        msg = "\n".join(msg_lines)
         send_telegram_message.delay(msg)
         return response
 

@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.db.models import Q, Sum
 from django.utils.translation import gettext as _
 
-from .models import PenaltyRule, Penalty, PenaltyExemption
+from .models import PenaltyRule, Penalty, PenaltyExemption, PenaltyDecisionLog
 
 
 def is_penalty_exempt(employee, date):
@@ -46,14 +46,38 @@ def apply_penalty_for_lateness(lateness_record):
     """
     rule = resolve_penalty_rule_for_employee(lateness_record.employee)
     if not rule:
+        PenaltyDecisionLog.objects.create(
+            employee=lateness_record.employee,
+            lateness_record=lateness_record,
+            date=lateness_record.date,
+            decision=PenaltyDecisionLog.DECISION_SKIPPED,
+            reason_code="no_active_rule",
+            details="No active rule found for employee department/global.",
+        )
         return None
 
     # Avoid duplicate penalty for the same lateness
     if Penalty.objects.filter(lateness_record=lateness_record).exists():
+        PenaltyDecisionLog.objects.create(
+            employee=lateness_record.employee,
+            lateness_record=lateness_record,
+            date=lateness_record.date,
+            decision=PenaltyDecisionLog.DECISION_SKIPPED,
+            reason_code="already_penalized",
+            details="Penalty already exists for this lateness record.",
+        )
         return None
 
     # Sababli jarima yozilmasin: shu kun uchun ozod mavjud bo'lsa
     if is_penalty_exempt(lateness_record.employee, lateness_record.date):
+        PenaltyDecisionLog.objects.create(
+            employee=lateness_record.employee,
+            lateness_record=lateness_record,
+            date=lateness_record.date,
+            decision=PenaltyDecisionLog.DECISION_SKIPPED,
+            reason_code="penalty_exempt",
+            details="Employee has penalty exemption for this date.",
+        )
         return None
 
     # Oylikdan foiz: faqat foiz yoziladi (1% yoki 2%), summa buqalter oy oxirida hisoblaydi
@@ -73,6 +97,15 @@ def apply_penalty_for_lateness(lateness_record):
             reason=_("Kechikish %(min)s daq — oylikdan %(p)s%%") % {"min": lateness_record.minutes_late, "p": penalty_percent},
             is_manual=False,
         )
+        PenaltyDecisionLog.objects.create(
+            employee=lateness_record.employee,
+            lateness_record=lateness_record,
+            date=lateness_record.date,
+            decision=PenaltyDecisionLog.DECISION_CREATED,
+            reason_code="percent_of_salary",
+            details=f"Created percent penalty {penalty_percent}%.",
+            penalty=penalty,
+        )
         return penalty
 
     if rule.rule_type == "per_minute":
@@ -83,6 +116,14 @@ def apply_penalty_for_lateness(lateness_record):
         amount = rule.amount_per_unit or Decimal("0")
 
     if amount <= 0:
+        PenaltyDecisionLog.objects.create(
+            employee=lateness_record.employee,
+            lateness_record=lateness_record,
+            date=lateness_record.date,
+            decision=PenaltyDecisionLog.DECISION_SKIPPED,
+            reason_code="non_positive_amount",
+            details=f"Computed amount is non-positive: {amount}.",
+        )
         return None
 
     if rule.max_amount_per_day is not None and rule.max_amount_per_day > 0:
@@ -95,6 +136,14 @@ def apply_penalty_for_lateness(lateness_record):
         )
         remaining = rule.max_amount_per_day - existing_total
         if remaining <= 0:
+            PenaltyDecisionLog.objects.create(
+                employee=lateness_record.employee,
+                lateness_record=lateness_record,
+                date=lateness_record.date,
+                decision=PenaltyDecisionLog.DECISION_SKIPPED,
+                reason_code="daily_cap_reached",
+                details=f"Remaining daily cap is {remaining}.",
+            )
             return None
         amount = min(amount, remaining)
 
@@ -106,5 +155,14 @@ def apply_penalty_for_lateness(lateness_record):
         penalty_date=lateness_record.date,
         reason=_("Late %(min)s min on %(date)s") % {"min": lateness_record.minutes_late, "date": lateness_record.date},
         is_manual=False,
+    )
+    PenaltyDecisionLog.objects.create(
+        employee=lateness_record.employee,
+        lateness_record=lateness_record,
+        date=lateness_record.date,
+        decision=PenaltyDecisionLog.DECISION_CREATED,
+        reason_code="amount_penalty",
+        details=f"Created amount penalty {amount}.",
+        penalty=penalty,
     )
     return penalty

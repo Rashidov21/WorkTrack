@@ -38,5 +38,16 @@
       </div>
     </div>
   </a>
+  <a href="{% url 'reports:reconciliation' %}" class="block p-5 bg-white rounded-xl shadow border border-slate-200 hover:bg-slate-50 hover:shadow-lg hover:border-slate-300 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-400">
+    <div class="flex items-start gap-3">
+      <span class="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
+        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/></svg>
+      </span>
+      <div>
+        <span class="font-medium text-slate-800">{% trans "Reconcilation / Audit" %}</span>
+        <p class="text-sm text-slate-500 mt-0.5">{% trans "Ingress, davomat va jarima o'rtasidagi nomutanosibliklarni tekshiradi" %}</p>
+      </div>
+    </div>
+  </a>
 </div>
 {% endblock %}

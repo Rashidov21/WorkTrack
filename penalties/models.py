@@ -206,3 +206,50 @@ class PenaltyExemption(models.Model):
 
     def __str__(self):
         return f"{self.employee} {self.date_from}–{self.date_to} ({self.get_reason_type_display()})"
+
+
+class PenaltyDecisionLog(models.Model):
+    """Audit trail: why auto-penalty was created or skipped."""
+
+    DECISION_CREATED = "created"
+    DECISION_SKIPPED = "skipped"
+    DECISION_ERROR = "error"
+
+    DECISION_CHOICES = [
+        (DECISION_CREATED, _("Yaratildi")),
+        (DECISION_SKIPPED, _("O'tkazib yuborildi")),
+        (DECISION_ERROR, _("Xatolik")),
+    ]
+
+    employee = models.ForeignKey(
+        "employees.Employee",
+        on_delete=models.CASCADE,
+        related_name="penalty_decision_logs",
+    )
+    lateness_record = models.ForeignKey(
+        "attendance.LatenessRecord",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="decision_logs",
+    )
+    date = models.DateField(db_index=True)
+    decision = models.CharField(max_length=20, choices=DECISION_CHOICES, db_index=True)
+    reason_code = models.CharField(max_length=64, db_index=True)
+    details = models.TextField(blank=True)
+    penalty = models.ForeignKey(
+        Penalty,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="decision_logs",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = _("Jarima qaror logi")
+        verbose_name_plural = _("Jarima qaror loglari")
+
+    def __str__(self):
+        return f"{self.employee} {self.date} {self.decision}:{self.reason_code}"
